@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InformacoesAutorizatario" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="5ae70e34-d5c1-440d-b367-6cdbaf2a2e37">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SEMOB"/>
+	<parameter name="GAU_ID" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select
+  ti.TIC_NOME,
+  CONVERT(VARCHAR(MAX),  i.INC_DESCRICAO) as Descricao,
+  ga.GAU_ID
+From
+  SMB_INFO_COMPL i
+  Inner Join SMB_TIPO_INFO_COMPL ti On ti.TIC_ID = i.TIC_ID_TIPO
+  Inner Join SMB_GESTAO_AUTORIZATARIO ga On ga.GAU_ID = i.GAU_ID
+  Where 
+  ga.GAU_ID = $P{GAU_ID}
+/*WHERE_NEW*/
+/*ORDER_NEW*/]]>
+	</queryString>
+	<field name="TIC_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIC_NOME"/>
+	</field>
+	<field name="Descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Descricao"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<detail>
+		<band height="74" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="0" width="554" height="16" backcolor="#0078D7" uuid="ce36e504-68e2-4926-8890-92e1d0503590">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="1" y="0" width="553" height="16" forecolor="#FFFFFF" uuid="f3ebaa54-588a-484c-91e2-46e9d4e0430b"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informações do Autorizatário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="20" width="90" height="18" uuid="df41a605-0d14-43b9-9a84-e458289950ba">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Informação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="41" width="90" height="28" uuid="d3e4d0c5-7336-43ef-9365-97e464b7c1ce">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Procuração]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="41" width="434" height="28" uuid="0cc4eb9e-2865-4e64-828c-57b964a91496"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="20" width="434" height="18" uuid="4fea5042-4832-448d-b64e-1c350afd4065"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TIC_NOME}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="69" width="554" height="1" uuid="441360d8-d49e-4407-af21-eca709f4409a"/>
+			</line>
+			<line>
+				<reportElement x="555" y="1" width="1" height="69" uuid="cf1700d4-b94d-4bdf-b578-af638c313933">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="1" y="41" width="554" height="1" uuid="860358f6-e460-4f4d-bb71-9bf249765f2a"/>
+			</line>
+			<line>
+				<reportElement x="1" y="1" width="1" height="69" uuid="f880bf52-c2cc-415b-84eb-09b15ea207af">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,37 @@
+# O . representa o diretório atual
+# Construa a imagem Docker
+docker build -t ubuntu-ssh .
+
+# Execute o container
+
+docker run -d -p 8080:8080 -p 2222:22 --name ubuntu-ssh-container ubuntu-ssh
+
+docker run -e -d -p 8080:8080 -p 9090:80 -p 2222:22 --name ubuntu-ssh-container ubuntu-ssh
+
+# Execute o terminal do container 
+
+exec -it ubuntu-ssh-container bash
+
+# Acesso via winscp na porta 2222 do localhost com usuario root e senha do root definida na imagem do docker
+
+#Comando importantes
+ps aux - verifica os servicos ativos
+printenv - verifica as variaveis de ambiente
+
+
+Para  derrubar o tomcat 
+cd /opt/tomcat/bin 
+./shutdown.sh
+./startup.sh
+
+
+# Coloque a variavel no arquivo a baixo para definir a webrun_home
+
+nano ~/.bashrc
+
+WEBRUN_HOME=/opt/tomcat/settings/sgci
+
+
+### Definir temporariamente
+export WEBRUN_HOME=/opt/tomcat/settings/sgci
+

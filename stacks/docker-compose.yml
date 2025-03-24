@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  sysmobi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NOME_CONTEXTO: sysmobi
+    container_name: sysmobi_container
+    ports:
+      - "8080:8080"  # Expondo o Tomcat
+      - "2222:22"    # Expondo o SSH (mapeado para 2222 na máquina host)
+    volumes:
+      - ./files:/opt/tomcat/files  # Mapeando os arquivos locais para o container
+    environment:
+      - WEBRUN_HOME=/opt/tomcat/settings/
+    restart: always

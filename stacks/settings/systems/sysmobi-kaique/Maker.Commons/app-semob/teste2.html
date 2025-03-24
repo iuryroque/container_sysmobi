@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Controle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d6efd;
+            padding: 10px 15px;
+            color: white;
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-right: 10px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 10px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            color: #0d6efd;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s;
+        }
+        
+        .menu-item i {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .menu-item:active {
+            transform: scale(0.95);
+        }
+        
+        .footer-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-tabs .tab-item {
+            color: #6c757d;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .footer-tabs .tab-item.active {
+            color: #0d6efd;
+        }
+        
+        .footer-tabs .tab-item i {
+            font-size: 20px;
+        }
+        
+        .history-page {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .history-page.active {
+            display: block;
+        }
+        
+        .history-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .activation-page {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .activation-page.active {
+            display: block;
+        }
+        
+        .activation-info {
+            margin-top: 20px;
+        }
+        
+        .btn-action {
+            width: 100%;
+            max-width: 350px;
+            font-size: 1.25rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .current-date {
+            text-align: center;
+            margin-top: 1rem;
+            color: #6c757d;
+        }
+        
+        .location {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 1rem;
+        }
+        
+        .btn-action {
+            width: 100%;
+            max-width: 350px;
+            font-size: 1.25rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .btn-disabled {
+            background-color: #6c757d;
+            color: #ffffff;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="header">
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="d-flex align-items-center">
+                <img src="https://via.placeholder.com/40" alt="Foto do Agente" class="profile-pic">
+                <div>
+                    <h6 class="mb-0">Nome do Agente</h6>
+                    <small>Matrícula: 123456</small>
+                </div>
+            </div>
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bell"></i>
+            </button>
+        </div>
+
+        <!-- Conteúdo Principal com Scroll -->
+        <!-- Data Atual -->
+        <div class="current-date" id="current-date">
+            <!-- Data será inserida via JavaScript -->
+        </div>
+
+        <!-- Localização Atual -->
+        <div class="location" id="location">
+            Localização: <span id="location-coordinates">Obtendo localização...</span>
+        </div>
+
+        <!-- Painel de Ativação/Desativação -->
+        <div class="main-content flex-grow-1">
+            <!-- Botão de Ativação -->
+            <button id="btn-ativar" class="btn btn-success btn-action">Ativar Estação</button>
+
+            <!-- Botão de Desativação (Inicialmente desabilitado) -->
+            <button id="btn-desativar" class="btn btn-disabled btn-action" disabled>Desativar Estação</button>
+        </div>
+
+    </div>
+
+    <!-- Footer Tabs -->
+    <div class="footer-tabs">
+        <a href="#" class="tab-item active">
+            <i class="fas fa-home"></i>
+            <div>Início</div>
+        </a>
+        <a href="#" class="tab-item">
+            <i class="fas fa-clock"></i>
+            <div>Histórico</div>
+        </a>
+        <a href="#" class="tab-item">
+            <i class="fas fa-user"></i>
+            <div>Perfil</div>
+        </a>
+        <a href="#" class="tab-item">
+            <i class="fas fa-cog"></i>
+            <div>Configurações</div>
+        </a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script para mostrar a data atual
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Função para obter a localização geográfica
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location-coordinates').innerText = "Geolocalização não suportada.";
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById('location-coordinates').innerText =
+                `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('location-coordinates').innerText = "Permissão de localização negada.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('location-coordinates').innerText = "Informação de localização indisponível.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('location-coordinates').innerText = "Tempo de solicitação de localização esgotado.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('location-coordinates').innerText = "Erro desconhecido.";
+                    break;
+            }
+        }
+
+        // Obter localização ao carregar a página
+        getLocation();
+
+        // Simulação da lógica de ativação/desativação
+        const btnAtivar = document.getElementById('btn-ativar');
+        const btnDesativar = document.getElementById('btn-desativar');
+
+        btnAtivar.addEventListener('click', () => {
+            // Simula captura de data, hora e localização (pode ser adicionado logicamente)
+            alert('Estação ativada!');
+
+            btnAtivar.classList.remove('btn-success');
+            btnAtivar.classList.add('btn-disabled');
+            btnAtivar.innerText = 'Ativo';
+            btnAtivar.disabled = true;
+
+            btnDesativar.classList.remove('btn-disabled');
+            btnDesativar.classList.add('btn-danger');
+            btnDesativar.disabled = false;
+        });
+
+        btnDesativar.addEventListener('click', () => {
+            // Simula captura de data, hora e localização para desativação
+            if (confirm('Tem certeza que deseja desativar a estação?')) {
+                alert('Estação desativada!');
+
+                btnAtivar.classList.remove('btn-disabled');
+                btnAtivar.classList.add('btn-success');
+                btnAtivar.innerText = 'Ativar Estação';
+                btnAtivar.disabled = false;
+
+                btnDesativar.classList.remove('btn-danger');
+                btnDesativar.classList.add('btn-disabled');
+                btnDesativar.disabled = true;
+            }
+        });
+    </script>
+</body>
+
+</html>

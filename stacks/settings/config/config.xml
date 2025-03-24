@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+  <group>
+    <group-name>Agendador</group-name>
+    <item>
+      <item-name>Tempo</item-name>
+      <item-param>600000</item-param>
+    </item>
+  </group>
+  <group>
+    <group-name>Componentes</group-name>
+    <item>
+      <item-name>CarregarMoreLookup</item-name>
+      <item-param>1</item-param>
+    </item>
+    <item>
+      <item-name>PaginacaoConsulta</item-name>
+      <item-param>100</item-param>
+    </item>
+    <item>
+      <item-name>PaginacaoGrid</item-name>
+      <item-param>100</item-param>
+    </item>
+    <item>
+      <item-name>PaginacaoMoreLookup</item-name>
+      <item-param>100</item-param>
+    </item>
+  </group>
+  <group>
+    <group-name>Relatorio</group-name>
+    <item>
+      <item-name>GeradorLocalPadrao</item-name>
+      <item-param>0</item-param>
+    </item>
+  </group>
+  <group>
+    <group-name>Sessao</group-name>
+    <item>
+      <item-name>DebugCachedFiles</item-name>
+      <item-param>0</item-param>
+    </item>
+    <item>
+      <item-name>DebugMode</item-name>
+      <item-param>1</item-param>
+    </item>
+    <item>
+      <item-name>RuleTimeout</item-name>
+      <item-param>300</item-param>
+    </item>
+    <item>
+      <item-name>Tempo</item-name>
+      <item-param>3600</item-param>
+    </item>
+  </group>
+</config>
+

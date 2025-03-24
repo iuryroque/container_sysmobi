@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[
+  ;WITH GroupedData AS (
+  SELECT
+    i.ITD_LOGRADOURO as Logradouro,
+    i.ITD_BAIRRO as Bairro,
+    COUNT(i.ITD_ID) as Quantidade,
+    MIN(i.ITD_SEQUENCIA) as MinSequencia,
+    MAX(i.ITD_SEQUENCIA) as MaxSequencia,
+    MIN(i.ITD_LATITUDE) as Latitude,  -- Pega um valor de latitude
+    MIN(i.ITD_LONGITUDE) as Longitude,  -- Pega um valor de longitude
+    STRING_AGG(Concat(l.LNH_ID, ' - ', l.LNH_NOME), ', ') As Linhas  -- Agrega as linhas associadas
+  FROM
+    SMB_ITINERARIO_DETALHE i WITH (NOLOCK)
+    INNER JOIN SMB_ITINERARIO it ON it.ITI_ID = i.ITI_ID
+    INNER JOIN SMB_LINHA l ON l.LNH_ID = it.LNH_ID
+    INNER JOIN SMB_PARAMETROS_LINHA pl ON pl.LNH_ID = l.LNH_ID  -- Faz o JOIN com a tabela correta
+  WHERE
+    i.ITD_LOGRADOURO IS NOT NULL
+    AND pl.LNH_ID =$P{Cod} -- Filtro para o código fornecido
+  GROUP BY
+    i.ITD_LOGRADOURO,
+    i.ITD_BAIRRO
+)
+SELECT
+  Logradouro,
+  Bairro,
+  Quantidade,
+  MinSequencia,
+  MaxSequencia,
+  Latitude,
+  Longitude,
+  Linhas
+FROM
+  GroupedData
+ORDER BY
+  MinSequencia]]>
+	</queryString>
+	<field name="Logradouro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Logradouro"/>
+	</field>
+	<field name="Bairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Bairro"/>
+	</field>
+	<field name="Quantidade" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Quantidade"/>
+	</field>
+	<field name="MinSequencia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="MinSequencia"/>
+	</field>
+	<field name="MaxSequencia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="MaxSequencia"/>
+	</field>
+	<field name="Latitude" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Latitude"/>
+	</field>
+	<field name="Longitude" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Longitude"/>
+	</field>
+	<field name="Linhas" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Linhas"/>
+	</field>
+	<columnHeader>
+		<band height="58">
+			<staticText>
+				<reportElement x="7" y="24" width="562" height="14" forecolor="#FFFFFF" uuid="0e7cbebf-12dd-4cf6-bed1-ec24d73b42ee"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINHA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="4" y="23" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3960551c-bce5-47d0-a802-08f4389b25b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="24" width="568" height="14" forecolor="#FFFFFF" uuid="d3a764dc-b033-408f-a7bc-a1e36c1de834"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESUMO DO ITINERÁRIO POR VIA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="4" y="41" width="294" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="ff270215-145f-4abe-81ba-3b2568f75e44">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="41" width="294" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="fbdd409b-2a5c-4432-8130-6545089f66a6"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Logradouro:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="300" y="41" width="275" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="2d2b3125-3c34-4b80-b6da-e9abd284c744"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="300" y="41" width="274" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="7fed1a23-17fa-479c-8fc1-70a43d85babf"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Bairro]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17">
+			<rectangle>
+				<reportElement x="4" y="2" width="294" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="74722d81-5c8b-40e8-be4c-88c7f7c55c31"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="300" y="2" width="275" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="355b58b6-f097-4595-a825-7fba2411ebb2"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="4" y="2" width="294" height="15" uuid="a447b0b2-ff4a-46f5-92e0-cbab14eb5091">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0abfa6a7-c411-4955-a796-de5daec01ef8"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Logradouro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="2" width="274" height="14" uuid="18dfc4b3-10c4-4e7a-a30e-ec3c2fc42a25">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7474e8d2-251f-4a0e-9a65-9d3daa97dec5"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Bairro}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

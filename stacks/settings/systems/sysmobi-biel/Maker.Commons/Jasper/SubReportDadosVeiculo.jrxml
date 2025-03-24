@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SubReportDadosVeiculo" pageWidth="554" pageHeight="842" whenNoDataType="NoPages" columnWidth="554" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="59f68e5d-41d0-4677-9476-65b7889f28ba">
+	<property name="ireport.scriptlethandling" value="2"/>
+	<property name="ireport.encoding" value="ISO-8859-1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.xml.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="GAU_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{GAU_ID}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select
+V.SMB_CA_ID,
+V.gau_id,
+  p.PES_ID,
+  v.SMB_NUMERO_ORDEM,
+  v.SMB_PLACA,
+  Case When v.SMB_TIPO_COMUBSTIVEL = 'G' Then 'Gasolina'
+    When v.SMB_TIPO_COMUBSTIVEL = 'D' Then 'Diesel'
+    When v.SMB_TIPO_COMUBSTIVEL = 'E' Then 'Elétrico' Else 'Não Definido'
+  End As TIPO_COMBUSTIVEL,
+  v.SMB_ANO_FABRICACAO,
+  v.SMB_DT_AQUISICAO,
+  v.SMB_NUM_NFE As NotaFiscal,
+  v.SMB_DATA_NFE As DataNotaFiscal,
+  v.SMB_RESTRICOES_VENDA,
+  Case WHEN v.SMB_RESTRICOES_VENDA IS NULL OR v.SMB_RESTRICOES_VENDA = '' THEN 'Não' ELSE 'Sim'
+  END AS RestricaoVenda,
+  v.SMB_CAPACIDADE_PASSAGEIRO, 
+  Case When v.SMB_PASSAGEIROS_SENTADOS = 'NULL' Or v.SMB_PASSAGEIROS_SENTADOS = '' Then 0 Else Cast(v.SMB_PASSAGEIROS_SENTADOS As INT) End + Case When v.SMB_PASSAGEIRO_EM_PE = 'NULL' Or v.SMB_PASSAGEIRO_EM_PE = '' Then 0 Else Cast(v.SMB_PASSAGEIRO_EM_PE As INT) End As SomaPassageiros,
+  v.SMB_RENAVAM,
+  v.SMB_ESTADO_VEICULO,
+  v.SMB_QTD_DE_PORTAS,
+  v.SMB_ANO_LICENCIADO,
+  v.SMB_NUMERO_CHASSI,
+  ve.SMB_ESP_DESCRICAO As Especie,
+  tv.TPV_DESCRICAO As TipoVeiculo,
+  cmo.SMB_MO_DESCRICAO As marca,
+  fa.FAQ_DESCRICAO As categoria,
+  cvc.SMB_CORES_DESCRICAO As Cor,
+  v.SMB_PASSAGEIROS_SENTADOS As [Passageiros sentados],
+  Concat(ev.SMD_ID, ' - ', tv.TPV_DESCRICAO, ' - ', clv.LYV_DESCRICAO, ' - Portas: ', Coalesce(ev.SMB_QTD_PORTAS, 0), ' - Potência Motor: ', Coalesce(ev.SMB_POTENCIA_MOTOR, 0)) As EspDescricao
+From
+  SMB_CADASTRAR_VEICULO v
+  Inner Join SMB_PESSOA p On p.PES_ID = v.PES_ID_AUTORIZATARIO
+  Left join SMB_ESPECIFICACAO_DO_VEICULO ev on ev.SMB_ESP_ID = v.SMB_ESP_ID  
+  Left Join SMB_CADASTRAR_LAYOUT_VEICULO clv On clv.SMB_CAD_ID = ev.SMB_CAD_ID
+  Left Join SMB_TIPO_DE_VEICULO tv On tv.SMB_TIP_ID = v.SMB_TIP_ID
+  Left Join SMB_CADASTRO_DE_VEICULO_ESP ve On ve.SMB_ESP_ID =
+    v.SMB_ESP_ID_ESPECIE
+  Left Join SMB_CADASTRAR_MODELO_DE_ONIBUS cmo On cmo.SMB_CAD_ID =
+    v.SMB_MODELO_ID
+  Left Join SMB_FORMA_AQUISICAO fa On fa.FAQ_ID = v.FAQ_ID
+  Left Join SMB_CADASTRO_DE_VEICULO_CORES cvc On cvc.SMB_CORES_ID = v.SMB_COR
+Where
+  v.GAU_ID =  $P{GAU_ID} ]]>
+	</queryString>
+	<field name="SMB_CA_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CA_ID"/>
+	</field>
+	<field name="gau_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="gau_id"/>
+	</field>
+	<field name="PES_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PES_ID"/>
+	</field>
+	<field name="SMB_NUMERO_ORDEM" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_NUMERO_ORDEM"/>
+	</field>
+	<field name="SMB_PLACA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_PLACA"/>
+	</field>
+	<field name="TIPO_COMBUSTIVEL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIPO_COMBUSTIVEL"/>
+	</field>
+	<field name="SMB_ANO_FABRICACAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ANO_FABRICACAO"/>
+	</field>
+	<field name="SMB_DT_AQUISICAO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_DT_AQUISICAO"/>
+	</field>
+	<field name="NotaFiscal" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NotaFiscal"/>
+	</field>
+	<field name="DataNotaFiscal" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DataNotaFiscal"/>
+	</field>
+	<field name="SMB_RESTRICOES_VENDA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_RESTRICOES_VENDA"/>
+	</field>
+	<field name="RestricaoVenda" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RestricaoVenda"/>
+	</field>
+	<field name="SMB_CAPACIDADE_PASSAGEIRO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAPACIDADE_PASSAGEIRO"/>
+	</field>
+	<field name="SomaPassageiros" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SomaPassageiros"/>
+	</field>
+	<field name="SMB_RENAVAM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_RENAVAM"/>
+	</field>
+	<field name="SMB_ESTADO_VEICULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ESTADO_VEICULO"/>
+	</field>
+	<field name="SMB_QTD_DE_PORTAS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_QTD_DE_PORTAS"/>
+	</field>
+	<field name="SMB_ANO_LICENCIADO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ANO_LICENCIADO"/>
+	</field>
+	<field name="SMB_NUMERO_CHASSI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_NUMERO_CHASSI"/>
+	</field>
+	<field name="Especie" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Especie"/>
+	</field>
+	<field name="TipoVeiculo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TipoVeiculo"/>
+	</field>
+	<field name="marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="marca"/>
+	</field>
+	<field name="categoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="categoria"/>
+	</field>
+	<field name="Cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cor"/>
+	</field>
+	<field name="Passageiros sentados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Passageiros sentados"/>
+	</field>
+	<field name="EspDescricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="EspDescricao"/>
+	</field>
+	<variable name="consulta1" class="java.lang.String">
+		<variableExpression><![CDATA["Select   SMB_PARAMETROS_GLOBAIS.PGL_BRASAO From   SMB_PARAMETROS_GLOBAIS /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="InformacoesComplementares" class="java.lang.String">
+		<variableExpression><![CDATA["Select   ti.TIC_NOME,   i.INC_DESCRICAO,   ga.GAU_ID From   SMB_INFO_COMPL i   Inner Join SMB_TIPO_INFO_COMPL ti On ti.TIC_ID = i.TIC_ID_TIPO   Inner Join SMB_GESTAO_AUTORIZATARIO ga On ga.GAU_ID = i.GAU_ID /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Veiculo" class="java.lang.String">
+		<variableExpression><![CDATA["Select   p.PES_ID,   v.SMB_NUMERO_ORDEM,   v.SMB_PLACA,   Case When v.SMB_TIPO_COMUBSTIVEL = 'G' Then 'Gasolina'     When v.SMB_TIPO_COMUBSTIVEL = 'D' Then 'Diesel'     When v.SMB_TIPO_COMUBSTIVEL = 'E' Then 'Elétrico' Else 'Não Definido'   End As TIPO_COMBUSTIVEL,   v.SMB_ANO_FABRICACAO,   v.SMB_DT_AQUISICAO,   v.SMB_NUM_NFE As NotaFiscal,   v.SMB_DATA_NFE As DataNotaFiscal,   v.SMB_RESTRICOES_VENDA,   v.SMB_CAPACIDADE_PASSAGEIRO,   v.SMB_RENAVAM,   v.SMB_ESTADO_VEICULO,   v.SMB_QTD_DE_PORTAS,   v.SMB_ANO_LICENCIADO,   v.SMB_NUMERO_CHASSI,   ve.SMB_ESP_DESCRICAO As Especie,   tv.TPV_DESCRICAO As TipoVeiculo,   cmo.SMB_MO_DESCRICAO As marca,   fa.FAQ_DESCRICAO As categoria,   cvc.SMB_CORES_DESCRICAO As Cor From   SMB_CADASTRAR_VEICULO v   Inner Join SMB_PESSOA p On p.PES_ID = v.PES_ID_AUTORIZATARIO   Left Join SMB_TIPO_DE_VEICULO tv On tv.SMB_TIP_ID = v.SMB_TIP_ID   Left Join SMB_CADASTRO_DE_VEICULO_ESP ve On ve.SMB_ESP_ID =     v.SMB_ESP_ID_ESPECIE   Left Join SMB_CADASTRAR_MODELO_DE_ONIBUS cmo On cmo.SMB_CAD_ID =     v.SMB_MODELO_ID   Left Join SMB_FORMA_AQUISICAO fa On fa.FAQ_ID = v.FAQ_ID   Left Join SMB_CADASTRO_DE_VEICULO_CORES cvc On cvc.SMB_CORES_ID = v.SMB_COR /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Entidade" class="java.lang.String">
+		<variableExpression><![CDATA["SELECT     E.ENT_BRASAO,     E.ENT_NOME,     E.ENT_END,     E.ENT_BAIRRO,     M.MUN_NOME,     U.UF_SIGLA FROM     GER_ENTIDADE E LEFT JOIN GER_MUNICIPIO M ON E.MUN_COD = M.MUN_COD     LEFT JOIN GER_UF U ON M.UF_COD = U.UF_COD "]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="19">
+			<rectangle>
+				<reportElement key="Shape11" mode="Opaque" x="0" y="0" width="552" height="18" forecolor="#000000" backcolor="#0078D7" uuid="e9c3dc78-1ac8-498b-99f9-eb05ebca080c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="Label53" mode="Transparent" x="0" y="0" width="551" height="18" forecolor="#FFFFFF" uuid="0576948c-e4d7-45a1-9b67-f5aac57b6d9f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dados do Veículo]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="87" splitType="Prevent">
+			<rectangle>
+				<reportElement key="Shape12" mode="Opaque" x="0" y="0" width="552" height="85" forecolor="#000000" backcolor="#FFFFFF" uuid="8c92e1e5-ad12-41b3-96f6-ce6378b3073c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="Label66" mode="Transparent" x="11" y="5" width="69" height="12" forecolor="#000000" uuid="f76abcfe-b3c9-4dac-943c-5ba9df19a8c3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Placa Policial:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label82" mode="Transparent" x="11" y="17" width="40" height="12" forecolor="#000000" uuid="4e8554bf-db87-47f4-8d04-5cb263fe435f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Espécie:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label83" mode="Transparent" x="394" y="30" width="64" height="12" forecolor="#000000" uuid="f11e833f-808e-4314-be64-bfbd13852031">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Combustível:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label85" mode="Transparent" x="11" y="30" width="76" height="12" forecolor="#000000" uuid="e5da294d-f226-4369-a284-4256137243c6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Ano Fabricação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label401" mode="Transparent" x="143" y="30" width="92" height="12" forecolor="#000000" uuid="8b0a1c52-8b29-412f-b07c-a089394a1987">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data da Aquisição:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label87" mode="Transparent" x="235" y="56" width="93" height="12" forecolor="#000000" uuid="45484d1c-b461-428d-9090-107edc263b88">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data da Nota Fiscal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label88" mode="Transparent" x="11" y="69" width="48" height="12" forecolor="#000000" uuid="8692a1e1-9449-44e1-b538-71d7549d1bc9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Restrição:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label89" mode="Transparent" x="497" y="5" width="17" height="12" forecolor="#000000" uuid="2f3854fe-e666-41a8-ba18-4cc893256964"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label90" mode="Transparent" x="143" y="5" width="47" height="12" forecolor="#000000" uuid="91777bb6-4e74-4ef9-a223-545ec8a60fa5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Renavam:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label91" mode="Transparent" x="317" y="5" width="43" height="12" forecolor="#000000" uuid="03894f29-5af8-4312-add8-f2334650fabe">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Chassi:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label92" mode="Transparent" x="143" y="17" width="77" height="12" forecolor="#000000" uuid="d93e298b-056a-487e-bfb1-0872bade6b71">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Especificação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label95" mode="Transparent" x="11" y="56" width="69" height="12" forecolor="#000000" uuid="bfdd2d11-b830-4138-a560-8e77e3b03ddd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[N. Nota Fiscal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label502" mode="Transparent" x="424" y="17" width="25" height="12" forecolor="#000000" uuid="6e8f8e63-e5a8-43b2-a7b5-9015d01f3efc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label97" mode="Transparent" x="492" y="42" width="29" height="12" forecolor="#000000" uuid="ca4cdd07-ca57-41f7-b19d-2eb92c0f216b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Porta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label98" mode="Transparent" x="281" y="30" width="76" height="12" forecolor="#000000" uuid="7d71224a-b9d7-4177-a013-36b51284f577">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Ano Licenciado:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText76" mode="Transparent" x="81" y="5" width="59" height="12" forecolor="#000000" uuid="def75f18-b747-49d9-9bb2-76bd55027ef8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_PLACA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText77" mode="Transparent" x="515" y="5" width="36" height="12" forecolor="#000000" uuid="d1dd6126-b3c3-4f0a-9807-64e91d0c8700"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_ESTADO_VEICULO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText78" mode="Transparent" x="54" y="17" width="86" height="12" forecolor="#000000" uuid="e64312e3-57d7-4494-a8d3-9f63d4f12ff1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Especie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText79" mode="Transparent" x="462" y="30" width="88" height="12" forecolor="#000000" uuid="9bb4b171-1907-4602-9b45-d0fcc142c9b7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_COMBUSTIVEL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText301" mode="Transparent" x="89" y="30" width="38" height="12" forecolor="#000000" uuid="27fa108b-9dc0-4682-8980-446c506b58c9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_ANO_FABRICACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText82" mode="Transparent" x="230" y="30" width="54" height="12" forecolor="#000000" uuid="1b5f109c-7100-42ea-8a0a-7152d14829b9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{SMB_DT_AQUISICAO})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText83" mode="Transparent" x="327" y="56" width="70" height="12" forecolor="#000000" uuid="a362dbe4-ac6d-494a-aa88-e93d76d92c0c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DataNotaFiscal})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText84" mode="Transparent" x="60" y="69" width="490" height="12" forecolor="#000000" uuid="6a316add-5ca4-4e3e-8119-47a5683ffe54"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_RESTRICOES_VENDA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText85" mode="Transparent" x="81" y="56" width="152" height="12" forecolor="#000000" uuid="18a6dd5f-7628-4b41-8f13-99c72b6ace7a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NotaFiscal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText87" mode="Transparent" x="521" y="42" width="28" height="12" forecolor="#000000" uuid="797f5e7e-0f3b-402c-890c-4878c130f326"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_QTD_DE_PORTAS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText88" mode="Transparent" x="451" y="17" width="100" height="12" forecolor="#000000" uuid="96776c61-217d-4aac-8f56-e56f205f0c7b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText90" mode="Transparent" x="190" y="5" width="107" height="12" forecolor="#000000" uuid="ab9f5dfa-c7d6-407f-ba98-7814d25e4c63">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_RENAVAM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText401" mode="Transparent" x="359" y="5" width="130" height="12" forecolor="#000000" uuid="6603136f-bdc7-4704-97a6-c14328f2f948"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_NUMERO_CHASSI}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText92" mode="Transparent" x="216" y="17" width="200" height="12" forecolor="#000000" uuid="d91e59f1-efbc-4b87-af84-d6be21fab9d5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EspDescricao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText93" mode="Transparent" x="359" y="30" width="27" height="12" forecolor="#000000" uuid="481acf1b-3974-4b39-829e-3c8904fdc81a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_ANO_LICENCIADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label801" mode="Transparent" x="401" y="56" width="102" height="12" forecolor="#000000" uuid="cf412f86-521e-4205-8362-12643299eadb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Restrição para Venda:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label95" mode="Transparent" x="11" y="42" width="100" height="12" forecolor="#000000" uuid="d6608fa8-90b7-41aa-b692-0fe7888f8fff">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Passageiros Sentados:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="111" y="41" width="16" height="14" uuid="0b0679d1-fb34-4878-84eb-b973fa50d1b3"/>
+				<textElement>
+					<font fontName="OpenSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Passageiros sentados}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label95" mode="Transparent" x="143" y="44" width="90" height="12" forecolor="#000000" uuid="93cc78cc-7d02-4764-acfc-1a1061012ce8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Total Passageiros:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText92" mode="Transparent" x="233" y="43" width="46" height="12" forecolor="#000000" uuid="a4c6ec7c-adc2-42ca-8077-e5903ad9bc74"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SomaPassageiros}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText87" mode="Transparent" x="506" y="56" width="30" height="12" forecolor="#000000" uuid="7f69e786-5f9c-4d15-b3b9-82f35e2dcd9b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RestricaoVenda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

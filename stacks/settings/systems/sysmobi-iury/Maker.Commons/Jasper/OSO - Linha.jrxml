@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO - Linha" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3a4d9b8-4e7d-4dc5-ba33-84415183b8fc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SYSMOBI"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="codigoLinha" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{codigoLinha}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select
+  SMB_LINHA.LNH_ID,
+  SMB_LINHA.LNH_NOME,
+  Case When SMB_LINHA.LNH_STATUS = 'I' Then 'INATIVA' When SMB_LINHA.LNH_STATUS = 'A' Then 'ATIVA' When SMB_LINHA.LNH_STATUS = 'C' Then 'CANCELADA' When SMB_LINHA.LNH_STATUS = 'E' Then 'EM CADASTRO' When SMB_LINHA.LNH_STATUS = 'T' Then 'EM TESTE' Else 'STATUS DESCONHECIDO' End As [S.LINHA],
+  SMB_LINHA.LNH_STATUS,
+  SMB_LINHA.LNH_CODIGO As [COD.LINHA],
+  SMB_LINHA.LNH_CODIGO,
+  SMB_LINHA.LNH_VERSAO_LINHA As [V.LINHA],
+  SMB_LINHA.LNH_VERSAO_LINHA,
+  SMB_LINHA.LNH_DATA_ATIVACAO,
+  SMB_LINHA.LNH_DATA_DESATIVACAO,
+  SMB_DATA_ALTERACAO,
+  SMB_LINHA.AJ_ID,
+  SMB_LINHA.TL_ID,
+  Coalesce(SMB_LINHA.LNH_TEMPO_IDA, 0) + Coalesce(SMB_LINHA.LNH_TEMPO_VOLTA, 0) As LNH_TEMPO_PERCURSO,
+  (Select Top 1 Format(i.ITI_EXTENSAO_IDA, 'N2', 'pt-BR') + ' km' From SMB_ITINERARIO i Where (i.LNH_ID = SMB_LINHA.LNH_ID) And (i.ITI_TIPO = 'SE')) As ITI_EXTENSAO_IDA,
+  (Select Top 1 Format(i.ITI_EXTENSAO_VOLTA, 'N2', 'pt-BR') + ' km' From SMB_ITINERARIO i Where (i.LNH_ID = SMB_LINHA.LNH_ID) And (i.ITI_TIPO = 'SE')) As ITI_EXTENSAO_VOLTA,
+  (Select Top 1 Format(i.ITI_EXTENSAO_IDA + i.ITI_EXTENSAO_VOLTA, 'N2', 'pt-BR') + ' km' From SMB_ITINERARIO i Where (i.LNH_ID = SMB_LINHA.LNH_ID) And (i.ITI_TIPO = 'SE')) As ITI_EXTENSAO_TOTAL,
+  SMB_LINHA.LNH_TEMPO_IDA,
+  SMB_LINHA.LNH_TEMPO_VOLTA,
+    CASE 
+    WHEN EXISTS (SELECT 1 FROM SMB_LINHA WHERE LNH_ID_MAE IS NOT NULL) 
+        THEN 
+            CASE 
+                WHEN EXISTS (SELECT 1 FROM SMB_LINHA L WHERE L.LNH_ID_MAE = SMB_LINHA.LNH_CODIGO) 
+                    THEN 'MÃE' 
+                ELSE 'FILHA' 
+            END
+    ELSE ''
+END AS LNH_HIERARQUIA,
+  SMB_ITINERARIO.ITI_TIPO,
+  SMB_AREA_JURISDICAO.AJ_DESCRICAO,
+  SMB_AREA_JURISDICAO.AJ_DESCRICAO As AREA,
+  SMB_NIVEL_TARIFARIO.NVT_DESCRICAO,
+  SMB_NIVEL_TARIFARIO.NVT_DESCRICAO As [N.TARIFARIO],
+  SMB_LINHA.LNH_ID_MAE,
+  SMB_TIPO_OPERACAO.TPO_DESCRICAO,
+  SMB_CLASSIFICACAO_FUNCIONAL.CLA_DESCRICAO,
+  SMB_CLASSIFICACAO_FUNCIONAL.CLA_DESCRICAO As [CLA.FUNC],
+  SMB_TIPO_FROTA.TPF_DESCRICAO,
+  SMB_LINHA.LNH_ORGAO_FISCALIZADOR,
+  Coalesce(SMB_LINHA.LNH_TEMPO_IDA, 0) + Coalesce(SMB_LINHA.LNH_TEMPO_VOLTA, 0) As LNH_TEMPO_PERCURSO
+From
+  SMB_LINHA
+  left Join
+  SMB_ITINERARIO On SMB_ITINERARIO.ITI_ID = (SELECT TOP 1 SMB_ITINERARIO.ITI_ID FROM SMB_ITINERARIO WHERE SMB_ITINERARIO.LNH_ID = SMB_LINHA.LNH_ID)
+  left Join
+  SMB_AREA_JURISDICAO On SMB_AREA_JURISDICAO.AJ_ID = SMB_LINHA.AJ_ID
+  left Join
+  SMB_NIVEL_TARIFARIO On SMB_NIVEL_TARIFARIO.NVT_ID = SMB_LINHA.NVT_ID
+  inner Join
+  SMB_TIPO_OPERACAO On SMB_TIPO_OPERACAO.TPO_ID = SMB_LINHA.TPO_ID
+  inner Join
+  SMB_CLASSIFICACAO_FUNCIONAL On SMB_CLASSIFICACAO_FUNCIONAL.CLA_ID = SMB_LINHA.CLA_ID
+  inner Join
+  SMB_TIPO_FROTA On SMB_TIPO_FROTA.TPF_ID = SMB_LINHA.TPF_ID
+  Where
+  SMB_LINHA.LNH_ID =   $P{codigoLinha}]]>
+	</queryString>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="LNH_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_NOME"/>
+	</field>
+	<field name="S.LINHA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="S.LINHA"/>
+	</field>
+	<field name="LNH_STATUS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_STATUS"/>
+	</field>
+	<field name="COD.LINHA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COD.LINHA"/>
+	</field>
+	<field name="LNH_CODIGO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_CODIGO"/>
+	</field>
+	<field name="V.LINHA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="V.LINHA"/>
+	</field>
+	<field name="LNH_VERSAO_LINHA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_VERSAO_LINHA"/>
+	</field>
+	<field name="LNH_DATA_ATIVACAO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_DATA_ATIVACAO"/>
+	</field>
+	<field name="LNH_DATA_DESATIVACAO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_DATA_DESATIVACAO"/>
+	</field>
+	<field name="SMB_DATA_ALTERACAO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_DATA_ALTERACAO"/>
+	</field>
+	<field name="AJ_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="AJ_ID"/>
+	</field>
+	<field name="TL_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="TL_ID"/>
+	</field>
+	<field name="LNH_TEMPO_PERCURSO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_TEMPO_PERCURSO"/>
+	</field>
+	<field name="ITI_EXTENSAO_IDA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ITI_EXTENSAO_IDA"/>
+	</field>
+	<field name="ITI_EXTENSAO_VOLTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ITI_EXTENSAO_VOLTA"/>
+	</field>
+	<field name="ITI_EXTENSAO_TOTAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ITI_EXTENSAO_TOTAL"/>
+	</field>
+	<field name="LNH_TEMPO_IDA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_TEMPO_IDA"/>
+	</field>
+	<field name="LNH_TEMPO_VOLTA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_TEMPO_VOLTA"/>
+	</field>
+	<field name="LNH_HIERARQUIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_HIERARQUIA"/>
+	</field>
+	<field name="ITI_TIPO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ITI_TIPO"/>
+	</field>
+	<field name="AJ_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="AJ_DESCRICAO"/>
+	</field>
+	<field name="AREA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="AREA"/>
+	</field>
+	<field name="NVT_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NVT_DESCRICAO"/>
+	</field>
+	<field name="N.TARIFARIO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="N.TARIFARIO"/>
+	</field>
+	<field name="LNH_ID_MAE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID_MAE"/>
+	</field>
+	<field name="TPO_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TPO_DESCRICAO"/>
+	</field>
+	<field name="CLA_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLA_DESCRICAO"/>
+	</field>
+	<field name="CLA.FUNC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLA.FUNC"/>
+	</field>
+	<field name="TPF_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TPF_DESCRICAO"/>
+	</field>
+	<field name="LNH_ORGAO_FISCALIZADOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ORGAO_FISCALIZADOR"/>
+	</field>
+	<field name="COLUMN_32" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_TEMPO_PERCURSO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="143" splitType="Stretch">
+			<rectangle>
+				<reportElement x="303" y="76" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="80a4c82d-94eb-4b88-84b3-476e196c2ba9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="2" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="851df5a3-8752-4022-a1ba-add73216eec1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-7" y="3" width="562" height="14" forecolor="#FFFFFF" uuid="402ed587-cd5e-471f-9844-3e421f6cfd7a"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINHA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-10" y="40" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="820aacba-59c7-4b53-b921-17d1b7cca8be">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-10" y="40" width="110" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="766a91c7-3628-424a-8423-191f3dbce3c2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Código/Linha]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="40" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="6c16bf01-549d-4c62-9122-83bfe7bf39a1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="211" y="40" width="350" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="71815ba5-1279-493e-b328-a36fd7937885"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="58" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="482d05e0-c2cd-49d0-a2d5-49990500d58f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-10" y="58" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="95fadb9b-815d-4145-a2a6-427cfa0fb1a4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Data/Ofício Criação:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="58" width="91" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e812a8ab-d6b8-46b3-b1ac-0439338e0210"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="58" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="72c45b46-bf79-4dd1-8658-8b6d49af5f04">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="58" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="9ff23d9e-9d5f-419a-b1d9-0e9ee183b828">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Data/Ofício Desativação:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-10" y="76" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="8f0943bd-417c-495b-89da-a94ee618464b"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-10" y="76" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="a8677ab5-f796-41f9-9794-067d037f538c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Km / Tempo min (Ida-Volta)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="76" width="44" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e843fab7-fe72-484c-a5af-bb8455a56d75">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="164" y="76" width="45" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="2b90d0c1-04f6-4ce7-950e-3f0de17c7009">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="211" y="58" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="5dc8e1cf-93ad-43d2-b189-3e050ec2cc94"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="211" y="76" width="44" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="453f189f-ee18-4a33-8c32-956e3231db11">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="257" y="76" width="44" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="1226e1db-2b80-4cd5-8743-26f977a48a52">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="431" y="58" width="69" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f5f7f5a9-71b5-4016-a048-919bdb48e7c8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="76" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="d0561f93-553d-4856-957d-027abaf67367">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Km / Tempo min (Total):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-10" y="94" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="33e3a382-115c-44c5-bacd-6cafa4598791">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-10" y="93" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="5951cce1-df6b-4208-bab4-45f8c18f85a6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Tipo/Hierarquia]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="94" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="7f7e2610-e200-49cb-b317-1cd5a5a0bbdd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="111" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="43cc853b-5db5-44ce-9416-c8664de5535f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-10" y="111" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="a46366c2-f840-4131-991e-b2ea6303ed6d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jurisdição: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="111" width="183" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="fe246aee-79df-40ec-b640-e5284b63293d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="111" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="4efd7e42-b798-496c-8c6e-9e3c7f7e1834">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="94" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="b3154925-fc15-46ab-9dd3-d29c5a243886"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="94" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="75312196-179c-4045-815c-375e06914686"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Classificação Funcional: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="112" width="124" height="14" forecolor="#FFFCFC" backcolor="#080707" uuid="99f5d4b5-092c-4e5e-a8bf-69245b038df0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Órgão Fiscalizador: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="431" y="94" width="130" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="2a3bb82a-9c3d-4746-95f6-4cb79c1951d8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="431" y="111" width="130" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e7f79336-0288-4fcb-a749-829ab2a9c5be">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="502" y="58" width="59" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c55caba9-0b21-406b-9787-4b5df72e5099">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="431" y="76" width="69" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="72e7a574-f1ae-4610-9d78-4866693867b8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="502" y="76" width="59" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f9563f18-40d4-499b-a361-ea3fa272f5f9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="211" y="94" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="0bb41ea7-169b-4985-97a5-cc7d17e8fc95"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="128" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="d6b6d120-5f19-4a56-9e81-2a71a37f0a02">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="128" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="270b934c-d123-4df7-940c-b81923979733">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nível tarifário]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="128" width="183" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="24b41579-92f0-45d6-b4d6-1a864e49ea50">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="128" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3017bfb8-60d9-4db1-ae32-a40f974ea746">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="129" width="124" height="14" forecolor="#FFFCFC" backcolor="#080707" uuid="19fa433d-3c3b-41a7-b532-44c258176e61">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de Programação]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="431" y="128" width="130" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="78b1a324-2369-4542-ad02-fd555a5f1303">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="23" width="125" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="23aaa7eb-5e7b-45df-8f2f-f5a1cb649d86">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="431" y="23" width="130" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="7ba75b5d-cebd-4d88-83fa-482d8facf84c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="118" y="23" width="183" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e3337830-2170-4af8-9dba-2e4872774298"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="303" y="23" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="73a0630b-9f61-400f-8193-d2632a6a19e4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Data do Status:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-10" y="23" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="02d1d2dd-3eb7-4baa-b296-2af8307125c8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-8" y="23" width="110" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="bc8e9009-74d3-4558-8525-f48c1a380972">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Status:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="23" width="183" height="15" forecolor="#050505" uuid="cb8bbc4d-55e0-4ef7-84e3-580aa7183e42"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{S.LINHA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="40" width="90" height="15" uuid="da458a85-3f32-49b8-b419-5e57ec11086e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COD.LINHA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="214" y="40" width="334" height="15" uuid="f5f08fc0-bb73-49ac-8acc-8458e38d4602"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_NOME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="76" width="44" height="15" uuid="2102b81b-90b3-442a-bc76-ea376769bf18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ITI_EXTENSAO_IDA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="164" y="76" width="45" height="15" uuid="c7619446-b240-483b-be1a-d8c77606ed63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ITI_EXTENSAO_VOLTA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="76" width="44" height="15" uuid="886bfeb0-1c63-4876-ba46-06891fe41801"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_TEMPO_IDA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="257" y="76" width="44" height="15" uuid="b082b948-cc98-4949-bc7d-e2623ed1e392"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_TEMPO_VOLTA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="502" y="76" width="59" height="15" uuid="31e9fcb5-ebc5-4405-9576-38680e46565f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_TEMPO_PERCURSO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="94" width="130" height="15" uuid="d55d68f7-df1a-41cb-b520-8519ef6c726e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CLA.FUNC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="111" width="180" height="15" uuid="1d998ce9-bc03-430d-967d-1effdb464b84"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="128" width="100" height="15" uuid="3b0fa723-fade-40bb-8289-c96e0cfb7e98"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NVT_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="112" width="130" height="14" uuid="fefc3ad4-7b95-42c0-8777-cb9cb8a62b7d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_ORGAO_FISCALIZADOR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="129" width="124" height="14" uuid="7564ce29-8c99-4140-95ba-3db0af89ee33"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TPF_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="76" width="68" height="15" uuid="142cd397-9897-417f-8e99-bcbb16f820e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ITI_EXTENSAO_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="94" width="88" height="15" uuid="e26487af-dd20-4f6b-b5de-a17622fbcb8d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{LNH_HIERARQUIA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="23" width="130" height="15" uuid="90b222f3-4f8b-4812-92bb-3656c9d5b1b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{SMB_DATA_ALTERACAO})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

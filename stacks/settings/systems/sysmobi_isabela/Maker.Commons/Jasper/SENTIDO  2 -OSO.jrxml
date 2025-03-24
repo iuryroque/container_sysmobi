@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  -- Horário de início e fim para dias úteis
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOINICIO, 108) 
+    ELSE '' 
+  END AS dia_util,
+
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOFIM, 108) 
+    ELSE '' 
+  END AS fim_dia_util,
+
+  -- Horário de início e fim para sábados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOINICIO, 108) 
+    ELSE '' 
+  END AS inicio_sabado,
+
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOFIM, 108) 
+    ELSE '' 
+  END AS fim_sabado,
+
+  -- Horário de início e fim para domingos e feriados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOINICIO, 108) 
+    ELSE '' 
+  END AS domingos_feriados,
+
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN CONVERT(VARCHAR(5), PLH.PAR_HORARIOFIM, 108) 
+    ELSE '' 
+  END AS fim_domingos_feriados,
+  
+  -- Intervalo para dias úteis
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN PLH.PAR_INTERVALO 
+    ELSE NULL 
+  END AS interv_dia_util,
+
+  -- Intervalo para sábados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN PLH.PAR_INTERVALO 
+    ELSE NULL 
+  END AS interv_sabado,
+
+  -- Intervalo para domingos e feriados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN PLH.PAR_INTERVALO 
+    ELSE NULL 
+  END AS interv_domingos_feriados,
+
+  -- Percurso para dias úteis
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN PLH.PAR_PERCURSO 
+    ELSE NULL 
+  END AS perc_dia_util,
+
+  -- Percurso para sábados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN PLH.PAR_PERCURSO 
+    ELSE NULL 
+  END AS perc_sabado,
+
+  -- Percurso para domingos e feriados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN PLH.PAR_PERCURSO 
+    ELSE NULL 
+  END AS perc_domingos_feriados,
+
+  -- Quantidade de viagens para dias úteis
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN COUNT(PLH.ID) 
+    ELSE NULL 
+  END AS quantidade_viagens_dia_util,
+
+  -- Quantidade de viagens para sábados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN COUNT(PLH.ID) 
+    ELSE NULL 
+  END AS quantidade_viagens_sabado,
+
+  -- Quantidade de viagens para domingos e feriados
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN COUNT(PLH.ID) 
+    ELSE NULL 
+  END AS quantidade_viagens_domingos_feriados,
+
+  -- T. Equipamento para dias úteis, com primeira letra maiúscula
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'U' THEN 
+      UPPER(SUBSTRING(TV.TPV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(TV.TPV_DESCRICAO, 2, LEN(TV.TPV_DESCRICAO) - 1)) + ' ' + 
+      UPPER(SUBSTRING(LV.LYV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(LV.LYV_DESCRICAO, 2, LEN(LV.LYV_DESCRICAO) - 1))
+    ELSE NULL 
+  END AS t_equipamento_dia_util,
+
+  -- T. Equipamento para sábados, com primeira letra maiúscula
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'S' THEN 
+      UPPER(SUBSTRING(TV.TPV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(TV.TPV_DESCRICAO, 2, LEN(TV.TPV_DESCRICAO) - 1)) + ' ' + 
+      UPPER(SUBSTRING(LV.LYV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(LV.LYV_DESCRICAO, 2, LEN(LV.LYV_DESCRICAO) - 1))
+    ELSE NULL 
+  END AS t_equipamento_sabado,
+
+  -- T. Equipamento para domingos e feriados, com primeira letra maiúscula
+  CASE 
+    WHEN PLH.PAR_TIPODEDIA = 'D' THEN 
+      UPPER(SUBSTRING(TV.TPV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(TV.TPV_DESCRICAO, 2, LEN(TV.TPV_DESCRICAO) - 1)) + ' ' + 
+      UPPER(SUBSTRING(LV.LYV_DESCRICAO, 1, 1)) + LOWER(SUBSTRING(LV.LYV_DESCRICAO, 2, LEN(LV.LYV_DESCRICAO) - 1))
+    ELSE NULL 
+  END AS t_equipamento_domingos_feriados,
+   PLH.PAR_FROTA as frota
+
+FROM
+  SMB_PARAMETROS_LINHA_HORARIOS PLH
+  INNER JOIN SMB_PARAMETROS_LINHA PL ON PL.ID = PLH.ID_PARAMETRO_LINHA
+  INNER JOIN SMB_LINHA ON SMB_LINHA.LNH_ID = PL.LNH_ID
+  LEFT JOIN SMB_ESPECIFICACAO_DO_VEICULO EV ON PLH.SMB_ESP_ID = EV.SMB_ESP_ID
+  LEFT JOIN SMB_TIPO_DE_VEICULO TV ON EV.SMB_TIP_ID = TV.SMB_TIP_ID
+  LEFT JOIN SMB_CADASTRAR_LAYOUT_VEICULO LV ON EV.SMB_CAD_ID = LV.SMB_CAD_ID
+
+WHERE
+  SMB_LINHA.LNH_ID =$P{Cod} and
+     PLH.PAR_SENTIDO = 2
+GROUP BY
+  PLH.PAR_SENTIDO,
+  PLH.PAR_INTERVALO,
+  PLH.PAR_PERCURSO,
+  PLH.PAR_TERMINAL,
+  PLH.PAR_FROTA,
+  PLH.PAR_NUMEROSO,
+  PLH.ID,
+  PLH.ID_PARAMETRO_LINHA,
+  PLH.SMB_ESP_ID,
+  PLH.PAR_TIPODEDIA,
+  PLH.PAR_HORARIOINICIO,
+  PLH.PAR_HORARIOFIM,
+  TV.TPV_DESCRICAO,
+  LV.LYV_DESCRICAO,
+  EV.SMB_QTD_PORTAS,
+  EV.SMB_POTENCIA_MOTOR,
+  SMB_LINHA.LNH_ID]]>
+	</queryString>
+	<field name="dia_util" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dia_util"/>
+	</field>
+	<field name="fim_dia_util" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fim_dia_util"/>
+	</field>
+	<field name="inicio_sabado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="inicio_sabado"/>
+	</field>
+	<field name="fim_sabado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fim_sabado"/>
+	</field>
+	<field name="domingos_feriados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="domingos_feriados"/>
+	</field>
+	<field name="fim_domingos_feriados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fim_domingos_feriados"/>
+	</field>
+	<field name="interv_dia_util" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="interv_dia_util"/>
+	</field>
+	<field name="interv_sabado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="interv_sabado"/>
+	</field>
+	<field name="interv_domingos_feriados" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="interv_domingos_feriados"/>
+	</field>
+	<field name="perc_dia_util" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="perc_dia_util"/>
+	</field>
+	<field name="perc_sabado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="perc_sabado"/>
+	</field>
+	<field name="perc_domingos_feriados" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="perc_domingos_feriados"/>
+	</field>
+	<field name="quantidade_viagens_dia_util" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens_dia_util"/>
+	</field>
+	<field name="quantidade_viagens_sabado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens_sabado"/>
+	</field>
+	<field name="quantidade_viagens_domingos_feriados" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens_domingos_feriados"/>
+	</field>
+	<field name="t_equipamento_dia_util" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="t_equipamento_dia_util"/>
+	</field>
+	<field name="t_equipamento_sabado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="t_equipamento_sabado"/>
+	</field>
+	<field name="t_equipamento_domingos_feriados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="t_equipamento_domingos_feriados"/>
+	</field>
+	<field name="frota" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="frota"/>
+	</field>
+	<title>
+		<band height="55">
+			<rectangle>
+				<reportElement x="386" y="24" width="190" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="9be83596-28a2-4e89-b3fc-66f4a5aca88a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="197" y="24" width="186" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="07171ffa-b387-4993-940d-a2162655a71d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="58" y="40" width="22" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="76e3d533-9ca4-45e0-bbe5-b5096f2bce63">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="58" y="41" width="22" height="14" forecolor="#FFFFFF" uuid="6fd68149-0b0f-4bd1-9ca0-98c29d758a98">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interv]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="81" y="40" width="26" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="1b4dce1a-2f23-4ce1-9962-2d852f7f86a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="81" y="41" width="25" height="14" forecolor="#FFFFFF" uuid="75992f3b-b6bb-47c7-859f-751794e6d59a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T. Perc]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="108" y="40" width="19" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="dc343998-ddec-4935-ad9e-5d92c4869929">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="108" y="41" width="19" height="14" forecolor="#FFFFFF" uuid="73c7e51e-bade-49ea-847f-ae9b5d1ed2c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frota]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="128" y="40" width="40" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="e866657c-4013-4416-84c4-07ecbed03384">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="128" y="41" width="40" height="14" forecolor="#FFFFFF" uuid="3a322ac3-afde-4680-84b6-cef639ec36b5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Veículo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="169" y="40" width="25" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="62f5e4c7-c527-45d1-982f-0aca129d7a03">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement stretchType="ElementGroupHeight" x="169" y="41" width="25" height="14" forecolor="#FFFFFF" uuid="76cb01c7-1521-4660-8c12-c94937e4fdcd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° Viag.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="7" width="562" height="14" forecolor="#FFFFFF" uuid="0e7cbebf-12dd-4cf6-bed1-ec24d73b42ee"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINHA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="7" width="570" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3960551c-bce5-47d0-a802-08f4389b25b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="8" y="7" width="568" height="14" forecolor="#FFFFFF" uuid="cf8d790e-3409-44b6-9a65-22d05c075d35"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PARÂMETROS OPERACIONAIS (SENTIDO 2)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="24" width="188" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f67795a7-efa1-4e58-8852-22195500d89f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="24" width="188" height="14" forecolor="#FFFFFF" uuid="98c6e5d6-e1c2-4b23-a84e-baa9108be057"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIAS ÚTEIS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="40" width="51" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="6cab291d-e35a-43b7-9867-534701dc1608">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="41" width="50" height="14" forecolor="#FFFFFF" uuid="b05e83c5-eb4a-4e4c-8d4c-65e5c4541d63">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faixa Horária]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="24" width="184" height="14" forecolor="#FFFFFF" uuid="c84b8e03-5f69-4108-9c49-49502fcf9d32"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SÁBADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="25" width="190" height="14" forecolor="#FFFFFF" uuid="889c6abd-cc8d-4100-9ede-41801874d6bf"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOMINGOS E FERIADOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="249" y="40" width="22" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="acf38d1e-89cd-43e5-9322-365065cedfbd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="250" y="41" width="21" height="14" forecolor="#FFFFFF" uuid="52cbec8a-1956-4ba7-b9c5-6b36b267bdaa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interv]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="272" y="40" width="26" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="844e6308-163f-4c46-a1a0-2afec9a2fb67">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="272" y="41" width="26" height="14" forecolor="#FFFFFF" uuid="fd4834d4-bcad-40f6-be29-9ad1854051ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T. Perc]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="299" y="40" width="19" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="5c0b5981-7edc-4867-843d-295480103f2c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="299" y="41" width="19" height="14" forecolor="#FFFFFF" uuid="a494fd6a-0542-415d-862c-e0969c42d4b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frota]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="197" y="40" width="51" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="367625c6-c5bb-40fe-b134-36a5d26b0622">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="197" y="41" width="51" height="14" forecolor="#FFFFFF" uuid="648989a6-537d-4b19-b272-a292cc15df27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faixa Horária]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="438" y="40" width="22" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="37bb8cef-0012-47ca-80c9-8a45b0746c30">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="438" y="40" width="22" height="15" forecolor="#FFFFFF" uuid="dbd58dd5-0f7d-47f2-ac7b-ec521246dba0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interv]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="461" y="40" width="26" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="6ebba42b-9efc-49d3-9555-110be80d145e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="461" y="40" width="26" height="15" forecolor="#FFFFFF" uuid="4326c87b-5657-442a-a5dc-37104a7d3d32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T. Perc]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="488" y="40" width="19" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="0ed498f2-b480-44f1-ae7f-8766355d331b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="488" y="41" width="19" height="14" forecolor="#FFFFFF" uuid="ec42706a-73b2-409d-9791-c1de1e27aa46"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frota]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="386" y="40" width="51" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3ce86249-9cba-4761-957d-07b8e2217fea">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="386" y="40" width="51" height="15" forecolor="#FFFFFF" uuid="7f2159a9-0424-44d5-bc23-6e4112b8953d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faixa Horária]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="319" y="40" width="40" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="998e73b2-c770-45f8-bbd5-4061056f50c4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="319" y="41" width="40" height="14" forecolor="#FFFFFF" uuid="156c2e0e-4909-4ce6-bf78-41ac82aab3c7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Veículo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="360" y="40" width="23" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="c4864ae5-8c70-4fc0-9617-b43598483658">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement stretchType="ElementGroupHeight" x="360" y="41" width="22" height="14" forecolor="#FFFFFF" uuid="8181a116-1779-443e-8d66-417723c61770">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° Viag]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="508" y="40" width="44" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="dd9e5c73-4c24-4762-af07-b4008ac1e662">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="508" y="41" width="44" height="14" forecolor="#FFFFFF" uuid="286f5863-66c2-42ac-aba9-6589c4e200e0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Veículo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="553" y="40" width="23" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="72a313b3-46a1-40cf-a32b-5e36f318d09f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement stretchType="ElementGroupHeight" x="553" y="41" width="23" height="14" forecolor="#FFFFFF" uuid="26045567-ae4d-4d7d-ab43-9e4f3eb8a21d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° Viag]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="17">
+			<rectangle>
+				<reportElement x="6" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f75dd83d-23ba-47f7-b6e3-407bcf9d11df">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="32" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="133f3548-7fc4-4ab5-af78-6bd5560fea16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="58" y="2" width="22" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="6e4784a9-af5b-4cf1-b3ea-70fb8280d36d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="81" y="2" width="26" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c7033ba7-21eb-471b-bb62-aad80ae9a16b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="108" y="2" width="19" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="01111e02-1264-4cf3-8b50-6f21fdd0bf4d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement stretchType="ElementGroupHeight" x="128" y="2" width="40" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="7a3be0b0-c5cd-4083-ae28-f1fc3572f08b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="169" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="10ceb6d6-d958-4053-8669-4cc6e7bf45d8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="197" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="0fc72f91-a2a7-440e-87fa-af2ecc92a3bf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="223" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="98e8dc02-9e76-49da-bc09-6d927a6f797f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="249" y="2" width="22" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="9fc03ff0-b2e5-4d1d-841c-11463f1c8034">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="272" y="2" width="26" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a1a8e701-919f-4ea5-8366-089cb79204c6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="299" y="2" width="19" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c8efa712-90fb-4915-b39c-71936e61e55c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="386" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="61aea122-e0a5-4094-8a01-12171a9327fc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="412" y="2" width="25" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="eab199cf-56c1-4a9c-b5dd-3d53c6bfbce8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="438" y="2" width="22" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="7c53952a-3080-4a1b-8283-49df9398f56e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="2" width="26" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="771f0ed7-1e96-4f29-903d-cb2255d66586">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="488" y="2" width="19" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="120450b9-f5dd-4299-9af0-c350ac7088ce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="6" y="2" width="26" height="15" uuid="63af74fd-88b6-44fe-96ec-4f6148b029b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="32" y="2" width="24" height="15" uuid="d7528200-3f74-4c57-8231-15da4f3837f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fim_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="2" width="22" height="15" uuid="1efa1159-f5ce-4c33-b219-3f09e7ecc6e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interv_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="81" y="2" width="25" height="15" uuid="1f979817-60af-49f9-ac0b-483b0272be17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{perc_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="169" y="2" width="25" height="15" uuid="4c2a6392-b850-46c2-8b5f-5749033688a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade_viagens_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="128" y="2" width="40" height="15" uuid="b35a8ed7-2a80-48c7-ace1-03dd13621314"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_equipamento_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="197" y="2" width="25" height="15" uuid="83f1db20-8ae3-4e67-ac52-5e5362118a83"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inicio_sabado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="2" width="25" height="15" uuid="871e7ddf-e859-434c-8336-6a66a97d403e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fim_sabado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="249" y="3" width="22" height="14" uuid="34fcef7a-0e97-4c2c-8de7-b9d8f2b80a6e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interv_sabado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="272" y="3" width="26" height="14" uuid="3c540cb7-a407-45de-92be-2f0119e41712"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{perc_sabado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="386" y="2" width="25" height="15" uuid="90ce992e-a7b2-46f7-a549-26daf07531e1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{domingos_feriados}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="412" y="2" width="25" height="15" uuid="984e03aa-e42e-4122-abb5-6935fcaa22df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fim_domingos_feriados}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="2" width="22" height="15" uuid="52f343d7-7940-44d3-bcce-5b1a34e0be40">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interv_domingos_feriados}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="461" y="2" width="26" height="15" uuid="d72abcc0-7d73-43b2-a221-df40190d6f6f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{perc_domingos_feriados}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement stretchType="ElementGroupHeight" x="319" y="2" width="40" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="0d2c820d-22e8-48f4-a26d-b066ca4f1a19">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="360" y="2" width="23" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="41371e3a-9d0c-4527-86a5-a36e9afacb35">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="360" y="2" width="23" height="15" uuid="b9175694-90a2-4676-ac0f-c8f51f15b5fa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade_viagens_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="319" y="2" width="40" height="15" uuid="7e5f0dcd-e5b7-4228-b7c2-d6c088745d14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_equipamento_dia_util}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement stretchType="ElementGroupHeight" x="508" y="2" width="44" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="d3c93adb-2cf4-4d73-9576-07ac48598e16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="553" y="2" width="23" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="cabd3d05-3a43-4859-9ce4-4e902f2e4069">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="553" y="2" width="23" height="15" uuid="75cd9d2e-2431-4456-bdfa-758870842c02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade_viagens_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="508" y="2" width="44" height="15" uuid="c27eb1ae-78ce-477a-b7d7-bc8e8e434563"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_equipamento_dia_util}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="108" y="2" width="19" height="15" uuid="c2b4c63a-8431-44fb-b5dd-e2a3e5f589b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frota}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="2" width="19" height="15" uuid="3cc52a66-ae4e-4bb0-b6f2-ddac793c597e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frota}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="488" y="2" width="19" height="15" uuid="427d718e-fd02-4894-9589-cbfd1ecb280f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frota}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

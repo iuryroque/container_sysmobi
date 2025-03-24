@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Garagem - OSO" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="694a89d9-a6b3-43fc-86d7-f217ddb204c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  MAX(SMB_PARAMETROS_LINHA.ID) AS cod,
+  MAX(SMB_PARAMETROS_LINHA.PAR_NUMEROSO) AS numero_oso,
+  MAX(SMB_PARAMETROS_LINHA.PAR_INICIO) AS PAR_INICIO,
+  MAX(SMB_PARAMETROS_LINHA.PAR_FIM) AS PAR_FIM,
+  MAX(SMB_PARAMETROS_LINHA.PAR_ESPECIFICAO) AS PAR_ESPECIFICAO,
+  MAX(SMB_PARAMETROS_LINHA.PAR_MENSAGEM) AS mensagem,
+  MAX(SMB_PARAMETROS_LINHA.PAR_GARAGEM) AS cod_garagem,
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA) AS PAR_TERMINAL_PARTIDA,
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA) AS PAR_TERMINAL_CHEGADA,
+  MAX(SMB_PARAMETROS_LINHA.PAR_INFORMACOES) AS PAR_INFORMACOES,
+  MAX(SMB_PARAMETROS_LINHA.GAU_ID) AS GAU_ID,
+  MAX(SMB_PARAMETROS_LINHA.LNH_ID) AS LNH_ID,
+  MAX(SMB_PARAMETROS_LINHA.PAR_NUMEROSO_ORIGINAL) AS PAR_NUMEROSO_ORIGINAL,
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA_2) AS PAR_TERMINAL_PARTIDA_2,
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA_2) AS PAR_TERMINAL_CHEGADA_2,
+  MAX(SMB_GARAGEM.GAR_ID) AS GAR_ID,
+  MAX(SMB_GARAGEM.GAR_CODIGO_GARAGEM) AS GAR_CODIGO_GARAGEM,
+  MAX(SMB_GARAGEM.GAR_NOME_GARAGEM) AS GAR_NOME_GARAGEM,
+  MAX(SMB_TIPO_DE_VEICULO.TPV_DESCRICAO) AS TPV_DESCRICAO,
+  MAX(SMB_TIPO_DE_VEICULO.TPV_OBSERVACAO) AS TPV_OBSERVACAO,
+  MAX(SMB_CADASTRAR_VEICULO.SMB_CA_ID) AS SMB_CA_ID,
+  MAX(SMB_CADASTRAR_VEICULO.SMB_PASSAGEIRO_EM_PE) AS SMB_PASSAGEIRO_EM_PE,
+  MAX(SMB_CADASTRAR_VEICULO.SMB_PASSAGEIROS_SENTADOS) AS SMB_PASSAGEIROS_SENTADOS,
+  MAX(SMB_CADASTRAR_VEICULO.SMB_OBSERVACAO) AS SMB_OBSERVACAO
+FROM
+  SMB_PARAMETROS_LINHA
+  INNER JOIN SMB_GARAGEM ON SMB_PARAMETROS_LINHA.PAR_GARAGEM = SMB_GARAGEM.GAR_ID
+  INNER JOIN SMB_LINHA ON SMB_LINHA.LNH_ID = SMB_PARAMETROS_LINHA.LNH_ID
+  INNER JOIN SMB_TIPO_DE_VEICULO ON SMB_TIPO_DE_VEICULO.SMB_TIP_ID = SMB_LINHA.TPV_ID
+  INNER JOIN SMB_CADASTRAR_VEICULO ON SMB_CADASTRAR_VEICULO.GAU_ID = SMB_PARAMETROS_LINHA.GAU_ID
+WHERE 
+  SMB_PARAMETROS_LINHA.LNH_ID = $P{Cod}
+GROUP BY 
+  SMB_PARAMETROS_LINHA.LNH_ID]]>
+	</queryString>
+	<field name="cod" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cod"/>
+	</field>
+	<field name="numero_oso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="numero_oso"/>
+	</field>
+	<field name="PAR_INICIO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_INICIO"/>
+	</field>
+	<field name="PAR_FIM" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_FIM"/>
+	</field>
+	<field name="PAR_ESPECIFICAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_ESPECIFICAO"/>
+	</field>
+	<field name="mensagem" class="java.sql.Clob">
+		<property name="com.jaspersoft.studio.field.label" value="mensagem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_LINHA"/>
+	</field>
+	<field name="cod_garagem" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cod_garagem"/>
+	</field>
+	<field name="PAR_TERMINAL_PARTIDA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_TERMINAL_PARTIDA"/>
+	</field>
+	<field name="PAR_TERMINAL_CHEGADA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_TERMINAL_CHEGADA"/>
+	</field>
+	<field name="PAR_INFORMACOES" class="java.sql.Clob">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_INFORMACOES"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_LINHA"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="PAR_NUMEROSO_ORIGINAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_NUMEROSO_ORIGINAL"/>
+	</field>
+	<field name="PAR_TERMINAL_PARTIDA_2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_TERMINAL_PARTIDA_2"/>
+	</field>
+	<field name="PAR_TERMINAL_CHEGADA_2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_TERMINAL_CHEGADA_2"/>
+	</field>
+	<field name="GAR_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAR_ID"/>
+	</field>
+	<field name="GAR_CODIGO_GARAGEM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="GAR_CODIGO_GARAGEM"/>
+	</field>
+	<field name="GAR_NOME_GARAGEM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="GAR_NOME_GARAGEM"/>
+	</field>
+	<field name="TPV_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TPV_DESCRICAO"/>
+	</field>
+	<field name="TPV_OBSERVACAO" class="java.sql.Clob">
+		<property name="com.jaspersoft.studio.field.label" value="TPV_OBSERVACAO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_TIPO_DE_VEICULO"/>
+	</field>
+	<field name="SMB_CA_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CA_ID"/>
+	</field>
+	<field name="SMB_PASSAGEIRO_EM_PE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_PASSAGEIRO_EM_PE"/>
+	</field>
+	<field name="SMB_PASSAGEIROS_SENTADOS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_PASSAGEIROS_SENTADOS"/>
+	</field>
+	<field name="SMB_OBSERVACAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_OBSERVACAO"/>
+	</field>
+	<background>
+		<band height="21" splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="94" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle>
+				<reportElement x="5" y="4" width="572" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="6f5cb183-6f26-431e-add9-20cb05025e46">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="5" width="562" height="15" forecolor="#FFFFFF" uuid="59f6c510-1243-4243-95b3-baa50ef00c33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VEÍCULO / GARAGEM / PLATAFORMA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="5" y="21" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="fcd885c9-af0a-4233-bc95-2c32dea1416c"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="21" width="105" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="9920f450-6053-43ec-b2d1-bbf50e2c54db"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Garagem / Cód.:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="21" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="4c470f3d-a1d1-474b-975b-38b366bf1045"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="5" y="39" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="d6a55465-c5b3-4d3a-badf-106a9aabd962"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="39" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="1fd8f1fb-181a-47e4-9734-31b78beecc40"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Passageiros (Pé/Sent./Total):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="39" width="57" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="ac37ba8a-e6ed-4a6f-84a6-3c867ec7484b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="5" y="57" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="7dcd61b5-400f-4c5f-9748-9ef7107991af">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="5" y="57" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="421970f5-f43d-4b46-b827-95dc6648316e"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Pré Embarque:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="57" width="182" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a4bf012d-38e9-42eb-b66a-51eef4c2081c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="225" y="21" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="ec859a74-d4fe-4a08-8dd8-b3f7dd705818"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="317" y="21" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="fd325148-f783-4611-aad0-ff7d3a2ec5b3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="318" y="21" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="6cc9dcd0-0686-4c12-8043-c213be806c99"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Tipo de Veículo min:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="317" y="39" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f7897274-0319-416d-ac75-030e89a3eb05"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="317" y="39" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="3fc3fb29-f597-44a5-99a2-2d9ceb518b42"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Plataforma/Ponto Parada:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="445" y="39" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="599ade9a-0493-48b8-ac0d-bbaa51e8cc78"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="445" y="21" width="132" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c449bfda-4530-4c57-941d-1425562ec170"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="512" y="39" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e1cf75d8-d430-40db-a0e6-0943d34a1727"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="193" y="39" width="57" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="04e6c5c2-25b1-4d28-8949-f4a6a1d4381e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="253" y="39" width="62" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="4f2a15a1-3c57-441e-b806-154ccb93921a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="317" y="57" width="260" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="440ac57f-c890-48cb-993e-460df5f3eabf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="5" y="75" width="126" height="19" forecolor="#FCFAFA" backcolor="#767171" uuid="822e7c78-d8ee-447f-87d8-65b3e7b1b87c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="5" y="77" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="1c2894cc-1353-4d75-8678-01e95ed63ff7"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Info. Complementares:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="75" width="444" height="19" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a3768f07-6a7a-4184-92bb-9a7071ac4bfb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="133" y="20" width="90" height="16" uuid="4dee6c83-70e4-48b9-acb1-2d4fd18c1801"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GAR_CODIGO_GARAGEM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="225" y="21" width="90" height="15" uuid="3ac9c150-63f7-4d78-8fcc-1eff070289d9"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GAR_NOME_GARAGEM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="39" width="65" height="15" uuid="2dd28c72-fc1b-468a-9b54-82722c33f74c"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAR_TERMINAL_PARTIDA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="512" y="39" width="65" height="15" uuid="2d967867-8a10-4fa4-a94a-1762236964b1"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAR_TERMINAL_CHEGADA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="133" y="39" width="57" height="15" uuid="7d512775-b758-4c93-9203-494344625449"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_PASSAGEIRO_EM_PE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="193" y="39" width="57" height="15" uuid="ad3f674c-224b-4613-a25d-7b692eb7d018"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SMB_PASSAGEIROS_SENTADOS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="21" width="132" height="15" uuid="a27f9dce-f0c6-4354-8218-f65b01836503"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TPV_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="254" y="39" width="60" height="15" uuid="4c21a298-6bdb-46c9-95b0-4018b5ecb251"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{SMB_PASSAGEIRO_EM_PE} == null || $F{SMB_PASSAGEIRO_EM_PE}.isEmpty() ? 0 : Integer.parseInt($F{SMB_PASSAGEIRO_EM_PE})) + ($F{SMB_PASSAGEIROS_SENTADOS} == null || $F{SMB_PASSAGEIROS_SENTADOS}.isEmpty() ? 0 : Integer.parseInt($F{SMB_PASSAGEIROS_SENTADOS}))
+]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

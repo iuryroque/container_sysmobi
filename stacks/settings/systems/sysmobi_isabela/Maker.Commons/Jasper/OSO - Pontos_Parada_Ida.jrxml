@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO - Pontos Parada" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="694a89d9-a6b3-43fc-86d7-f217ddb204c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQL Server"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<subDataset name="ListaPontoParadas" uuid="2a89c462-b43e-4c85-963d-e93cef0887d9">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQL Server"/>
+		<parameter name="sentido" class="java.lang.String"/>
+		<parameter name="codigoLinha" class="java.lang.Integer"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+	SLPP.PTP_CODIGO_PONTO AS CODIGO,
+	E.END_ENDERECO AS ENDERECO,
+	SPP.PTP_LATITUDE,
+	SPP.PTP_LONGITUDE,
+	SLPP.LPP_SENTIDO,
+	E.END_ID 
+FROM 
+	SMB_LINHA_PONTO_PARADA SLPP
+INNER JOIN
+	SMB_PONTO_PARADA SPP on SLPP.PTP_CODIGO_PONTO = SPP.PTP_CODIGO_PONTO
+LEFT JOIN 
+	GER_ENDERECO E ON E.END_ID = SPP.END_ID
+WHERE 
+SLPP.LNH_ID = $P{codigoLinha} AND SLPP.LPP_SENTIDO = $P{sentido}]]>
+		</queryString>
+		<field name="CODIGO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="CODIGO"/>
+		</field>
+		<field name="ENDERECO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="ENDERECO"/>
+		</field>
+		<field name="PTP_LATITUDE" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="PTP_LATITUDE"/>
+		</field>
+		<field name="PTP_LONGITUDE" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="PTP_LONGITUDE"/>
+		</field>
+		<field name="LPP_SENTIDO" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="LPP_SENTIDO"/>
+		</field>
+		<field name="END_ID" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="END_ID"/>
+		</field>
+	</subDataset>
+	<parameter name="sentido" class="java.lang.String"/>
+	<parameter name="codigoLinha" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT 
+    SMB_LINHA.LNH_CODIGO AS CODIGO_LINHA,
+    SMB_LINHA.LNH_NOME AS NOME_LINHA
+FROM 
+    SMB_LINHA
+WHERE 
+    SMB_LINHA.LNH_ID = $P{codigoLinha}]]>
+	</queryString>
+	<field name="CODIGO_LINHA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CODIGO_LINHA"/>
+	</field>
+	<field name="NOME_LINHA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOME_LINHA"/>
+	</field>
+	<columnHeader>
+		<band height="50">
+			<staticText>
+				<reportElement mode="Opaque" x="-9" y="35" width="569" height="15" forecolor="#FFFFFF" backcolor="#767171" uuid="59f6c510-1243-4243-95b3-baa50ef00c33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PONTOS DE PARADA(IDA)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="94" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement mode="Transparent" x="-9" y="0" width="569" height="24" backcolor="#D0CECE" uuid="afcd8af5-c90a-41ac-b599-0b0536ba14ad">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="ListaPontoParadas" uuid="55b15a78-60f3-4cf9-8893-07460ca9160e">
+						<datasetParameter name="codigoLinha">
+							<datasetParameterExpression><![CDATA[$P{codigoLinha}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="sentido">
+							<datasetParameterExpression><![CDATA[$P{sentido}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="24" width="569">
+						<textField>
+							<reportElement mode="Opaque" x="300" y="2" width="269" height="20" backcolor="#D0CECE" uuid="f88bd107-1826-4607-8904-bbf86a49a442"/>
+							<textElement verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$F{ENDERECO}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement mode="Opaque" x="0" y="2" width="100" height="20" backcolor="#D0CECE" uuid="cc7b885d-2f4e-4710-8261-f1b46ca42dc4"/>
+							<textElement verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement mode="Opaque" x="100" y="2" width="100" height="20" backcolor="#D0CECE" uuid="f3fd4831-ec73-4643-95e8-96573e6d1ce9"/>
+							<textElement verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$F{PTP_LATITUDE}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement mode="Opaque" x="200" y="2" width="100" height="20" backcolor="#D0CECE" uuid="219992f8-8f4e-4341-ae01-db11e913a523"/>
+							<textElement verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$F{PTP_LONGITUDE}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

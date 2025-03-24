@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO - Ordem de Serviço Operacional" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="135525cd-1389-42df-a2af-f71a965de964">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SYSMOBI"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="codigoOSO" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT
+SMB_HISTORICO_OSO_LINHA.HOL_ID,
+  SMB_LINHA.LNH_ID,
+SMB_PARAMETROS_LINHA.ID,
+  SMB_PARAMETROS_LINHA.ID,
+  SMB_LINHA.LNH_CODIGO,
+  CONCAT(SMB_CADASTRO_DE_SISTEMA.SMB_CAD_NOME_DO_SISTEMA, ' - ', SMB_CADASTRO_DE_SISTEMA.SMB_CAD_SIGLA_DO_SISTEMA) AS [Sistema de Transporte],
+  SMB_PARAMETROS_LINHA.PAR_VERSAO,
+  CONVERT(VARCHAR, 
+        CASE 
+            WHEN LNH_DATA_ATIVACAO > SMB_PARAMETROS_LINHA.PAR_INICIO THEN LNH_DATA_ATIVACAO 
+            ELSE SMB_PARAMETROS_LINHA.PAR_INICIO 
+        END, 103) AS [Início V OSO],  -- 103 = dd/MM/yyyy
+    -- Término da Validade
+    CONVERT(VARCHAR, 
+        CASE 
+            WHEN LNH_DATA_DESATIVACAO > SMB_PARAMETROS_LINHA.PAR_FIM THEN LNH_DATA_DESATIVACAO 
+            ELSE SMB_PARAMETROS_LINHA.PAR_FIM 
+        END, 103) AS [Término V OSO],
+    -- Início do Período de Teste
+    CONVERT(VARCHAR, 
+        CASE 
+            WHEN LNH_DATA_INICIO_TESTE > SMB_PARAMETROS_LINHA.PAR_INICIO_TESTES THEN LNH_DATA_INICIO_TESTE 
+            ELSE SMB_PARAMETROS_LINHA.PAR_INICIO_TESTES
+        END, 103) AS [Início Teste OSO],
+    -- Término do Período de Teste
+    CONVERT(VARCHAR, 
+        CASE 
+            WHEN LNH_DATA_FIM_TESTE > SMB_PARAMETROS_LINHA.PAR_FIM_TESTES THEN LNH_DATA_FIM_TESTE 
+            ELSE SMB_PARAMETROS_LINHA.PAR_FIM_TESTES
+        END, 103) AS [Término Teste OSO],
+  -- Subselect para obter o campo PGL_BRASAO de SMB_PARAMETROS_GLOBAIS
+  (SELECT TOP 1 SMB_PARAMETROS_GLOBAIS.PGL_BRASAO FROM SMB_PARAMETROS_GLOBAIS) AS Brasão,
+  FR_USUARIO.USR_NOME,
+  -- Exibindo apenas o campo HOL_CONTADOR sem concatenação com LNH_CODIGO
+  SMB_HISTORICO_OSO_LINHA.HOL_VERSAO_OSO as [V.OSO]
+FROM
+  SMB_HISTORICO_OSO_LINHA
+  inner join SMB_LINHA on  SMB_LINHA.LNH_ID = SMB_HISTORICO_OSO_LINHA.LNH_COD 
+  INNER JOIN SMB_CADASTRO_DE_SISTEMA ON SMB_CADASTRO_DE_SISTEMA.SMB_CAD_ID = SMB_LINHA.SMB_CAD_ID
+  INNER JOIN SMB_PARAMETROS_LINHA ON SMB_HISTORICO_OSO_LINHA.PAR_COD = SMB_PARAMETROS_LINHA.ID 
+  LEFT JOIN FR_USUARIO ON FR_USUARIO.USR_CODIGO = SMB_LINHA.USR_COD
+WHERE 
+	SMB_HISTORICO_OSO_LINHA.HOL_ID =  $P{codigoOSO} ]]>
+	</queryString>
+	<field name="HOL_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="HOL_ID"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+	</field>
+	<field name="COLUMN_4" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+	</field>
+	<field name="LNH_CODIGO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_CODIGO"/>
+	</field>
+	<field name="Sistema de Transporte" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Sistema de Transporte"/>
+	</field>
+	<field name="PAR_VERSAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_VERSAO"/>
+	</field>
+	<field name="Início V OSO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Início V OSO"/>
+	</field>
+	<field name="Término V OSO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Término V OSO"/>
+	</field>
+	<field name="Início Teste OSO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Início Teste OSO"/>
+	</field>
+	<field name="Término Teste OSO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Término Teste OSO"/>
+	</field>
+	<field name="Brasão" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="Brasão"/>
+	</field>
+	<field name="USR_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="USR_NOME"/>
+	</field>
+	<field name="V.OSO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="V.OSO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="98" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-10" y="4" width="475" height="23" forecolor="#F7F8FF" backcolor="#002060" uuid="029cf7ab-c5e9-429a-a5a4-c307bd991494">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="28" width="475" height="15" forecolor="#F7F8FF" backcolor="#BDD6EE" uuid="67225cf8-c140-4d4b-aa06-143f696412d0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="4" width="474" height="22" forecolor="#FFFAFA" backcolor="#FAF5F5" uuid="d7ea3ef5-f9ad-4d37-86b9-9367b6f4b67a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDEM DE SERVIÇO DE OPERAÇÃO]]></text>
+			</staticText>
+			<image>
+				<reportElement x="474" y="4" width="86" height="39" uuid="9b7ecc06-d076-4057-8488-219c08e13411"/>
+				<imageExpression><![CDATA["./LOGO.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="-9" y="26" width="474" height="17" uuid="50dbcb78-85ca-4f36-8dec-814ac655a997"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Sistema de Transporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="297" y="64" width="133" height="20" uuid="d438ed91-0ee9-4e69-84c1-deac797f5ceb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Início do Período de Teste:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-8" y="64" width="136" height="20" uuid="246313f4-44a3-479a-a7cc-048c02267eb6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Início da Validade da OSO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="137" y="78" width="100" height="14" uuid="12c4732b-3dc7-4483-9ce6-16096106d55e"/>
+				<textFieldExpression><![CDATA[$F{Término V OSO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="297" y="78" width="144" height="20" uuid="ad8ccff1-a396-45ee-8773-da833c476f43"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Término do Período de Teste:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="137" y="63" width="100" height="16" uuid="270c5202-00e8-4450-8008-3082c6a88ffd"/>
+				<textFieldExpression><![CDATA[$F{Início V OSO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="78" width="100" height="14" uuid="456b1c45-889b-4583-ac7f-0b9cd40a7741"/>
+				<textFieldExpression><![CDATA[$F{Término Teste OSO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-8" y="78" width="149" height="20" uuid="66174079-3586-4654-a179-7c050a6fb34b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Término da Validade da OSO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="64" width="100" height="14" uuid="1a7588ab-d8ee-4666-9805-2482a11ae4b2"/>
+				<textFieldExpression><![CDATA[$F{Início Teste OSO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="243">
+			<subreport>
+				<reportElement x="-20" y="0" width="595" height="40" uuid="6c5f5637-b897-4c35-b16e-fee06426a9a3"/>
+				<subreportParameter name="codigoLinha">
+					<subreportParameterExpression><![CDATA[$F{LNH_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["OSO - Linha.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="-20" y="40" width="595" height="40" uuid="f6613522-0f40-4135-bed5-5612117a9335"/>
+				<subreportParameter name="codigoParametro">
+					<subreportParameterExpression><![CDATA[$F{ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["OSO - Empresa.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement positionType="Float" x="-20" y="83" width="595" height="40" uuid="4cdb4447-ba40-4448-aaad-642905f1a8f4"/>
+				<subreportParameter name="codigoLinha">
+					<subreportParameterExpression><![CDATA[$F{LNH_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["OSO - Bandeiras.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="19" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-11" y="3" width="128" height="16" forecolor="#FCFAFA" backcolor="#767171" uuid="c1c6633e-7f5c-4aa9-b24e-3124bde3775f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="119" y="3" width="362" height="16" forecolor="#FCFAFA" backcolor="#767171" uuid="c4551474-4168-4e08-a60f-3f1e1235eafd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="483" y="3" width="80" height="16" forecolor="#FCFAFA" backcolor="#767171" uuid="b5655c05-10a0-4c16-a586-f465440572ce"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-11" y="3" width="127" height="15" forecolor="#FFFFFF" uuid="dc0792e3-230c-4161-b536-033b54078da1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEMOB]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="513" y="4" width="18" height="14" forecolor="#FFFFFF" uuid="df925e8c-3de0-4e50-ab7a-32c9e45b53e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="484" y="3" width="36" height="15" forecolor="#FFFFFF" uuid="617a592d-5d1e-4078-9133-3200c70ea6b1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="529" y="4" width="15" height="14" forecolor="#FFFFFF" uuid="2c184606-9a45-4b5d-9676-52d371c38f46">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="122" y="4" width="70" height="15" forecolor="#FFFFFF" uuid="ab3daa14-ed70-4394-94a9-603993463e26"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="176" y="4" width="65" height="15" forecolor="#FFFFFF" uuid="690d919b-fac5-4ca0-9b2c-825e65fa2510"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="231" y="4" width="100" height="13" forecolor="#FFFFFF" uuid="419bca1d-b2a7-45a6-8416-b75b3b806878"/>
+				<textElement textAlignment="Left" verticalAlignment="Justified">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USR_NOME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="4" width="96" height="15" forecolor="#FFFFFF" uuid="1143b08e-4ae3-4278-8d2d-8ba2388523fb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VERSÃO DA OSO:]]></text>
+			</staticText>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="540" y="3" width="23" height="16" forecolor="#FFFFFF" uuid="46888d49-9034-4ffe-be28-f6d1f08f08c0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="4" width="41" height="15" forecolor="#FFFFFF" uuid="fce9848e-ef3d-4023-b270-2e06a8db1c1e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{V.OSO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="44">
+			<staticText>
+				<reportElement x="177" y="9" width="200" height="26" uuid="82787553-aff6-4d74-b962-3c8a390c43db"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Não existem registros.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

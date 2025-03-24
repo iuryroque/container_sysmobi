@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Header" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="6568c91f-f1df-415f-b02e-e5e9684f2b1d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SEMOB"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT   PGL_BRASAO FROM SMB_PARAMETROS_GLOBAIS
+ ]]>
+	</queryString>
+	<field name="PGL_BRASAO" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BRASAO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_GLOBAIS"/>
+	</field>
+	<title>
+		<band height="51">
+			<image vAlign="Middle" onErrorType="Blank" evaluationTime="Report">
+				<reportElement x="0" y="1" width="150" height="50" uuid="02cec14d-cc23-47ba-bc49-9c039bab9f04"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="210" y="7" width="160" height="31" uuid="7e0496b9-8e2a-4b81-92fc-c469e02fb718"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HANDY COPY]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="440" y="31" width="117" height="20" uuid="4e3cf195-d952-48e9-8e81-34e7512ec755"/>
+				<textElement markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<html><b>Data Emissão: </b>"+new SimpleDateFormat("dd/MM/yyyy").format(new Date())+"</html>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

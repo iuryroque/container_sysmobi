@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HandCopy" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="0" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="114b3522-4879-4f32-9ea1-7ee9d8e8e49c">
+	<property name="ireport.scriptlethandling" value="2"/>
+	<property name="ireport.encoding" value="ISO-8859-1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.xml.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="GAU_ID" class="java.lang.Long"/>
+	<parameter name="PES_ID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[Select 
+  ga.GAU_NUM_ALVARA_AUT,
+  gp.SMB_GES_PERMISSAO,
+  ga.GAU_INI_ALVARA,
+  p.PES_TIPO,
+  Case When pf.PEF_INSS = 'NULL' Then ' ' Else pf.PEF_INSS
+  End As INSS,
+  oe.END_ENDERECO As OperadorEndereco,
+  oe.END_LOCALIDADE As OperadorLocalidade,
+  Case When oe.END_CEP = 'NULL' Then ' ' Else oe.END_CEP End As OperadorCEP,
+  oe.END_BAIRRO As OperadorBairro,
+  oe.END_COMPLEMENTO As OperadorComplemento,
+  Case When opc.SMB_CAD_TELEFONE = 'NULL' Then ' '
+    Else opc.SMB_CAD_TELEFONE
+  End As OperadorTelefone,
+  Case When opc.SMB_CAD_CELULAR = 'NULL' Then ' '
+    Else opc.SMB_CAD_CELULAR End As OperadorCelular,
+  opc.SMB_CAD_E_MAIL As OperadorEmail,
+  Case When p.PES_TIPO = 'PF' Or p.PES_TIPO = 'F' Then 'Pessoa Física'
+    When p.PES_TIPO = 'PJ' Or p.PES_TIPO = 'J' Then 'Pessoa Jurídica'
+  End As PessoaTipo,
+  pf.PEF_NOME,
+  pf.PEF_CPF,
+  pf.PEF_RG,
+  pf.PEF_DATA_NASCIMENTO,
+  pf.PEF_SEXO,
+  Case When pf.PEF_SEXO = 'M' Then 'Masculino'
+    When pf.PEF_SEXO = 'F' Then 'Feminino' When pf.PEF_SEXO = 'O' Then 'Outro'
+  End As Sexo,
+  o.ORG_SIGLA,
+  pf.PEF_UF_RG,
+  pf.PEF_CNH,
+  pf.PEF_CNH_CATEGORIA,
+  pf.PEF_CNH_DATA_VALIDADE,
+  pf.PEF_INSS,
+  pj.PEJ_CNPJ,
+  pj.PEJ_RAZAO_SOCIAL,
+  pj.PEJ_INSCRICAO_ESTADUAL,
+  pj.PEJ_INSCRICAO_MUNICIPAL,
+  e.END_ENDERECO,
+  e.END_LOCALIDADE,
+  e.END_CEP,
+  e.END_BAIRRO,
+  e.END_COMPLEMENTO,
+  e.END_UF,
+  pc.SMB_CAD_TELEFONE,
+  pc.SMB_CAD_CELULAR,
+  pc.SMB_CAD_E_MAIL,
+  Case When p.PES_TIPO In ('PF', 'F') Then pf.PEF_NOME
+    When p.PES_TIPO In ('PJ', 'J') Then pj.PEJ_RAZAO_SOCIAL Else 'Não Informado'
+  End As InformacaoPessoa,
+  Case When p.PES_TIPO In ('PF', 'F') Then 'Nome:'
+    When p.PES_TIPO In ('PJ', 'J') Then 'Razão Social:' Else 'Não Informado'
+  End As DescricaoPessoa,  
+  Case When p.PES_TIPO In ('PF', 'F') Then pf.PEF_NOME_SOCIAL
+    When p.PES_TIPO In ('PJ', 'J') Then pj.PEJ_NOME_FANTASIA Else 'Não Informado'
+  End As InformacaoPessoaSocial,
+  Case When p.PES_TIPO In ('PF', 'F') Then 'Nome Social:'
+    When p.PES_TIPO In ('PJ', 'J') Then 'Nome Fantasia:' Else 'Não Informado'
+  End As DescricaoPessoaSocial,  
+  Case When p.PES_TIPO In ('PF', 'F') Then pf.PEF_CPF
+    When p.PES_TIPO In ('PJ', 'J') Then pj.PEJ_CNPJ
+    Else 'Não Informado' End As InformacaoDado,
+  Case When p.PES_TIPO In ('PF', 'F') Then 'CPF:'
+    When p.PES_TIPO In ('PJ', 'J') Then 'CNPJ:' Else 'Não Informado'
+  End As DescricaoDado,
+  spj.PEJ_RAZAO_SOCIAL As Cooperativa,
+  sa.SAU_SITUACAO,
+  p.PES_ID,
+  ga.GAU_ID,
+    (Select SMB_PARAMETROS_GLOBAIS.PGL_BRASAO 
+   From SMB_PARAMETROS_GLOBAIS) As PGL_BRASAO
+From
+  SMB_GESTAO_AUTORIZATARIO ga
+  Left Join SMB_GES_PERMISSAO gp On gp.SMB_GES_ID = ga.SMB_GES_ID
+  Left Join SMB_PESSOA p On p.PES_ID = ga.PES_COD_AUTORIZATARIO
+  Left Join GER_ENDERECO oe On oe.PES_ID = p.PES_ID
+  Left Join SMB_CADASTRAR_PESSOA_CONTATO opc On opc.PES_ID = p.PES_ID
+  Left Join SMB_PESSOA_FISICA pf On pf.PES_ID = p.PES_ID
+  Left Join SMB_PESSOA_JURIDICA pj On pj.PES_ID = p.PES_ID
+  Left Join SMB_ORGAO o On o.ORG_COD = pf.ORG_COD
+  Left Join GER_ENDERECO e On e.PES_ID = p.PES_ID
+  Left Join SMB_CADASTRAR_PESSOA_CONTATO pc On pc.PES_ID = p.PES_ID
+  Left Join SMB_COMPONENTE_ESPEC_VEICULO cev On cev.PES_ID = p.PES_ID
+  Left Join SMB_PESSOA_JURIDICA spj On spj.PES_ID = ga.PES_COD_CONSORCIO_COOPE
+  Left Join SMB_SITUACAO_AUTORIZATARIO sa On sa.SAU_ID = ga.SAU_ID_SITUACAO
+Where
+  ga.GAU_ID = $P{GAU_ID}]]>
+	</queryString>
+	<field name="GAU_NUM_ALVARA_AUT" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_NUM_ALVARA_AUT"/>
+	</field>
+	<field name="SMB_GES_PERMISSAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_GES_PERMISSAO"/>
+	</field>
+	<field name="GAU_INI_ALVARA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_INI_ALVARA"/>
+	</field>
+	<field name="PES_TIPO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PES_TIPO"/>
+	</field>
+	<field name="INSS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="INSS"/>
+	</field>
+	<field name="OperadorEndereco" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorEndereco"/>
+	</field>
+	<field name="OperadorLocalidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorLocalidade"/>
+	</field>
+	<field name="OperadorCEP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCEP"/>
+	</field>
+	<field name="OperadorBairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorBairro"/>
+	</field>
+	<field name="OperadorComplemento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorComplemento"/>
+	</field>
+	<field name="OperadorTelefone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorTelefone"/>
+	</field>
+	<field name="OperadorCelular" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCelular"/>
+	</field>
+	<field name="OperadorEmail" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorEmail"/>
+	</field>
+	<field name="PessoaTipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PessoaTipo"/>
+	</field>
+	<field name="PEF_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_NOME"/>
+	</field>
+	<field name="PEF_CPF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_CPF"/>
+	</field>
+	<field name="PEF_RG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_RG"/>
+	</field>
+	<field name="PEF_DATA_NASCIMENTO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_DATA_NASCIMENTO"/>
+	</field>
+	<field name="PEF_SEXO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_SEXO"/>
+	</field>
+	<field name="Sexo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Sexo"/>
+	</field>
+	<field name="ORG_SIGLA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORG_SIGLA"/>
+	</field>
+	<field name="PEF_UF_RG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_UF_RG"/>
+	</field>
+	<field name="PEF_CNH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_CNH"/>
+	</field>
+	<field name="PEF_CNH_CATEGORIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_CNH_CATEGORIA"/>
+	</field>
+	<field name="PEF_CNH_DATA_VALIDADE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_CNH_DATA_VALIDADE"/>
+	</field>
+	<field name="PEF_INSS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_INSS"/>
+	</field>
+	<field name="PEJ_CNPJ" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEJ_CNPJ"/>
+	</field>
+	<field name="PEJ_RAZAO_SOCIAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEJ_RAZAO_SOCIAL"/>
+	</field>
+	<field name="PEJ_INSCRICAO_ESTADUAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEJ_INSCRICAO_ESTADUAL"/>
+	</field>
+	<field name="PEJ_INSCRICAO_MUNICIPAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEJ_INSCRICAO_MUNICIPAL"/>
+	</field>
+	<field name="END_ENDERECO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_ENDERECO"/>
+	</field>
+	<field name="END_LOCALIDADE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_LOCALIDADE"/>
+	</field>
+	<field name="END_CEP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_CEP"/>
+	</field>
+	<field name="END_BAIRRO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_BAIRRO"/>
+	</field>
+	<field name="END_COMPLEMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_COMPLEMENTO"/>
+	</field>
+	<field name="END_UF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_UF"/>
+	</field>
+	<field name="SMB_CAD_TELEFONE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAD_TELEFONE"/>
+	</field>
+	<field name="SMB_CAD_CELULAR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAD_CELULAR"/>
+	</field>
+	<field name="SMB_CAD_E_MAIL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAD_E_MAIL"/>
+	</field>
+	<field name="InformacaoPessoa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="InformacaoPessoa"/>
+	</field>
+	<field name="DescricaoPessoa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DescricaoPessoa"/>
+	</field>
+	<field name="InformacaoPessoaSocial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="InformacaoPessoaSocial"/>
+	</field>
+	<field name="DescricaoPessoaSocial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DescricaoPessoaSocial"/>
+	</field>
+	<field name="InformacaoDado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="InformacaoDado"/>
+	</field>
+	<field name="DescricaoDado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DescricaoDado"/>
+	</field>
+	<field name="Cooperativa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cooperativa"/>
+	</field>
+	<field name="SAU_SITUACAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SAU_SITUACAO"/>
+	</field>
+	<field name="PES_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PES_ID"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="PGL_BRASAO" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BRASAO"/>
+	</field>
+	<variable name="consulta1" class="java.lang.String">
+		<variableExpression><![CDATA["Select   SMB_PARAMETROS_GLOBAIS.PGL_BRASAO From   SMB_PARAMETROS_GLOBAIS /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Veiculo" class="java.lang.String">
+		<variableExpression><![CDATA["Select   p.PES_ID,   v.SMB_NUMERO_ORDEM,   v.SMB_PLACA,   Case When v.SMB_TIPO_COMUBSTIVEL = 'G' Then 'Gasolina'     When v.SMB_TIPO_COMUBSTIVEL = 'D' Then 'Diesel'     When v.SMB_TIPO_COMUBSTIVEL = 'E' Then 'Elétrico' Else 'Não Definido'   End As TIPO_COMBUSTIVEL,   v.SMB_ANO_FABRICACAO,   v.SMB_DT_AQUISICAO,   v.SMB_NUM_NFE As NotaFiscal,   v.SMB_DATA_NFE As DataNotaFiscal,   v.SMB_RESTRICOES_VENDA,   v.SMB_CAPACIDADE_PASSAGEIRO,   v.SMB_RENAVAM,   v.SMB_ESTADO_VEICULO,   v.SMB_QTD_DE_PORTAS,   v.SMB_ANO_LICENCIADO,   v.SMB_NUMERO_CHASSI,   ve.SMB_ESP_DESCRICAO As Especie,   tv.TPV_DESCRICAO As TipoVeiculo,   cmo.SMB_MO_DESCRICAO As marca,   fa.FAQ_DESCRICAO As categoria,   cvc.SMB_CORES_DESCRICAO As Cor From   SMB_CADASTRAR_VEICULO v   Inner Join SMB_PESSOA p On p.PES_ID = v.PES_ID_AUTORIZATARIO   Left Join SMB_TIPO_DE_VEICULO tv On tv.SMB_TIP_ID = v.SMB_TIP_ID   Left Join SMB_CADASTRO_DE_VEICULO_ESP ve On ve.SMB_ESP_ID =     v.SMB_ESP_ID_ESPECIE   Left Join SMB_CADASTRAR_MODELO_DE_ONIBUS cmo On cmo.SMB_CAD_ID =     v.SMB_MODELO_ID   Left Join SMB_FORMA_AQUISICAO fa On fa.FAQ_ID = v.FAQ_ID   Left Join SMB_CADASTRO_DE_VEICULO_CORES cvc On cvc.SMB_CORES_ID = v.SMB_COR /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="InformacoesComplementares" class="java.lang.String">
+		<variableExpression><![CDATA["Select   ti.TIC_NOME,   i.INC_DESCRICAO,   ga.GAU_ID From   SMB_INFO_COMPL i   Inner Join SMB_TIPO_INFO_COMPL ti On ti.TIC_ID = i.TIC_ID_TIPO   Inner Join SMB_GESTAO_AUTORIZATARIO ga On ga.GAU_ID = i.GAU_ID /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="consulta" class="java.lang.String">
+		<variableExpression><![CDATA["Select distinct   ga.GAU_NUM_ALVARA_AUT,   gp.SMB_GES_PERMISSAO,   ga.GAU_INI_ALVARA,   p.PES_TIPO,   tpo.TOP_DESCRICAO As TipoOperador,   op.OPE_DATA_CURSO,   op.OPE_VALIDADE_CURSO,   Case     When op.OPE_VALIDADE_CNH Is Not Null And op.OPE_VALIDADE_CURSO Is Not Null     Then Case       When op.OPE_VALIDADE_CNH < DateAdd(YEAR, 1, GetDate()) And       op.OPE_VALIDADE_CNH < op.OPE_VALIDADE_CURSO Then op.OPE_VALIDADE_CNH       When op.OPE_VALIDADE_CURSO < DateAdd(YEAR, 1, GetDate()) Then       op.OPE_VALIDADE_CURSO Else DateAdd(YEAR, 1, GetDate()) End     When op.OPE_VALIDADE_CNH Is Not Null Then Case       When op.OPE_VALIDADE_CNH < DateAdd(YEAR, 1, GetDate()) Then       op.OPE_VALIDADE_CNH Else DateAdd(YEAR, 1, GetDate()) End     When op.OPE_VALIDADE_CURSO Is Not Null Then Case       When op.OPE_VALIDADE_CURSO < DateAdd(YEAR, 1, GetDate()) Then       op.OPE_VALIDADE_CURSO Else DateAdd(YEAR, 1, GetDate()) End     Else DateAdd(YEAR, 1, GetDate()) End As ValidadeCI,   opf.PEF_NOME As OperadorNome,   opf.PEF_CPF As OperadorCPF,   opf.PEF_RG As OperadorRG,   opf.PEF_DATA_NASCIMENTO As OperadorDataNascimento,   Case When opf.PEF_SEXO = 'M' Then 'Masculino'     When opf.PEF_SEXO = 'F' Then 'Feminino' When opf.PEF_SEXO = 'O' Then 'Outro'   End As OperadorSexo,   opf.PEF_UF_RG As OperadorUF,   opf.PEF_CNH As OperadorCNH,   opf.PEF_CNH_CATEGORIA As OperadorCNHCategoria,   opf.PEF_CNH_DATA_VALIDADE As OperadorCNHValidade,   Case When opf.PEF_INSS = 'NULL' Then ' ' Else opf.PEF_INSS   End As OperadorINSS,   oe.END_ENDERECO As OperadorEndereco,   oe.END_LOCALIDADE As OperadorLocalidade,   Case When oe.END_CEP = 'NULL' Then ' ' Else oe.END_CEP End As OperadorCEP,   oe.END_BAIRRO As OperadorBairro,   oe.END_COMPLEMENTO As OperadorComplemento,   Case When opc.SMB_CAD_TELEFONE = 'NULL' Then ' '     Else dbo.fn_RemoverZeroContato(opc.SMB_CAD_TELEFONE)   End As OperadorTelefone,   Case When opc.SMB_CAD_CELULAR = 'NULL' Then ' '     Else dbo.fn_RemoverZeroContato(opc.SMB_CAD_CELULAR) End As OperadorCelular,   opc.SMB_CAD_E_MAIL As OperadorEmail,   Case When p.PES_TIPO = 'PF' Or p.PES_TIPO = 'F' Then 'Pessoa Física'     When p.PES_TIPO = 'PJ' Or p.PES_TIPO = 'J' Then 'Pessoa Jurídica'   End As PessoaTipo,   pf.PEF_NOME,   pf.PEF_CPF,   pf.PEF_RG,   pf.PEF_DATA_NASCIMENTO,   pf.PEF_SEXO,   Case When pf.PEF_SEXO = 'M' Then 'Masculino'     When pf.PEF_SEXO = 'F' Then 'Feminino' When pf.PEF_SEXO = 'O' Then 'Outro'   End As Sexo,   o.ORG_SIGLA,   pf.PEF_UF_RG,   pf.PEF_CNH,   pf.PEF_CNH_CATEGORIA,   pf.PEF_CNH_DATA_VALIDADE,   pf.PEF_INSS,   pj.PEJ_CNPJ,   pj.PEJ_RAZAO_SOCIAL,   pj.PEJ_INSCRICAO_ESTADUAL,   pj.PEJ_INSCRICAO_MUNICIPAL,   e.END_ENDERECO,   e.END_LOCALIDADE,   e.END_CEP,   e.END_BAIRRO,   e.END_COMPLEMENTO,   Case When dbo.fn_RemoverZeroContato(pc.SMB_CAD_TELEFONE) = 'NULL' Then ' '     Else dbo.fn_RemoverZeroContato(pc.SMB_CAD_TELEFONE) End As SMB_CAD_TELEFONE,   dbo.fn_RemoverZeroContato(pc.SMB_CAD_CELULAR) As SMB_CAD_CELULAR,   pc.SMB_CAD_E_MAIL,   Case When p.PES_TIPO In ('PF', 'F') Then pf.PEF_NOME     When p.PES_TIPO In ('PJ', 'J') Then pj.PEJ_RAZAO_SOCIAL Else 'Não Informado'   End As InformacaoPessoa,   Case When p.PES_TIPO In ('PF', 'F') Then 'Nome:'     When p.PES_TIPO In ('PJ', 'J') Then 'Razão Social:' Else 'Não Informado'   End As DescricaoPessoa,   Case When p.PES_TIPO In ('PF', 'F') Then dbo.fn_MascararCPF(pf.PEF_CPF)     When p.PES_TIPO In ('PJ', 'J') Then dbo.fn_MascararCNPJ(pj.PEJ_CNPJ)     Else 'Não Informado' End As InformacaoDado,   Case When p.PES_TIPO In ('PF', 'F') Then 'CPF:'     When p.PES_TIPO In ('PJ', 'J') Then 'CNPJ:' Else 'Não Informado'   End As DescricaoDado,   op.OPE_ID,   spj.PEJ_RAZAO_SOCIAL As Cooperativa,   sa.SAU_SITUACAO,   so.SOP_SITUACAO As OperadorSituacao,   (Select STRING_AGG(gaa.GAU_NUM_ALVARA_AUT, ', ')   From SMB_GESTAO_AUTORIZATARIO gaa Inner Join SMB_COND_ALV_AVULSO caa       On gaa.GAU_ID = caa.GAU_ID Where caa.OPE_ID = op.OPE_ID) As Coringa,   p.PES_ID,   ga.GAU_ID From   SMB_GESTAO_AUTORIZATARIO ga   Left Join SMB_GES_PERMISSAO gp On gp.SMB_GES_ID = ga.SMB_GES_ID   Left Join SMB_PESSOA p On p.PES_ID = ga.PES_COD_AUTORIZATARIO   Left Join SMB_OPERADOR op On op.GAU_ID = ga.GAU_ID   Left Join SMB_TIPO_OPERADOR tpo On tpo.TOP_ID = op.TOP_ID   Left Join SMB_PESSOA_FISICA opf On opf.PES_ID = op.PES_COD_OPERADOR   Left Join GER_ENDERECO oe On oe.PES_ID = opf.PES_ID   Left Join SMB_CADASTRAR_PESSOA_CONTATO opc On opc.PES_ID = opf.PES_ID   Left Join SMB_PESSOA_FISICA pf On pf.PES_ID = p.PES_ID   Left Join SMB_PESSOA_JURIDICA pj On pj.PES_ID = p.PES_ID   Left Join SMB_ORGAO o On o.ORG_COD = pf.ORG_COD   Left Join GER_ENDERECO e On e.PES_ID = p.PES_ID   Left Join SMB_CADASTRAR_PESSOA_CONTATO pc On pc.PES_ID = p.PES_ID   Left Join SMB_COMPONENTE_ESPEC_VEICULO cev On cev.PES_ID = p.PES_ID   Left Join SMB_PESSOA_JURIDICA spj On spj.PES_ID = ga.PES_COD_CONSORCIO_COOPE   Left Join SMB_SITUACAO_AUTORIZATARIO sa On sa.SAU_ID = ga.SAU_ID_SITUACAO   Left Join SMB_SITUACAO_OPERADOR so On so.SOP_ID = op.SOP_ID Where (   (ga.GAU_ID = $P{GAU_ID}) Or   (op.PES_COD_OPERADOR = $P{PES_ID})) /*WHERE_ADD*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Entidade" class="java.lang.String">
+		<variableExpression><![CDATA["SELECT     E.ENT_BRASAO,     E.ENT_NOME,     E.ENT_END,     E.ENT_BAIRRO,     M.MUN_NOME,     U.UF_SIGLA FROM     GER_ENTIDADE E LEFT JOIN GER_MUNICIPIO M ON E.MUN_COD = M.MUN_COD     LEFT JOIN GER_UF U ON M.UF_COD = U.UF_COD "]]></variableExpression>
+	</variable>
+	<title>
+		<band height="301" splitType="Stretch">
+			<image hAlign="Left" evaluationTime="Report">
+				<reportElement key="DBImage1" stretchType="RelativeToBandHeight" mode="Opaque" x="9" y="2" width="181" height="46" forecolor="#000000" uuid="308f76f0-84d7-4a1c-b130-d2b2e6c213e7"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement key="Label1" mode="Transparent" x="192" y="2" width="188" height="40" forecolor="#000000" uuid="d6f058b4-03d3-421f-9a40-fb7b63f01e30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Hand Copy]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement key="Shape2" mode="Transparent" x="3" y="68" width="552" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="8d35d2f4-0e95-48a5-aed4-0c65d34af036"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement key="Shape1" mode="Opaque" x="3" y="51" width="552" height="18" forecolor="#000000" backcolor="#0078D7" uuid="202ba1e6-8de9-48e5-9929-e265c3f61448"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="Label2" mode="Transparent" x="3" y="51" width="552" height="16" forecolor="#FFFFFF" uuid="ca0e2e0c-5ad8-4826-9068-97409eac7eba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dados da Autorização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label3" mode="Transparent" x="9" y="77" width="94" height="15" forecolor="#000000" uuid="da6d7645-d3d5-4b45-9313-8987223115d5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cod. Autorizatário:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label4" mode="Transparent" x="147" y="77" width="86" height="15" forecolor="#000000" uuid="934d3928-75de-4d58-bbdc-fb89973b4911">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data de Cadastro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label5" mode="Transparent" x="303" y="77" width="25" height="15" forecolor="#000000" uuid="81c2ab3f-9d0b-41fa-bc3f-e9d02e010583">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tipo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label6" mode="Transparent" x="451" y="77" width="52" height="15" forecolor="#000000" uuid="5d6b5aa8-a558-4955-9217-86b4ba2f971f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nº Alvará:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText1" mode="Transparent" x="105" y="77" width="37" height="15" forecolor="#000000" uuid="cba0e82c-274f-4271-981d-8b406c330a10">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GAU_NUM_ALVARA_AUT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText2" mode="Transparent" x="504" y="77" width="46" height="15" forecolor="#000000" uuid="a5e5e7f8-09c3-4b77-b84f-6cddd8502ebe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GAU_NUM_ALVARA_AUT} == null ? "Não Definido" : "D-" + String.format("%04d", $F{GAU_NUM_ALVARA_AUT}).substring(String.format("%04d", $F{GAU_NUM_ALVARA_AUT}).length() - 4)]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText3" mode="Transparent" x="236" y="77" width="64" height="15" forecolor="#000000" uuid="a16a476a-445a-42ff-a926-a8a7e32ab5d0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{GAU_INI_ALVARA})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText4" mode="Transparent" x="331" y="77" width="118" height="15" forecolor="#000000" uuid="e7fcc073-9dd5-4758-896b-13f673b50ab7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_GES_PERMISSAO}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement key="Shape3" mode="Opaque" x="3" y="99" width="552" height="17" forecolor="#000000" backcolor="#0078D7" uuid="1bc2ca41-0215-4fa0-8e36-90ba193af119"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<frame>
+				<reportElement stretchType="RelativeToBandHeight" x="3" y="116" width="552" height="180" uuid="dcf0de07-6387-4f47-bed8-f22fe4a08c75">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.5"/>
+				</box>
+				<staticText>
+					<reportElement key="Label11" mode="Transparent" x="6" y="163" width="63" height="12" forecolor="#000000" uuid="a953bf5d-220a-4a8b-a96d-99241100cdc7">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					</textElement>
+					<text><![CDATA[Cooperativa:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="DBText11" mode="Transparent" x="67" y="163" width="479" height="12" isPrintWhenDetailOverflows="true" forecolor="#000000" uuid="667be41c-2769-49d9-a262-a638f7aac4f2">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Justified" verticalAlignment="Top">
+						<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Cooperativa}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement key="Label7" mode="Transparent" x="3" y="99" width="552" height="16" forecolor="#FFFFFF" uuid="cab5221c-e333-42f0-ae46-be74cfefb27c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dados do(a) Autorizatário(a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label9" mode="Transparent" x="9" y="163" width="31" height="12" forecolor="#000000" uuid="097d4ac3-3d3b-4c6c-927a-b8bbbafe9bdf"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tipo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label10" mode="Transparent" x="9" y="226" width="46" height="12" forecolor="#000000" uuid="4dcc82a9-09a9-47a4-9858-12a0acb01682"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label12" mode="Transparent" x="373" y="200" width="31" height="12" forecolor="#000000" uuid="da0f83cf-cb22-4603-a4b8-9d6c181ba4d6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label13" mode="Transparent" x="373" y="188" width="76" height="12" forecolor="#000000" uuid="a725a02b-d329-4386-a6b4-a80d7e6893fb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tel. Residencial:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label14" mode="Transparent" x="9" y="214" width="36" height="12" forecolor="#000000" uuid="89e22ebd-05da-475d-b291-708eff2b400a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label15" mode="Transparent" x="9" y="177" width="27" height="12" forecolor="#000000" uuid="234684c5-d789-4668-bcae-d0778cae844b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label16" mode="Transparent" x="9" y="189" width="40" height="12" forecolor="#000000" uuid="22df5529-4ff8-4b05-a133-e479da931396"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CNH:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label17" mode="Transparent" x="9" y="265" width="28" height="12" forecolor="#000000" uuid="bc92e464-38c8-44c8-92b3-c212cdd2f4b8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[INSS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label20" mode="Transparent" x="228" y="240" width="40" height="12" forecolor="#000000" uuid="d56a1228-c4f3-43ff-8f40-735932af9d31">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label22" mode="Transparent" x="228" y="177" width="83" height="12" forecolor="#000000" uuid="ba2c308b-ef02-4974-ad87-9b0afe77b505">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Orgão Expedidor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label23" mode="Transparent" x="228" y="190" width="68" height="12" forecolor="#000000" uuid="c7b0a12b-2fa5-433d-9d73-4c78ed5ede3c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade CNH:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label24" mode="Transparent" x="228" y="154" width="61" height="12" forecolor="#000000" uuid="c14ecf14-979d-4446-81b3-54f67f83e415"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Sexo/Gênero:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label202" mode="Transparent" x="9" y="240" width="29" height="12" forecolor="#000000" uuid="d57cc0e9-2397-4f88-baa6-5954b8fae7ca"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label27" mode="Transparent" x="373" y="175" width="38" height="12" forecolor="#000000" uuid="7219e07d-ced1-491e-9218-651e3cadef94">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Celular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label28" mode="Transparent" x="373" y="163" width="74" height="12" forecolor="#000000" uuid="e50101d2-8b19-453b-a371-f913f41cff02">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Categoria CNH:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label29" mode="Transparent" x="9" y="150" width="96" height="12" forecolor="#000000" uuid="7fec09c1-06cc-4384-b8cc-c6dff56964a2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data de Nascimento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label30" mode="Transparent" x="373" y="214" width="52" height="12" forecolor="#000000" uuid="286832c1-c75c-4d86-8e2c-0c829542f92d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF (Local):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText7" mode="Transparent" x="37" y="163" width="132" height="12" forecolor="#000000" uuid="ca691ce7-deda-42bd-804d-baa996d31fc6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PessoaTipo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText8" mode="Transparent" x="290" y="154" width="74" height="12" forecolor="#000000" uuid="191fb6a3-1ff7-46bd-8e6c-6754679eed03">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Sexo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText9" mode="Transparent" x="107" y="150" width="85" height="12" forecolor="#000000" uuid="b3b1caa6-27b3-4b47-a572-cd3b2f584e72">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{PEF_DATA_NASCIMENTO})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText10" mode="Transparent" x="57" y="226" width="306" height="12" forecolor="#000000" uuid="e53db525-26e8-4acf-ab91-fe5ed9437580">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText12" mode="Transparent" x="451" y="188" width="98" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="ff017119-85f5-40b3-9078-f50a313d37f6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_TELEFONE}.replaceFirst("^0", "").replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1) $2-$3")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText13" mode="Transparent" x="47" y="214" width="317" height="12" forecolor="#000000" uuid="7a435153-e1bc-4be9-b0ef-121f34cf423b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_E_MAIL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText14" mode="Transparent" x="38" y="177" width="146" height="12" forecolor="#000000" uuid="7fcf7c3c-72a8-478d-b885-274f8d41f9bc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEF_RG}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText15" mode="Transparent" x="38" y="189" width="132" height="12" forecolor="#000000" uuid="777d3da8-f459-4858-8c86-ccf2e6a5d2a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEF_CNH}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText16" mode="Transparent" x="40" y="265" width="140" height="12" forecolor="#000000" uuid="d39fbfb0-8c54-4953-9ec6-f9c52bb2c41a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INSS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText17" mode="Transparent" x="270" y="240" width="278" height="12" forecolor="#000000" uuid="424de934-61de-4d9e-8845-2ca2d1d96228">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_LOCALIDADE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText18" mode="Transparent" x="313" y="177" width="51" height="12" forecolor="#000000" uuid="d681340a-030d-4f88-bf55-321d358998e7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORG_SIGLA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText19" mode="Transparent" x="298" y="190" width="66" height="12" forecolor="#000000" uuid="daf9fa33-d72a-48a0-b39b-c8e9eb617ccf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{PEF_CNH_DATA_VALIDADE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText20" mode="Transparent" x="449" y="163" width="94" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="cd022d10-ad18-483c-8249-a1bbd8aa8d54">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEF_CNH_CATEGORIA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText21" mode="Transparent" x="39" y="240" width="78" height="12" forecolor="#000000" uuid="a1fa0e68-1c61-47d1-8666-0901301be107">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_CEP}.length() == 8 ? $F{END_CEP}.substring(0, 5) + "-" + $F{END_CEP}.substring(5) : $F{END_CEP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText23" mode="Transparent" x="406" y="200" width="143" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="093d24c9-78fe-4d6a-9a09-602f43e637e2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_BAIRRO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText24" mode="Transparent" x="413" y="175" width="126" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="78f1815a-13c5-4b3c-ac7a-7a51acf9de66">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_CELULAR}.replaceFirst("^0", "").replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1) $2-$3")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label8" mode="Transparent" x="380" y="10" width="90" height="12" forecolor="#000000" uuid="b2bf8c3c-805c-48ff-b3f2-059d2cdd9500"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data/Hora Emissão:]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement key="SystemVariable1" mode="Transparent" x="380" y="22" width="90" height="12" forecolor="#000000" uuid="883359ac-ac4a-489a-a800-dc66635bea84"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label18" mode="Transparent" x="9" y="253" width="74" height="12" forecolor="#000000" uuid="4cc624bc-9af3-41f3-9dc5-bed823bdf502">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Complemento:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText69" mode="Transparent" x="84" y="253" width="116" height="12" forecolor="#000000" uuid="cc9d3932-a5f2-46eb-bb2b-69776f60b337">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_COMPLEMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label19" mode="Transparent" x="373" y="121" width="52" height="12" forecolor="#000000" uuid="045a39d2-442b-4204-8df0-76b3f57f4e01">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Situação:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText70" mode="Transparent" x="425" y="121" width="122" height="12" forecolor="#000000" uuid="ce76a2b5-3dbd-48e9-bd7e-adc563ea1bad">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SAU_SITUACAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label26" mode="Transparent" x="373" y="265" width="74" height="12" forecolor="#000000" uuid="f3585bb9-84da-4ea7-b459-4ece3d41c170"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Insc. Municipal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label79" mode="Transparent" x="228" y="265" width="68" height="12" forecolor="#000000" uuid="8b071a4e-f5d4-4f32-9a7b-dcfee1fef1fd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Insc. Estadual:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText73" mode="Transparent" x="298" y="265" width="62" height="12" forecolor="#000000" uuid="5e4c71e3-2f99-4571-9c83-bb94c830fb9a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEJ_INSCRICAO_ESTADUAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText74" mode="Transparent" x="449" y="265" width="101" height="12" forecolor="#000000" uuid="c028b95b-0e8f-4b5f-918c-31ab2ba1a16b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEJ_INSCRICAO_MUNICIPAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="9" y="121" width="355" height="13" uuid="a1348ee7-d6b1-4647-828f-60964439201c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement markup="html">
+					<font fontName="OpenSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>" + $F{DescricaoPessoa} + "</b> " + $F{InformacaoPessoa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="228" y="166" width="136" height="12" uuid="628fdf20-18b7-49af-9fc4-95418fc844b7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement markup="html">
+					<font fontName="OpenSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>" + $F{DescricaoDado} + "</b> " + 
+(
+    $F{DescricaoDado}.equals("CPF:") ?
+    $F{InformacaoDado}.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4") : 
+    $F{InformacaoDado}.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5")
+)]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="">
+				<reportElement key="SystemVariable2" mode="Transparent" x="380" y="36" width="162" height="12" forecolor="#000000" uuid="7c059a09-6837-4b66-b38c-3e3c4a581005"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + "1" + " de " + $V{PAGE_NUMBER}.toString()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="9" y="136" width="346" height="13" uuid="42bae66a-a2d7-4f84-9860-ded3c6ef2768">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement markup="html">
+					<font fontName="OpenSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>" + $F{DescricaoPessoaSocial} + "</b> " + ($F{InformacaoPessoaSocial} == null || $F{InformacaoPessoaSocial}.isEmpty() ? "" : $F{InformacaoPessoaSocial})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label16" mode="Transparent" x="9" y="201" width="74" height="12" forecolor="#000000" uuid="e78dc552-52d2-4900-9905-7df424b23962"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data do Curso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label23" mode="Transparent" x="228" y="202" width="92" height="12" forecolor="#000000" uuid="48e33585-8610-4287-813e-14e7bf49bf9b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade do Curso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label30" mode="Transparent" x="373" y="151" width="78" height="12" forecolor="#000000" uuid="ce3dc1e6-f604-44aa-ae36-5fdb513a3ff2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText22" mode="Transparent" x="426" y="214" width="33" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="92a25547-8317-471f-a75f-3049b82c076e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_UF}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="DBText22" mode="Transparent" x="396" y="151" width="55" height="12" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="3c30d9fa-b8f2-41a7-8208-6e47b32252a6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEF_UF_RG}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="53">
+			<subreport>
+				<reportElement positionType="Float" x="3" y="13" width="553" height="9" uuid="d3f56aa8-253f-4ec1-b416-e7b7b484aaa3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="GAU_ID">
+					<subreportParameterExpression><![CDATA[$F{GAU_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["SubReportDadosVeiculo.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="1" y="23" width="553" height="11" uuid="57782d13-0dce-4182-a615-58ed5dac6468">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="GAU_ID">
+					<subreportParameterExpression><![CDATA[$F{GAU_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["SubReportDadosOperador.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="3" y="-3" width="552" height="13" isRemoveLineWhenBlank="true" uuid="ef901b6d-787f-4556-a129-a27800631ecf">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="GAU_ID">
+					<subreportParameterExpression><![CDATA[$F{GAU_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["SubReportInfoAutorizatario.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

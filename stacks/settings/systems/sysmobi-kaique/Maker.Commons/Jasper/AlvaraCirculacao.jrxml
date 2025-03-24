@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AlvaraCirculacao" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6a486f6-74f3-4cb0-8aa4-4797f9cd1afb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ALVARA" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[$F{GAU_NUM_ALVARA_AUT}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COOPE" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[Select distinct
+  ga.GAU_ID,
+  cv.SMB_DT_CADASTRO,
+  ga.GAU_NUM_ALVARA_AUT,
+  ga.GAU_VALIDADE_ALVARA,
+  Case When p.PES_TIPO In ('PF', 'F') Then Concat(pf.PEF_NOME, ' - ', 'CPF: ', pf.PEF_CPF) When p.PES_TIPO In ('PJ', 'J') Then Concat(ga.GAU_NUM_ALVARA_AUT, ' - ', pj.PEJ_RAZAO_SOCIAL, ' - ', 'CNPJ: ', pj.PEJ_CNPJ) Else 'Não Informado' End As dados,
+  cv.SMB_RENAVAM,  
+  ppv.[NOME-CNPJ] as Cooperativa,
+  ev.SMB_ESP_ID,
+  Concat(ev.SMD_ID, ' - ', tv.TPV_DESCRICAO, ' - ', clv.LYV_DESCRICAO) As Descricao,
+  cv.SMB_ANO_FABRICACAO,
+  cv.SMB_PLACA,
+  cv.SMB_NUMERO_CHASSI,
+  Case
+    When cs.SMB_CAD_SIGLA_DO_SISTEMA = 'STEC' Then 'D-' + Cast(ga.GAU_NUM_ALVARA_AUT As VARCHAR)
+    When cs.SMB_CAD_SIGLA_DO_SISTEMA = 'STCO' Then 'SPE ' + Cast(ga.GAU_NUM_ALVARA_AUT As VARCHAR)
+    Else Cast(ga.GAU_NUM_ALVARA_AUT As VARCHAR) 
+  End As AlvaraMasc,
+  cs.SMB_CAD_SIGLA_DO_SISTEMA,
+      (Select SMB_PARAMETROS_GLOBAIS.PGL_BRASAO 
+   From SMB_PARAMETROS_GLOBAIS) As PGL_BRASAO,
+   ga.GAU_QRCODE 
+From
+  SMB_GESTAO_AUTORIZATARIO ga
+  Left join SMB_CADASTRAR_VEICULO cv On cv.GAU_ID = ga.GAU_ID 
+  Left join SMB_ESPECIFICACAO_DO_VEICULO ev on ev.SMB_ESP_ID = cv.SMB_ESP_ID 
+  Inner Join SMB_PESSOA p On p.PES_ID = ga.PES_COD_AUTORIZATARIO
+  Left Join SMB_PESSOA_JURIDICA pj On pj.PES_ID = p.PES_ID
+  Left Join SMB_PESSOA_FISICA pf On pf.PES_ID = p.PES_ID 
+  inner join PESSOAS_PJ_VI ppv on ppv.PES_ID = ga.PES_COD_CONSORCIO_COOPE
+  Inner Join SMB_PESSOA_JURIDICA ppj On ppv.PES_ID = ppj.PES_ID
+  Left Join SMB_TIPO_DE_VEICULO tv On ev.SMB_TIP_ID = tv.SMB_TIP_ID
+  Left Join SMB_CADASTRAR_LAYOUT_VEICULO clv On clv.SMB_CAD_ID = ev.SMB_CAD_ID
+  Left Join SMB_CADASTRO_DE_SISTEMA cs On cs.SMB_CAD_ID = ga.SMB_CAD_ID
+  Where ga.GAU_ID = IsNull( $P{ALVARA} , ga.GAU_ID) And
+  ppj.PES_ID = IsNull($P{COOPE} , ppj.PES_ID)]]>
+	</queryString>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="SMB_DT_CADASTRO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_DT_CADASTRO"/>
+	</field>
+	<field name="GAU_NUM_ALVARA_AUT" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_NUM_ALVARA_AUT"/>
+	</field>
+	<field name="GAU_VALIDADE_ALVARA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_VALIDADE_ALVARA"/>
+	</field>
+	<field name="dados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dados"/>
+	</field>
+	<field name="SMB_RENAVAM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_RENAVAM"/>
+	</field>
+	<field name="Cooperativa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cooperativa"/>
+	</field>
+	<field name="SMB_ESP_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ESP_ID"/>
+	</field>
+	<field name="Descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Descricao"/>
+	</field>
+	<field name="SMB_ANO_FABRICACAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ANO_FABRICACAO"/>
+	</field>
+	<field name="SMB_PLACA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_PLACA"/>
+	</field>
+	<field name="SMB_NUMERO_CHASSI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_NUMERO_CHASSI"/>
+	</field>
+	<field name="AlvaraMasc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="AlvaraMasc"/>
+	</field>
+	<field name="SMB_CAD_SIGLA_DO_SISTEMA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAD_SIGLA_DO_SISTEMA"/>
+	</field>
+	<field name="PGL_BRASAO" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BRASAO"/>
+	</field>
+	<field name="GAU_QRCODE" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_QRCODE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_GESTAO_AUTORIZATARIO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="237">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" evaluationTime="Master">
+				<reportElement stretchType="RelativeToTallestObject" x="110" y="-10" width="341" height="225" uuid="b9797073-202f-4fa0-bd28-e6521104b6ee"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<imageExpression><![CDATA["./image/FUNDO_ALVARA.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="118" y="83" width="326" height="28" uuid="ae82c21c-53c0-41e8-8920-0f50b7253d70"/>
+				<box topPadding="5" leftPadding="9" rightPadding="0">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUTORIZATÁRIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="4" width="93" height="15" uuid="b2eeb328-69b1-461c-8550-be50c0a4116f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA DE CADASTRO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="299" y="41" width="83" height="15" uuid="66d82a6e-451c-47c7-8a18-a53bf7ab78b3"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AlvaraMasc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="299" y="16" width="93" height="15" uuid="e71fb05c-964a-46d1-b896-74b310c558bb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{SMB_DT_CADASTRO})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="299" y="29" width="83" height="15" uuid="e565b259-bebd-4bce-a213-ffb53de5ab69">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALVARÁ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="54" width="83" height="15" uuid="965cd962-6c7a-4dc7-8cd5-d3aaac9c8ff4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALIDADE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="299" y="64" width="83" height="15" uuid="c0f7c189-112c-4491-b260-1e03220ae26e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GAU_VALIDADE_ALVARA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="118" y="111" width="101" height="28" uuid="87ab2f7b-9d09-4057-a843-08dc5880d245">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RENAVAM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="118" y="139" width="171" height="28" uuid="78055a56-818f-45de-a2cb-d6114874f89b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHASSI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="118" y="166" width="141" height="28" uuid="16936872-ea9a-45d1-9404-a087ba30937c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO COOPERATIVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="289" y="139" width="154" height="28" uuid="b1987b17-db58-4f0f-a0e6-2b05db083f2d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="219" y="111" width="107" height="28" uuid="4db32db3-783a-41d5-8776-c5d625980b23"/>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MARCA/MODELO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="166" width="78" height="28" uuid="8279dc77-4463-4c54-a396-62cd4487c1cd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERVIÇO DE RÁDIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="166" width="106" height="28" uuid="4b4cc111-2188-416d-bd22-862325da6615">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ASS: SERVIDOR/MATRÍCULA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="98" width="311" height="10" uuid="53d49bf8-bcb1-404d-b04e-b74b3fdb5864">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dados}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="126" y="125" width="82" height="10" uuid="fd6f670f-049b-438d-b9a5-d0d02e23c027">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_RENAVAM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="299" y="154" width="140" height="10" uuid="aa888f5f-796e-47c5-99d4-93f5c8ef1676">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_SIGLA_DO_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="126" y="154" width="152" height="10" uuid="76d5197c-c983-45eb-b3c8-aa7dce12f5b3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_NUMERO_CHASSI}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="226" y="15" width="60" height="50" uuid="7c843183-d463-49bc-9f83-4d9d8f1f32ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALVARÁ
+DE
+CIRCULAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="111" width="43" height="28" uuid="ad863ffc-c559-4e84-9ec2-d5f57465371e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="111" width="74" height="28" uuid="6cac003a-6527-41e4-9eee-0029a500a1fe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="9">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="334" y="125" width="34" height="10" uuid="61d281f2-13d1-4b74-ab8c-b87a86af665f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_ANO_FABRICACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="379" y="125" width="60" height="10" uuid="989e3db7-a059-412b-9c80-cddf39943aab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_PLACA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="229" y="125" width="90" height="10" uuid="2e4d0aea-cd3a-429c-b913-29bb0f46ce13">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Descricao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="181" width="120" height="10" uuid="422e613d-a452-4885-b57b-4ac7cad203d6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cooperativa}]]></textFieldExpression>
+			</textField>
+			<image evaluationTime="Master">
+				<reportElement x="118" y="27" width="100" height="41" uuid="6b20260c-1fb2-4683-9dc1-894e12d94484"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="379" y="9" width="64" height="64" uuid="1869e6ce-6000-4a63-a676-e7e96dcc61ad"/>
+				<imageExpression><![CDATA[$F{GAU_QRCODE}.getBinaryStream()]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<noData>
+		<band height="279">
+			<staticText>
+				<reportElement x="208" y="0" width="130" height="105" uuid="d4b27825-3ddc-474b-91bb-111880496e6c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALVARÁ
+DE
+CIRCULAÇÃO]]></text>
+			</staticText>
+			<image evaluationTime="Master">
+				<reportElement x="-2" y="29" width="200" height="96" uuid="26382609-675f-4017-9cd1-812b7b625b71"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="83" y="140" width="383" height="30" uuid="ce6f8626-7f05-426e-ab2c-8ed07f9c4cab"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Não existe nenhuma informação para ser gerada.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

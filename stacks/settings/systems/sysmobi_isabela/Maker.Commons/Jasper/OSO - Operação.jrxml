@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO -  OSO - Operação " pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="30dd2441-c9ff-4301-b069-7564335bf656">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SYSMOBI"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="codigoLinha" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  SMB_LINHA.LNH_ID,
+  SMB_LINHA.LNH_NOME,
+  SMB_TIPO_OPERACAO.TPO_DESCRICAO,
+  SMB_CLASSIFICACAO_FUNCIONAL.CLA_DESCRICAO,
+  SMB_CLASSIFICACAO_FUNCIONAL.CLA_DESCRICAO AS [CLA.FUNC],
+  SMB_TIPO_FROTA.TPF_DESCRICAO,
+  SMB_CADASTRO_DE_SISTEMA.SMB_CAD_NOME_DO_SISTEMA,
+  SMB_CONDICAO_TRAFEGO.CDT_DESCRICAO,
+  SMB_CONDICAO_TRAFEGO.CDT_DESCRICAO AS [CON.TRAFEGO],
+  -- Nível de conforto nos horários de pico
+  NCONF_PICO.CON_NIVEL_CONFORTO AS CON_NIVEL_CONFORTO_PICO,
+  -- Nível de conforto nos horários entre picos
+  NCONF_ENTRE_PICO.CON_NIVEL_CONFORTO AS CON_NIVEL_CONFORTO_ENTRE_PICO,
+  SMB_FORMA_OPERACAO.FRO_DESCRICAO
+FROM
+  SMB_LINHA
+  left JOIN SMB_NIVEL_TARIFARIO ON SMB_NIVEL_TARIFARIO.NVT_ID = SMB_LINHA.NVT_ID
+  left JOIN SMB_TIPO_OPERACAO ON SMB_TIPO_OPERACAO.TPO_ID = SMB_LINHA.TPO_ID
+  left JOIN SMB_CLASSIFICACAO_FUNCIONAL ON SMB_CLASSIFICACAO_FUNCIONAL.CLA_ID = SMB_LINHA.CLA_ID
+  left JOIN SMB_TIPO_FROTA ON SMB_TIPO_FROTA.TPF_ID = SMB_LINHA.TPF_ID
+  left JOIN SMB_CADASTRO_DE_SISTEMA ON SMB_CADASTRO_DE_SISTEMA.SMB_CAD_ID = SMB_LINHA.SMB_CAD_ID
+  left JOIN SMB_CONDICAO_TRAFEGO ON SMB_CONDICAO_TRAFEGO.CDT_ID = SMB_LINHA.CDT_ID
+  -- Join correto para nível de conforto nos horários de pico (usando CON_ID_PICO)
+  LEFT JOIN SMB_NIVEL_CONFORTO NCONF_PICO ON NCONF_PICO.CON_ID = SMB_LINHA.CON_ID_PICO
+  -- Join correto para nível de conforto nos horários entre picos (usando CON_ID_ENTRE_PICO)
+  LEFT JOIN SMB_NIVEL_CONFORTO NCONF_ENTRE_PICO ON NCONF_ENTRE_PICO.CON_ID = SMB_LINHA.CON_ID_ENTRE_PICO
+  left JOIN SMB_FORMA_OPERACAO ON SMB_LINHA.FRO_ID = SMB_FORMA_OPERACAO.FRO_ID
+  where SMB_LINHA.LNH_ID =  $P{codigoLinha}]]>
+	</queryString>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="LNH_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_NOME"/>
+	</field>
+	<field name="TPO_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TPO_DESCRICAO"/>
+	</field>
+	<field name="CLA_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLA_DESCRICAO"/>
+	</field>
+	<field name="CLA.FUNC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLA.FUNC"/>
+	</field>
+	<field name="TPF_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TPF_DESCRICAO"/>
+	</field>
+	<field name="SMB_CAD_NOME_DO_SISTEMA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAD_NOME_DO_SISTEMA"/>
+	</field>
+	<field name="CDT_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CDT_DESCRICAO"/>
+	</field>
+	<field name="CON.TRAFEGO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CON.TRAFEGO"/>
+	</field>
+	<field name="CON_NIVEL_CONFORTO_PICO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CON_NIVEL_CONFORTO_PICO"/>
+	</field>
+	<field name="CON_NIVEL_CONFORTO_ENTRE_PICO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CON_NIVEL_CONFORTO_ENTRE_PICO"/>
+	</field>
+	<field name="FRO_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FRO_DESCRICAO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="69" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-10" y="0" width="572" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="afade2c9-8057-4492-8e6a-50f069d89f5a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="1" width="571" height="14" forecolor="#FFFFFF" uuid="23302d10-feb2-4e63-8c15-eff4cbcf5991">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OPERAÇÃO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-10" y="18" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="c9c8d64f-7307-464d-94ca-34ae903dcca3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="18" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="420896f2-cdd2-4e5b-8b81-6b939a294fb1"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Serviço: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="18" width="183" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a3e0dd1d-660b-45ac-9045-81fa182b4bc1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="36" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="02a0fc74-236a-432d-b935-afc6c320503e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="36" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="aeb4d77f-8510-42e0-8cc2-4a4b74093101">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Condição de Tráfego: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="36" width="183" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f52fc2e8-9160-405b-a6c7-7cdd133194a7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="53" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="fc7a6ac7-c936-4d01-a1d2-d9ed37d08202"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="53" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="a44f4a66-d895-4b34-9616-5ad3e5c32f9d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nível de Conforto % / Faixa: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="53" width="31" height="15" forecolor="#FCFAFA" backcolor="#A8D08D" uuid="0380145b-5d44-46b8-99f9-059ccfdf1696"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="151" y="53" width="57" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="3accf585-94a7-4ac7-a6da-425776a90103"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="151" y="53" width="58" height="15" forecolor="#050505" backcolor="#080707" uuid="3c6e91ef-493b-4632-ae3e-45e188f33289">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Entre pico]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="303" y="18" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="893b9e5f-0471-430a-bb2b-729cc23431f4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="431" y="18" width="131" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a28133f5-47e3-4ec0-b6e5-449972854088">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="36" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="a386a1fa-d74c-4944-9585-3ab33a11f31a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="431" y="36" width="131" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="3e8cc3f0-0e07-4972-a405-3e34599c83a4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="211" y="53" width="31" height="15" forecolor="#FCFAFA" backcolor="#A8D08D" uuid="0907f662-edfe-42d9-bfbd-b42d52508969"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="244" y="53" width="57" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="054e7f9d-ee94-4281-8f0e-1df1d477384e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="244" y="53" width="57" height="15" forecolor="#050505" backcolor="#080707" uuid="f85c4336-43ee-4490-90b9-ffe553bb964c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Pico]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="431" y="54" width="131" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="847d8b31-a021-4df4-8a5e-5a0023c1f2a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="303" y="54" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="efe024d2-79d8-49dd-8b76-8457025f8094"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="18" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="7b950868-ec69-49a9-b56e-d82b970ce8ac"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Modo de Transporte:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="36" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="c9b4b091-25a7-4cc2-8436-2f18dd2264ad"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Forma de Operação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="54" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="a3597aa0-cb0b-463a-a4bc-e2fbedbf17b3"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Tipo de Operação:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="119" y="18" width="182" height="15" uuid="211a4818-d52d-4490-9f87-a9b0ae774f2c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_NOME_DO_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="54" width="130" height="15" uuid="2713b45d-c214-4ce7-b0a8-6c57bc6011b5"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TPO_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="119" y="36" width="182" height="15" uuid="fe8ac764-336a-4cb5-b4d7-c2fd508e098b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CON.TRAFEGO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="36" width="130" height="15" uuid="1cc4dccf-c917-4455-9845-dd4100440041"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FRO_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="18" width="130" height="15" uuid="42107ed9-44e0-41ea-9aba-904164043ab6"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_CAD_NOME_DO_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="53" width="31" height="15" uuid="71d490ac-ae99-4f64-bdaa-38d0260d6c8e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CON_NIVEL_CONFORTO_PICO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="53" width="31" height="15" uuid="bef5fad1-87d2-4a55-91e4-9ee9bf2b2c80"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CON_NIVEL_CONFORTO_ENTRE_PICO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

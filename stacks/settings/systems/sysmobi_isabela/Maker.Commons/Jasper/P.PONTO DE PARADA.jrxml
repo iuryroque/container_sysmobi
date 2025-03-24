@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  MAX(SMB_LINHA_PONTO_PARADA.LPP_ID) AS [Cód linha ponto],
+  MAX(SMB_LINHA_PONTO_PARADA.LNH_ID) AS LNH_ID,
+  MAX(SMB_LINHA_PONTO_PARADA.PTP_ID) AS PTP_ID,
+  MAX(e.END_CEP) AS END_CEP,
+  e.END_ENDERECO,
+  e.END_BAIRRO,
+  MAX(e.END_NUMERO) AS END_NUMERO,
+  MAX(e.END_LOCALIDADE) AS END_LOCALIDADE,
+  MAX(e.END_UF) AS END_UF,
+  MAX(e.END_COMPLEMENTO) AS END_COMPLEMENTO,
+  MAX(e.END_PONTO_REFERENCIA) AS END_PONTO_REFERENCIA,
+  MAX(e.END_LATITUDE) AS Latitude,
+  MAX(e.END_LONGITUDE) AS Longitude,
+  MAX(CONCAT(l.LNH_ID, l.LNH_NOME)) AS Linha,
+  MAX(SMB_PONTO_PARADA.PTP_DESCRICAO_PONTO) AS Ponto
+FROM
+  SMB_LINHA_PONTO_PARADA
+  INNER JOIN SMB_PONTO_PARADA ON SMB_PONTO_PARADA.PTP_ID = SMB_LINHA_PONTO_PARADA.PTP_ID
+  INNER JOIN SMB_LINHA l ON l.LNH_ID = SMB_LINHA_PONTO_PARADA.LNH_ID
+  LEFT JOIN GER_ENDERECO e ON SMB_PONTO_PARADA.PTP_ID = e.PTP_ID
+WHERE
+  e.END_ENDERECO IS NOT NULL
+  AND l.LNH_ID = $P{Cod} -- Usando SMB_LINHA.LNH_ID para o filtro
+GROUP BY 
+  e.END_ENDERECO, 
+  e.END_BAIRRO
+ORDER BY 
+  e.END_ENDERECO, 
+  e.END_BAIRRO]]>
+	</queryString>
+	<field name="Cód linha ponto" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Cód linha ponto"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="PTP_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PTP_ID"/>
+	</field>
+	<field name="END_CEP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_CEP"/>
+	</field>
+	<field name="END_ENDERECO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_ENDERECO"/>
+	</field>
+	<field name="END_BAIRRO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_BAIRRO"/>
+	</field>
+	<field name="END_NUMERO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_NUMERO"/>
+	</field>
+	<field name="END_LOCALIDADE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_LOCALIDADE"/>
+	</field>
+	<field name="END_UF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_UF"/>
+	</field>
+	<field name="END_COMPLEMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_COMPLEMENTO"/>
+	</field>
+	<field name="END_PONTO_REFERENCIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_PONTO_REFERENCIA"/>
+	</field>
+	<field name="Latitude" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Latitude"/>
+	</field>
+	<field name="Longitude" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Longitude"/>
+	</field>
+	<field name="Linha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Linha"/>
+	</field>
+	<field name="Ponto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Ponto"/>
+	</field>
+	<title>
+		<band height="17"/>
+	</title>
+	<columnHeader>
+		<band height="41">
+			<rectangle>
+				<reportElement x="6" y="7" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="148c620e-7729-4480-86ed-08fe35f1d4e6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="8" width="570" height="14" forecolor="#FFFFFF" uuid="98f119d7-bfd7-4e88-9abd-f49cebca79d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PONTOS DE PARADA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="40" y="26" width="188" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="8940c857-dc5c-428d-8afa-19f5c2a93f2f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="26" width="188" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="4b6cb119-c928-4c35-8a34-21826e933f2b"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Logradouro:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="230" y="26" width="137" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="2b1a7e4a-f20c-493f-8189-68b3a50e27c2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="231" y="26" width="136" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="ffee05f0-004d-4df8-bfe2-f59ff21aaba9"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Bairro]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="370" y="26" width="107" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="85051900-d132-4339-927b-9b20f30330e4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="370" y="26" width="107" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="1beb6678-5a50-465a-bff6-da5ef2ac2c5f"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Latitude]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="480" y="26" width="97" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="d2888c9d-cc76-4199-9823-1f0d9ac99098"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="480" y="26" width="96" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="d1b40f44-6731-4423-9742-5bc8b22ffb40"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Longitude]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="26" width="31" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="c3bfaa39-1590-4631-896b-760c8d8503c1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="26" width="30" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="821db322-e3e6-4793-97a6-bc1593f0f68a"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Cód]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement x="40" y="1" width="188" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="87b6c688-2e8e-4f5d-bc8e-ba3ab3197f42"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="230" y="1" width="137" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="eeb4a1f6-9791-4b7b-807a-7493ba3b28ef"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="370" y="1" width="107" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="d62d837a-7ffe-45b5-b518-8e32e86fd749"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="480" y="1" width="97" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="8a486d4b-484e-4371-95e6-df0258988937"/>
+			</rectangle>
+			<textField isBlankWhenNull="true" hyperlinkType="Reference">
+				<reportElement x="370" y="0" width="106" height="16" uuid="5a6da07b-683e-40af-8210-cff30dd0797d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ab5ebfb-0c46-4a90-b5aa-185c8b0dda22"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Latitude}]]></textFieldExpression>
+				<hyperlinkReferenceExpression><![CDATA["https://www.google.com/maps/?q=" + $F{Latitude} + "," + $F{Longitude}]]></hyperlinkReferenceExpression>
+				<hyperlinkWhenExpression><![CDATA[true]]></hyperlinkWhenExpression>
+			</textField>
+			<textField isBlankWhenNull="true" hyperlinkTarget="Blank">
+				<reportElement x="480" y="1" width="96" height="14" uuid="a1160756-7a7f-49ef-ae9a-39c826364b5f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5c7d7b29-0ff5-4611-9bbe-7af92141a91a"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Longitude}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="6" y="1" width="31" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="2f5cf369-4835-44bb-9b40-3ca3d90f69c1"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="0" width="188" height="16" uuid="fc303c7f-719e-4851-a1a7-de0ffeb3e017">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="245bb178-8bb8-4ba5-9e63-1c15cceb5516"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="6" y="1" width="30" height="14" uuid="9bcc3c46-2348-45cc-9b24-e6ced155c033">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c73667c0-7fab-4bb7-818a-550374bd9068"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cód linha ponto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="231" y="1" width="136" height="14" uuid="87546dbf-77b7-40cb-83a6-d7e725a0e101">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="da66ee12-9017-46ba-92bd-da40a43060ca"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_BAIRRO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

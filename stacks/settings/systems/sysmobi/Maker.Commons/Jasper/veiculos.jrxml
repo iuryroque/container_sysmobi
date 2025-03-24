@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="veiculos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="4eba63b3-fc27-4a03-af4a-5a62d9bb3a45">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SEMOB"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="PES_ID" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select
+  p.PES_ID,
+  v.SMB_NUMERO_ORDEM,
+  v.SMB_PLACA,
+  Case When v.SMB_TIPO_COMUBSTIVEL = 'G' Then 'Gasolina'
+    When v.SMB_TIPO_COMUBSTIVEL = 'D' Then 'Diesel'
+    When v.SMB_TIPO_COMUBSTIVEL = 'E' Then 'Elétrico' Else 'Não Definido'
+  End As TIPO_COMBUSTIVEL,
+  v.SMB_ANO_FABRICACAO,
+  v.SMB_DT_AQUISICAO,
+  v.SMB_NUM_NFE As NotaFiscal,
+  v.SMB_DATA_NFE As DataNotaFiscal,
+  v.SMB_RESTRICOES_VENDA,
+  v.SMB_CAPACIDADE_PASSAGEIRO,
+  v.SMB_RENAVAM,
+  v.SMB_ESTADO_VEICULO,
+  v.SMB_QTD_DE_PORTAS,
+  v.SMB_ANO_LICENCIADO,
+  v.SMB_NUMERO_CHASSI,
+  ve.SMB_ESP_DESCRICAO As Especie,
+  tv.TPV_DESCRICAO As TipoVeiculo,
+  cmo.SMB_MO_DESCRICAO As marca,
+  fa.FAQ_DESCRICAO As categoria,
+  cvc.SMB_CORES_DESCRICAO As Cor
+From
+  SMB_CADASTRAR_VEICULO v
+  Inner Join SMB_PESSOA p On p.PES_ID = v.PES_ID_AUTORIZATARIO
+  Left Join SMB_TIPO_DE_VEICULO tv On tv.SMB_TIP_ID = v.SMB_TIP_ID
+  Left Join SMB_CADASTRO_DE_VEICULO_ESP ve On ve.SMB_ESP_ID =
+    v.SMB_ESP_ID_ESPECIE
+  Left Join SMB_CADASTRAR_MODELO_DE_ONIBUS cmo On cmo.SMB_CAD_ID =
+    v.SMB_MODELO_ID
+  Left Join SMB_FORMA_AQUISICAO fa On fa.FAQ_ID = v.FAQ_ID
+  Left Join SMB_CADASTRO_DE_VEICULO_CORES cvc On cvc.SMB_CORES_ID = v.SMB_COR
+  Where
+ p.PES_ID = $P{PES_ID}]]>
+	</queryString>
+	<field name="PES_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PES_ID"/>
+	</field>
+	<field name="SMB_NUMERO_ORDEM" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_NUMERO_ORDEM"/>
+	</field>
+	<field name="SMB_PLACA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_PLACA"/>
+	</field>
+	<field name="TIPO_COMBUSTIVEL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIPO_COMBUSTIVEL"/>
+	</field>
+	<field name="SMB_ANO_FABRICACAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ANO_FABRICACAO"/>
+	</field>
+	<field name="SMB_DT_AQUISICAO" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_DT_AQUISICAO"/>
+	</field>
+	<field name="NotaFiscal" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NotaFiscal"/>
+	</field>
+	<field name="DataNotaFiscal" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DataNotaFiscal"/>
+	</field>
+	<field name="SMB_RESTRICOES_VENDA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_RESTRICOES_VENDA"/>
+	</field>
+	<field name="SMB_CAPACIDADE_PASSAGEIRO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_CAPACIDADE_PASSAGEIRO"/>
+	</field>
+	<field name="SMB_RENAVAM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_RENAVAM"/>
+	</field>
+	<field name="SMB_ESTADO_VEICULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ESTADO_VEICULO"/>
+	</field>
+	<field name="SMB_QTD_DE_PORTAS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_QTD_DE_PORTAS"/>
+	</field>
+	<field name="SMB_ANO_LICENCIADO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_ANO_LICENCIADO"/>
+	</field>
+	<field name="SMB_NUMERO_CHASSI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_NUMERO_CHASSI"/>
+	</field>
+	<field name="Especie" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Especie"/>
+	</field>
+	<field name="TipoVeiculo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TipoVeiculo"/>
+	</field>
+	<field name="marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="marca"/>
+	</field>
+	<field name="categoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="categoria"/>
+	</field>
+	<field name="Cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cor"/>
+	</field>
+	<detail>
+		<band height="138" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="4" width="555" height="16" backcolor="#0078D7" uuid="f9e7be22-c91d-4ec6-88de-54da6d6ef9c3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="1" y="4" width="554" height="16" forecolor="#FFFFFF" uuid="701acd54-73c0-43e6-89b2-98fa4a40c6c6"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do Veiculo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="25" width="48" height="18" uuid="98271c05-aedc-4bc7-a47c-b9eda1e2a34b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Placa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="43" width="40" height="18" uuid="40698fe1-1e94-4cb2-a629-ccd6820d484a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Espécie:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="61" width="104" height="18" uuid="84320176-6808-494e-a706-575a06fcb02c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Combustivel:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="79" width="71" height="18" uuid="0a8b0e98-0477-4335-9b3e-69a4aba2df35">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca/Modelo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="97" width="95" height="18" uuid="df5869e2-7a82-43eb-a79e-42fe9d199336">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano de Fabricação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="25" width="19" height="18" uuid="f606d8c1-a86d-43a1-aba1-760759ed9465">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="25" width="48" height="18" uuid="4fad1836-112a-4fc0-890e-22a5b132a198">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Renavam:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="25" width="53" height="18" uuid="945bbf2e-6395-4b29-8525-a1ff57f9c6e1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Chassi:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="43" width="74" height="18" uuid="3c450234-8945-4372-a1f3-854cabbda03a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Veículo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="61" width="48" height="18" uuid="4d4f663c-1ae6-45d1-bc08-fc8791f514b7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoria:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="79" width="59" height="18" uuid="d34f0624-67f6-4a6a-aa76-ed5d0df0b424">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capacidade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="97" width="70" height="18" uuid="66fdaf4f-0f98-43b2-a160-ca4cf0c0e9b6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Nota Fiscal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="43" width="20" height="18" uuid="5710eae2-976f-48dd-9d36-a3868d468be2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="61" width="30" height="18" uuid="00acffa9-9cc4-4808-9e9a-8778628faf4d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Porta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="116" width="111" height="18" uuid="9738394d-5712-43ab-92e8-76149c60bf4e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Restrição Para Venda:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="79" width="76" height="18" uuid="e9dda615-57e3-4e45-9655-12b9b67b97e3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano Licenciado :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="25" width="63" height="18" uuid="87a82899-b118-4867-87a3-ab5a06ef6a73"/>
+				<textFieldExpression><![CDATA[$F{SMB_PLACA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="53" y="43" width="83" height="18" uuid="b271fc6f-259b-4172-8fcf-8f4a2e1b9a72"/>
+				<textFieldExpression><![CDATA[$F{Especie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="61" width="59" height="18" uuid="db43cd62-a995-4b67-8782-82831be08226"/>
+				<textFieldExpression><![CDATA[$F{TIPO_COMBUSTIVEL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="82" y="79" width="83" height="18" uuid="d428d6fb-c30d-45e3-a008-dfe56048d17c"/>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="97" width="83" height="18" uuid="f087e485-673c-40a5-8838-5ef5942d2306"/>
+				<textFieldExpression><![CDATA[$F{SMB_ANO_FABRICACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="246" y="25" width="83" height="18" uuid="e8dca8e5-7639-410e-9f33-f6d064354a61"/>
+				<textFieldExpression><![CDATA[$F{SMB_RENAVAM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="248" y="61" width="83" height="18" uuid="18a629c6-5360-49af-a865-8422a9b17488"/>
+				<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="257" y="79" width="83" height="18" uuid="01699e9f-f137-42f6-aca8-720337dde243"/>
+				<textFieldExpression><![CDATA[$F{SMB_CAPACIDADE_PASSAGEIRO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="268" y="97" width="240" height="18" uuid="89146a4a-5ceb-4a42-80b9-19d0e5bcf66b"/>
+				<textFieldExpression><![CDATA[$F{NotaFiscal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="25" width="83" height="18" uuid="e6510b59-0609-478b-8c1a-b72678298156"/>
+				<textFieldExpression><![CDATA[$F{SMB_NUMERO_CHASSI}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="397" y="43" width="108" height="18" uuid="48816867-3920-4f03-b08e-107d7cfbd437"/>
+				<textFieldExpression><![CDATA[$F{Cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="407" y="61" width="98" height="18" uuid="651fbdcb-b71e-4540-84d2-6ef4ca28ee53"/>
+				<textFieldExpression><![CDATA[$F{SMB_QTD_DE_PORTAS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="79" width="51" height="18" uuid="be5bce18-0a00-4654-9704-63bc711de484"/>
+				<textFieldExpression><![CDATA[$F{SMB_ANO_LICENCIADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="121" y="116" width="431" height="18" uuid="0d0a55fa-503e-41df-ad0f-96d9d8d6613e"/>
+				<textFieldExpression><![CDATA[$F{SMB_RESTRICOES_VENDA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

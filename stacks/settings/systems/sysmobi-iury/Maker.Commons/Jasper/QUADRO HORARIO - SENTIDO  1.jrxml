@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[Select
+  Case When PLH.PAR_TIPODEDIA = 'U' Then 'Dia Útil' When PLH.PAR_TIPODEDIA = 'S' Then 'Sábado' When PLH.PAR_TIPODEDIA = 'D' Then 'Domingos e Feriados' Else 'Desconhecido' End As tipo_dia,
+
+  -- Exibir o horário inicial da faixa de viagens
+  MIN(Convert(VARCHAR(5), PLH.PAR_HORARIOINICIO, 108)) AS horario_inicial,
+
+  -- Exibir o horário final da faixa de viagens
+  MAX(Convert(VARCHAR(5), PLH.PAR_HORARIOFIM, 108)) AS horario_final,
+
+  -- Concatenar todos os horários de início de viagem em uma única linha
+  (
+      SELECT STRING_AGG(Convert(VARCHAR(5), PLH2.PAR_HORARIOINICIO, 108), ' ') 
+      FROM SMB_PARAMETROS_LINHA_HORARIOS PLH2
+      WHERE PLH2.ID_PARAMETRO_LINHA = PLH.ID_PARAMETRO_LINHA
+        AND PLH2.PAR_TIPODEDIA = PLH.PAR_TIPODEDIA
+        AND PLH2.PAR_SENTIDO = PLH.PAR_SENTIDO
+  ) AS viagens_corridas,
+
+  -- Quantidade de viagens calculada
+  Count(PLH.ID) As quantidade_viagens
+  
+From
+  SMB_PARAMETROS_LINHA_HORARIOS PLH
+  Inner Join
+  SMB_PARAMETROS_LINHA PL On PL.ID = PLH.ID_PARAMETRO_LINHA
+  Inner Join
+  SMB_LINHA On SMB_LINHA.LNH_ID = PL.LNH_ID
+Where
+  PLH.PAR_TIPODEDIA = 'U' And
+  PLH.PAR_SENTIDO = 1 And
+  SMB_LINHA.LNH_ID = $P{Cod}
+Group By
+  PLH.PAR_TIPODEDIA,
+  PLH.PAR_SENTIDO,
+  PLH.ID_PARAMETRO_LINHA]]>
+	</queryString>
+	<field name="tipo_dia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipo_dia"/>
+	</field>
+	<field name="horario_inicial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_inicial"/>
+	</field>
+	<field name="horario_final" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_final"/>
+	</field>
+	<field name="viagens_corridas" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="viagens_corridas"/>
+	</field>
+	<field name="quantidade_viagens" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens"/>
+	</field>
+	<title>
+		<band height="55">
+			<staticText>
+				<reportElement x="9" y="7" width="562" height="14" forecolor="#FFFFFF" uuid="0e7cbebf-12dd-4cf6-bed1-ec24d73b42ee"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINHA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="6" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3960551c-bce5-47d0-a802-08f4389b25b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="8" y="6" width="568" height="14" forecolor="#FFFFFF" uuid="cf8d790e-3409-44b6-9a65-22d05c075d35"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QUADRO HORÁRIO (SENTIDO 1)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="22" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f67795a7-efa1-4e58-8852-22195500d89f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="23" width="570" height="14" forecolor="#FFFFFF" uuid="98c6e5d6-e1c2-4b23-a84e-baa9108be057"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIAS ÚTEIS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="38" width="94" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="6cab291d-e35a-43b7-9867-534701dc1608">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="8" y="38" width="92" height="15" forecolor="#FFFFFF" uuid="b05e83c5-eb4a-4e4c-8d4c-65e5c4541d63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faixa Horária]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="103" y="38" width="443" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="1ff63653-f99d-4cd0-ba62-edfd1475ebf2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="104" y="39" width="376" height="14" forecolor="#FFFFFF" uuid="73c7e51e-bade-49ea-847f-ae9b5d1ed2c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Viagens Corridas]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="549" y="38" width="28" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="e69b8ded-50e0-4640-99a8-6ed89a82a059">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="15">
+			<rectangle>
+				<reportElement x="6" y="0" width="50" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f75dd83d-23ba-47f7-b6e3-407bcf9d11df">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="58" y="0" width="42" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="133f3548-7fc4-4ab5-af78-6bd5560fea16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="103" y="0" width="443" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="59768846-4875-47e3-ae21-a918819aa62f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="549" y="0" width="28" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="15721e90-7cd7-4241-9fe0-0bfbf56a16a6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="103" y="1" width="443" height="14" uuid="40fed037-08c4-4e5f-8c73-c82ce2a4c73f"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{viagens_corridas}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="549" y="1" width="28" height="14" uuid="1fde67a7-c2b4-4537-b016-0a23c43bbecf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quantidade_viagens}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="6" y="0" width="50" height="15" uuid="3f3600fd-6c6d-4f52-9bdd-0f57c17e37e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{horario_inicial}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="-2" width="42" height="17" uuid="9da80f03-e9de-45c8-b077-ab5958018fd5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{horario_final}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

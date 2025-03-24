@@ -1,0 +1,16 @@
+{
+  "atalho_Menu-submenu-1745326_0": {
+    "id": "atalho_Menu-submenu-1745326_0",
+    "conteudo": "<i class=\"menu-icon fas fa-user-plus\" style=\"font-size: 2rem; margin-bottom: 0.25rem;\"></i><span class=\"menu-item-text text-center mw-100\">Funcionários</span>",
+    "left": "174px",
+    "top": "320px",
+    "tipoEvento": "form",
+    "parametros": [
+      "34",
+      "Aba",
+      "{EAB4ED3A-EA54-4F93-9DCC-05A4D62CFA6D}",
+      "Menu",
+      {}
+    ]
+  }
+}

@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="oficioNotificacao" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="21860953-99cc-4c1c-92dd-9d1c27391d69">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="codOficio" class="java.lang.Long">
+		<parameterDescription><![CDATA[código do ofício OFN_COD]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+OFN_COD,
+OFN_STATUS_OFICIO,
+(CASE WHEN (son.OFN_TIPO_OFICIO='C') THEN 'Circular' WHEN (son.OFN_TIPO_OFICIO='S') THEN 'Simples' END)tipoOficio,
+OFN_NUMERO_OFICIO,
+CAST(DAY(OFN_DT_VIGENCIA_INI) AS VARCHAR) + ' de ' +
+  CASE MONTH(OFN_DT_VIGENCIA_INI)
+    WHEN 1 THEN 'janeiro'
+    WHEN 2 THEN 'fevereiro'
+    WHEN 3 THEN 'março'
+    WHEN 4 THEN 'abril'
+    WHEN 5 THEN 'maio'
+    WHEN 6 THEN 'junho'
+    WHEN 7 THEN 'julho'
+    WHEN 8 THEN 'agosto'
+    WHEN 9 THEN 'setembro'
+    WHEN 10 THEN 'outubro'
+    WHEN 11 THEN 'novembro'
+    WHEN 12 THEN 'dezembro'
+  END + ' de ' +
+  CAST(YEAR(OFN_DT_VIGENCIA_INI) AS VARCHAR) AS inicioVigencia,
+  CAST(DAY(OFN_DT_VIGENCIA_TER) AS VARCHAR) + ' de ' +
+  CASE MONTH(OFN_DT_VIGENCIA_TER)
+    WHEN 1 THEN 'janeiro'
+    WHEN 2 THEN 'fevereiro'
+    WHEN 3 THEN 'março'
+    WHEN 4 THEN 'abril'
+    WHEN 5 THEN 'maio'
+    WHEN 6 THEN 'junho'
+    WHEN 7 THEN 'julho'
+    WHEN 8 THEN 'agosto'
+    WHEN 9 THEN 'setembro'
+    WHEN 10 THEN 'outubro'
+    WHEN 11 THEN 'novembro'
+    WHEN 12 THEN 'dezembro'
+  END + ' de ' +
+  CAST(YEAR(OFN_DT_VIGENCIA_TER) AS VARCHAR) AS terminoVigencia,
+OFN_DT_VIGENCIA_TER,
+PGL_BRASAO,
+PGL_NOME_FANTASIA,
+PGL_LOGRADOURO,
+PGL_NUMERO,
+PGL_BAIRRO,
+PGL_MUNICIPIO,
+PGL_UF,
+(CASE 
+    WHEN LEN(PGL_TELEFONE) = 10 THEN 
+        '(' + LEFT(PGL_TELEFONE, 2) + ') ' + 
+        SUBSTRING(PGL_TELEFONE, 3, 4) + '-' + 
+        RIGHT(PGL_TELEFONE, 4)
+    WHEN LEN(PGL_TELEFONE) = 11 THEN 
+        '(' + LEFT(PGL_TELEFONE, 2) + ') ' + 
+        SUBSTRING(PGL_TELEFONE, 3, 5) + '-' + 
+        RIGHT(PGL_TELEFONE, 4)
+    ELSE PGL_TELEFONE END) PGL_TELEFONE,
+OFN_TITULO,
+OFN_CORPO_EMAIL,
+FR_USUARIO.USR_LOGIN,
+FR_USUARIO.USR_ASSINATURA,
+pessoa.PEF_NOME,
+cargo.CAR_DESCRICAO ,
+son.OFN_RESPONSAVEL_ENVIO,
+son.OFN_QRCODE
+FROM SMB_OFICIO_NOTIFICACAO son 
+CROSS JOIN SMB_PARAMETROS_GLOBAIS
+LEFT JOIN FR_USUARIO ON FR_USUARIO.USR_CODIGO=son.OFN_RESPONSAVEL_ENVIO
+LEFT JOIN SMB_SERVIDOR servidor ON servidor.USR_CODIGO=FR_USUARIO.USR_CODIGO 
+LEFT JOIN SMB_PESSOA_FISICA pessoa ON pessoa.PES_ID=servidor.PES_ID
+LEFT JOIN SMB_CARGO cargo ON cargo.CAR_ID=servidor.CAR_ID
+WHERE OFN_COD=$P{codOficio}]]>
+	</queryString>
+	<field name="OFN_COD" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_COD"/>
+	</field>
+	<field name="OFN_STATUS_OFICIO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_STATUS_OFICIO"/>
+	</field>
+	<field name="tipoOficio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipoOficio"/>
+	</field>
+	<field name="OFN_NUMERO_OFICIO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_NUMERO_OFICIO"/>
+	</field>
+	<field name="inicioVigencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="inicioVigencia"/>
+	</field>
+	<field name="terminoVigencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="terminoVigencia"/>
+	</field>
+	<field name="OFN_DT_VIGENCIA_TER" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_DT_VIGENCIA_TER"/>
+	</field>
+	<field name="PGL_BRASAO" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BRASAO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_GLOBAIS"/>
+	</field>
+	<field name="PGL_NOME_FANTASIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_NOME_FANTASIA"/>
+	</field>
+	<field name="PGL_LOGRADOURO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_LOGRADOURO"/>
+	</field>
+	<field name="PGL_NUMERO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_NUMERO"/>
+	</field>
+	<field name="PGL_BAIRRO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BAIRRO"/>
+	</field>
+	<field name="PGL_MUNICIPIO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_MUNICIPIO"/>
+	</field>
+	<field name="PGL_UF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_UF"/>
+	</field>
+	<field name="PGL_TELEFONE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_TELEFONE"/>
+	</field>
+	<field name="OFN_TITULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_TITULO"/>
+	</field>
+	<field name="OFN_CORPO_EMAIL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_CORPO_EMAIL"/>
+	</field>
+	<field name="USR_LOGIN" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="USR_LOGIN"/>
+	</field>
+	<field name="USR_ASSINATURA" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="USR_ASSINATURA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FR_USUARIO"/>
+	</field>
+	<field name="PEF_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEF_NOME"/>
+	</field>
+	<field name="CAR_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CAR_DESCRICAO"/>
+	</field>
+	<field name="OFN_RESPONSAVEL_ENVIO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_RESPONSAVEL_ENVIO"/>
+	</field>
+	<field name="OFN_QRCODE" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="OFN_QRCODE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_OFICIO_NOTIFICACAO"/>
+	</field>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<image>
+				<reportElement x="172" y="0" width="210" height="64" isPrintInFirstWholeBand="true" uuid="2d21eff2-b429-41f1-a791-02087cf4f2ce"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="5" width="39" height="22" uuid="232b2c67-ca7d-44f7-92fd-c67f6e7bd79a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ofício]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="40" y="5" width="59" height="22" uuid="e575bdbc-90ac-47ee-948f-d18fad6b2b1a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoOficio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="99" y="5" width="20" height="22" uuid="83a7e7c7-9662-4bfb-80c3-a7b2356b4be2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="5" width="68" height="22" uuid="71b1a638-c31b-4412-bc72-2aeea4034a68"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OFN_NUMERO_OFICIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="188" y="5" width="86" height="22" uuid="e1609e3c-94e0-49a2-ac5d-2c3d8401e625"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[- COPRO/DIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="160" height="15" uuid="32837984-4fa1-4c1c-8887-c38f14daaaff"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Início da Vigência:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="160" height="15" uuid="01a8d81b-c2a8-4b0d-b25a-dc634cc12611">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Término da Vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="70" width="100" height="15" uuid="a4f10bc9-a877-4291-bdcb-f5792669029f"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inicioVigencia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="85" width="100" height="15" isRemoveLineWhenBlank="true" uuid="69d21d39-a92f-4e7e-a0b1-ea5d29dda470"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{terminoVigencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="60" height="22" uuid="256a92bf-b7ff-4c71-9449-5b8e59c8c10f"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Salvador,]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="63" y="40" width="247" height="22" uuid="52e16761-8320-47f9-af67-2985f3382cea"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.GregorianCalendar().get(java.util.Calendar.DAY_OF_MONTH) + 
+" de " + 
+new java.text.DateFormatSymbols(new java.util.Locale("pt", "BR")).getMonths()[new java.util.GregorianCalendar().get(java.util.Calendar.MONTH)] + 
+" de " + 
+new java.util.GregorianCalendar().get(java.util.Calendar.YEAR)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="417" y="5" width="128" height="22" forecolor="#FFFFFF" backcolor="#545252" uuid="def03eae-3168-4c43-9343-32e84316fabd">
+					<printWhenExpression><![CDATA["C".equals(String.valueOf($F{OFN_STATUS_OFICIO}))]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ofício Cancelado]]></text>
+			</staticText>
+		</band>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="0" width="160" height="17" uuid="bcdb78f4-6e2f-4ba5-a5e3-1a0720a6ae02">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Linhas Impactadas:]]></text>
+			</staticText>
+		</band>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="556" height="22" uuid="37fda394-3ca8-4950-ac35-8a654eb775b9"/>
+				<box bottomPadding="0"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OFN_TITULO}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="90">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" mode="Opaque" x="0" y="10" width="556" height="70" isRemoveLineWhenBlank="true" uuid="49e0211b-8058-403f-949b-9feead240fba"/>
+				<textElement markup="html">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OFN_CORPO_EMAIL}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="208" splitType="Prevent">
+			<property name="com.jaspersoft.studio.layout"/>
+			<image>
+				<reportElement x="296" y="24" width="120" height="114" uuid="32f7b320-6dd3-49a8-99ee-8078ea8f8ef1">
+					<printWhenExpression><![CDATA[$F{OFN_QRCODE} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{OFN_QRCODE}.getBinaryStream()]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="79" y="24" width="120" height="114" uuid="47a3c5ff-e4f4-472e-824c-9a44df622b4d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{OFN_RESPONSAVEL_ENVIO} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{USR_ASSINATURA}.getBinaryStream()]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="251" y="144" width="190" height="25" uuid="7b4d0c1b-8da5-4124-ab50-7fcc5354920d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Verifique a veracidade do documento
+a partir do QRcode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="169" width="200" height="30" forecolor="#FA0A0A" uuid="41f8fe1b-1cbf-477a-b68e-44b142b2694a"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Confira se a página carregada possui o 
+link oficial da prefeitura.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="144" width="190" height="14" uuid="8a678f5f-2869-40fc-9912-93b53721c765">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Assinado digitalmente por:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="32" y="158" width="214" height="14" isRemoveLineWhenBlank="true" uuid="47ce39f7-6996-4196-ad4d-712d559d6426">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEF_NOME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="32" y="172" width="214" height="14" isRemoveLineWhenBlank="true" uuid="bb17fdd8-0548-4731-830b-928875a58fa8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CAR_DESCRICAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="94" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="78" width="22" height="14" forecolor="#000000" uuid="8f63f464-0537-4f85-a57e-63956bbab283"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="529" y="78" width="15" height="14" forecolor="#000000" uuid="3da194b5-c5b4-432b-bc34-d0e4fb8b6ce8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="543" y="78" width="14" height="14" forecolor="#000000" uuid="6b72e7f9-c45a-4521-a702-892be25b9184"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="20" width="526" height="14" isRemoveLineWhenBlank="true" uuid="34001264-89f1-48d0-9ce0-5fc3d143558d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PGL_NOME_FANTASIA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="34" width="526" height="14" isRemoveLineWhenBlank="true" uuid="5c8eab3b-9a64-4074-aa1b-2aaf03e9abb4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PGL_LOGRADOURO} + ", " + 
+$F{PGL_NUMERO} + " - " + 
+$F{PGL_BAIRRO} + ", " + 
+$F{PGL_MUNICIPIO} + ", " + 
+$F{PGL_UF} + ", Brasil"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="48" width="450" height="14" isRemoveLineWhenBlank="true" uuid="a37260d8-21e9-4f4d-932a-2ededfd6445c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PGL_TELEFONE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="80" width="450" height="14" uuid="14b6b828-8142-4c2a-b21d-1937c4afcbc8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ofício " + $F{tipoOficio} + " " + $F{OFN_NUMERO_OFICIO}+ " - Data " +
+    new java.util.GregorianCalendar().get(java.util.Calendar.DAY_OF_MONTH) + "/" +
+    (new java.util.GregorianCalendar().get(java.util.Calendar.MONTH) + 1) + "/" +
+    new java.util.GregorianCalendar().get(java.util.Calendar.YEAR)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

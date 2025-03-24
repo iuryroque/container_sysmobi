@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SubReportDadosOperador" pageWidth="556" pageHeight="842" columnWidth="556" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="46dd932e-1d9f-4645-8bbf-1ec87cfc9a46">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="GAU_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{GAU_ID}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select 
+Case
+    When op.OPE_VALIDADE_CNH Is Not Null And op.OPE_VALIDADE_CURSO Is Not Null
+    Then Case
+      When op.OPE_VALIDADE_CNH < DateAdd(YEAR, 1, GetDate()) And
+      op.OPE_VALIDADE_CNH < op.OPE_VALIDADE_CURSO Then op.OPE_VALIDADE_CNH
+      When op.OPE_VALIDADE_CURSO < DateAdd(YEAR, 1, GetDate()) Then
+      op.OPE_VALIDADE_CURSO Else DateAdd(YEAR, 1, GetDate()) End
+    When op.OPE_VALIDADE_CNH Is Not Null Then Case
+      When op.OPE_VALIDADE_CNH < DateAdd(YEAR, 1, GetDate()) Then
+      op.OPE_VALIDADE_CNH Else DateAdd(YEAR, 1, GetDate()) End
+    When op.OPE_VALIDADE_CURSO Is Not Null Then Case
+      When op.OPE_VALIDADE_CURSO < DateAdd(YEAR, 1, GetDate()) Then
+      op.OPE_VALIDADE_CURSO Else DateAdd(YEAR, 1, GetDate()) End
+    Else DateAdd(YEAR, 1, GetDate()) End As ValidadeCI,
+  op.OPE_DATA_CURSO As DataCurso,
+  opf.PEF_NOME As OperadorNome,
+  opf.PEF_NOME_SOCIAL as OperadorNomeSocial,
+  opf.PEF_CPF As OperadorCPF,
+  opf.PEF_RG As OperadorRG,
+  opf.PEF_DATA_NASCIMENTO As OperadorDataNascimento,
+  se.SXO_DESCRICAO As OperadorSexo,
+  opf.PEF_UF_RG As OperadorUF,
+  opf.PEF_CNH As OperadorCNH,
+  opf.PEF_CNH_CATEGORIA As OperadorCNHCategoria,
+  opf.PEF_CNH_DATA_VALIDADE As OperadorCNHValidade,
+  Case When opf.PEF_INSS = 'NULL' Then ' ' Else opf.PEF_INSS
+  End As OperadorINSS,
+  op.OPE_VALIDADE_CURSO As ValidadeCurso,
+  cASE WHEN oe.END_NUMERO IS NULL THEN oe.END_ENDERECO ELSE concat(oe.END_ENDERECO, ', Nº ', oe.END_NUMERO) END  As OperadorEndereco,
+  oe.END_LOCALIDADE AS OperadorLocalidade,
+  Case When oe.END_CEP = 'NULL' Then ' ' Else oe.END_CEP End As OperadorCEP,
+  oe.END_BAIRRO As OperadorBairro,
+  oe.END_COMPLEMENTO As OperadorComplemento,
+  oe.END_UF as OperadorLocalUF,
+  Case When opc.SMB_CAD_TELEFONE = 'NULL' Then ' '
+    Else opc.SMB_CAD_TELEFONE
+  End As OperadorTelefone,
+  Case When opc.SMB_CAD_CELULAR = 'NULL' Then ' '
+    Else opc.SMB_CAD_CELULAR End As OperadorCelular,
+  opc.SMB_CAD_E_MAIL As OperadorEmail,
+  op.OPE_ID,
+  o.ORG_SIGLA as OrgaoExpedidor,
+  so.SOP_SITUACAO As OperadorSituacao,
+  (Select STRING_AGG(gaa.GAU_NUM_ALVARA_AUT, ', ')
+  From SMB_GESTAO_AUTORIZATARIO gaa Inner Join SMB_COND_ALV_AVULSO caa
+      On gaa.GAU_ID = caa.GAU_ID Where caa.OPE_ID = op.OPE_ID) As Coringa,
+  ga.GAU_ID,
+  tpo.TOP_DESCRICAO as TipoOperador,
+  op.OPE_MATRICULA as  InscricaoSEMOB,o.ORG_COD
+From
+  SMB_GESTAO_AUTORIZATARIO ga
+  Left Join SMB_OPERADOR op On op.GAU_ID = ga.GAU_ID
+  Left Join SMB_TIPO_OPERADOR tpo On tpo.TOP_ID = op.TOP_ID
+  Left Join SMB_PESSOA_FISICA opf On opf.PES_ID = op.PES_COD_OPERADOR
+  Left Join GER_ENDERECO oe On oe.PES_ID = opf.PES_ID
+  Left Join SMB_ORGAO o On o.ORG_COD = opf.ORG_COD
+  Left Join SMB_CADASTRAR_PESSOA_CONTATO opc On opc.PES_ID = opf.PES_ID
+  Left Join SMB_SITUACAO_OPERADOR so On so.SOP_ID = op.SOP_ID
+  Left Join SMB_SEXO se on se.SXO_ID=opf.SXO_ID
+Where
+  ga.GAU_ID = $P{GAU_ID}]]>
+	</queryString>
+	<field name="ValidadeCI" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="ValidadeCI"/>
+	</field>
+	<field name="DataCurso" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DataCurso"/>
+	</field>
+	<field name="OperadorNome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorNome"/>
+	</field>
+	<field name="OperadorNomeSocial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorNomeSocial"/>
+	</field>
+	<field name="OperadorCPF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCPF"/>
+	</field>
+	<field name="OperadorRG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorRG"/>
+	</field>
+	<field name="OperadorDataNascimento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorDataNascimento"/>
+	</field>
+	<field name="OperadorSexo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorSexo"/>
+	</field>
+	<field name="OperadorUF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorUF"/>
+	</field>
+	<field name="OperadorCNH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCNH"/>
+	</field>
+	<field name="OperadorCNHCategoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCNHCategoria"/>
+	</field>
+	<field name="OperadorCNHValidade" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCNHValidade"/>
+	</field>
+	<field name="OperadorINSS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorINSS"/>
+	</field>
+	<field name="ValidadeCurso" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="ValidadeCurso"/>
+	</field>
+	<field name="OperadorEndereco" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorEndereco"/>
+	</field>
+	<field name="OperadorLocalidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorLocalidade"/>
+	</field>
+	<field name="OperadorCEP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCEP"/>
+	</field>
+	<field name="OperadorBairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorBairro"/>
+	</field>
+	<field name="OperadorComplemento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorComplemento"/>
+	</field>
+	<field name="OperadorLocalUF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorLocalUF"/>
+	</field>
+	<field name="OperadorTelefone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorTelefone"/>
+	</field>
+	<field name="OperadorCelular" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorCelular"/>
+	</field>
+	<field name="OperadorEmail" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorEmail"/>
+	</field>
+	<field name="OPE_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="OPE_ID"/>
+	</field>
+	<field name="OrgaoExpedidor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OrgaoExpedidor"/>
+	</field>
+	<field name="OperadorSituacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OperadorSituacao"/>
+	</field>
+	<field name="Coringa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Coringa"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="TipoOperador" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TipoOperador"/>
+	</field>
+	<field name="InscricaoSEMOB" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="InscricaoSEMOB"/>
+	</field>
+	<field name="ORG_COD" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ORG_COD"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="19">
+			<rectangle>
+				<reportElement key="Shape9" positionType="Float" mode="Opaque" x="2" y="0" width="552" height="18" forecolor="#000000" backcolor="#0078D7" uuid="21a93891-0459-4c57-bc1a-7846d0c2a552"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="Label54" positionType="Float" mode="Transparent" x="0" y="0" width="552" height="18" forecolor="#FFFFFF" uuid="8125f95d-fa1e-4389-994d-d800c2c14f79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dados do(a) Operador(a)]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="173" splitType="Stretch">
+			<rectangle>
+				<reportElement key="Shape10" positionType="Float" mode="Opaque" x="2" y="0" width="552" height="170" forecolor="#000000" backcolor="#FFFFFF" uuid="04f074d5-18ca-4e30-8307-a46cc09af061">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText58" positionType="Float" mode="Transparent" x="472" y="101" width="76" height="12" forecolor="#000000" uuid="ea57126b-9c2a-4bab-bef5-0466634c2d51">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorTelefone}.replaceFirst("^0", "").replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1) $2-$3")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label81" positionType="Float" mode="Transparent" x="8" y="87" width="72" height="12" forecolor="#000000" uuid="832f4484-6a74-48c6-bca3-b359526db59d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data do Curso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label69" positionType="Float" mode="Transparent" x="392" y="21" width="83" height="12" forecolor="#000000" uuid="b35f63f3-e839-4c1b-8aa3-1dd4a23baaa0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Inscrição SEMOB:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label63" positionType="Float" mode="Transparent" x="8" y="75" width="39" height="12" forecolor="#000000" uuid="ddffa4da-2d77-4dbc-9f33-b77cc58ccaec">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nº CNH:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText46" positionType="Float" mode="Transparent" x="79" y="140" width="468" height="12" forecolor="#000000" uuid="fb140cba-94f9-4434-9f53-584eba546430">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorComplemento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText59" positionType="Float" mode="Transparent" x="89" y="49" width="139" height="12" forecolor="#000000" uuid="f0443403-a5cb-4c3c-97dc-c06b7d5f61a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TipoOperador}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label203" positionType="Float" mode="Transparent" x="229" y="126" width="39" height="12" forecolor="#000000" uuid="20b911c2-4048-425a-ad42-cfeaf06daf40">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText54" positionType="Float" mode="Transparent" x="424" y="113" width="123" height="12" forecolor="#000000" uuid="88bd94ab-cab6-4929-a624-9fcf478697fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorBairro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label58" positionType="Float" mode="Transparent" x="8" y="140" width="69" height="12" forecolor="#000000" uuid="11c44135-f8af-4e75-bc76-c95943f88709">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Complemento:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText67" positionType="Float" mode="Transparent" x="469" y="35" width="74" height="12" forecolor="#000000" uuid="506f007d-62d9-4fbe-9cc9-ec54f27b3477">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{ValidadeCI})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label61" positionType="Float" mode="Transparent" x="8" y="99" width="36" height="12" forecolor="#000000" uuid="99f99499-aa70-4a22-9343-bbfe05411038">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label60" positionType="Float" mode="Transparent" x="392" y="101" width="78" height="12" forecolor="#000000" uuid="1fc9b6ae-c6b5-4edd-afcc-2febf66fda1d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tel. Residencial:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText48" positionType="Float" mode="Transparent" x="41" y="153" width="178" height="12" forecolor="#000000" uuid="54e653cf-7b70-45ca-aed5-ad565f4df245">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorINSS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText52" positionType="Float" mode="Transparent" x="445" y="126" width="37" height="12" forecolor="#000000" uuid="ad8e268c-0579-4ebc-a760-f47ec637b87f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorLocalUF}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText44" positionType="Float" mode="Transparent" x="300" y="35" width="84" height="12" forecolor="#000000" uuid="e31e1bc0-1ae4-4447-9338-c0274c321f5b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorSexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label21" positionType="Float" mode="Transparent" x="392" y="6" width="46" height="12" forecolor="#000000" uuid="ba20c5ee-b8ec-42a6-9eb1-9bc97b9fd476">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Situação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label65" positionType="Float" mode="Transparent" x="229" y="48" width="26" height="12" forecolor="#000000" uuid="65c7876f-f21a-4f9b-8093-cbd00b215ee0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText41" positionType="Float" mode="Transparent" x="50" y="6" width="333" height="12" forecolor="#000000" uuid="f7b144c9-a9f2-425f-8ee0-08ad4c845ef7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorNome}.contains("#") ? $F{OperadorNome}.substring(0, $F{OperadorNome}.indexOf("#")) : $F{OperadorNome}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText50" positionType="Float" mode="Transparent" x="34" y="63" width="123" height="12" forecolor="#000000" uuid="4d0141ea-8370-4c92-b2ad-23f881f21bfe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorRG}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText72" positionType="Float" mode="Transparent" x="431" y="48" width="115" height="12" forecolor="#000000" uuid="974554e0-a65b-4be0-8d02-bcfcd85dcbee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Coringa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label64" positionType="Float" mode="Transparent" x="8" y="153" width="28" height="12" forecolor="#000000" uuid="386db66f-670b-432f-8a6c-5fa2e33456c0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[INSS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label56" positionType="Float" mode="Transparent" x="8" y="49" width="91" height="12" forecolor="#000000" uuid="907083f0-83cd-4938-a499-df61b68d8fc6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de Operador:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText55" positionType="Float" mode="Transparent" x="45" y="99" width="174" height="12" forecolor="#000000" uuid="ee97132f-e8de-4edb-92d9-e1831c750f9f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorEmail}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label75" positionType="Float" mode="Transparent" x="392" y="76" width="71" height="12" forecolor="#000000" uuid="0634c57e-7445-420d-a71e-2a1deca44072">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Categoria CNH:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText71" positionType="Float" mode="Transparent" x="440" y="6" width="96" height="12" forecolor="#000000" uuid="441dcbd7-a329-4fe8-ada6-29970280b856">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorSituacao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText51" positionType="Float" mode="Transparent" x="34" y="126" width="67" height="12" forecolor="#000000" uuid="ce7248d4-5063-43b0-b5d0-0f8c2e39d4cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorCEP}.length() == 8 ? $F{OperadorCEP}.substring(0, 5) + "-" + $F{OperadorCEP}.substring(5) : $F{OperadorCEP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label74" positionType="Float" mode="Transparent" x="229" y="101" width="40" height="12" forecolor="#000000" uuid="588f1acc-7c02-4ab3-b9a5-511a7eff8b61">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Celular:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText42" positionType="Float" mode="Transparent" x="111" y="35" width="96" height="12" forecolor="#000000" uuid="f81eeca2-6ad5-4e21-bb35-c4cf951a1bf5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{OperadorDataNascimento})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label73" positionType="Float" mode="Transparent" x="8" y="126" width="25" height="12" forecolor="#000000" uuid="4c4678f2-8b50-4f8a-a562-439b4caed148">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText57" positionType="Float" mode="Transparent" x="271" y="101" width="111" height="12" forecolor="#000000" uuid="995e6aba-4c19-43ca-ab90-38d568db660e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorCelular}.replaceFirst("^0", "").replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1) $2-$3")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label55" positionType="Float" mode="Transparent" x="8" y="6" width="38" height="12" forecolor="#000000" uuid="b7a8b243-c01b-4ecf-8d9b-bc4a1331c950">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText56" positionType="Float" mode="Transparent" x="50" y="75" width="169" height="12" forecolor="#000000" uuid="e39981cc-b0f5-4138-b075-dce469712175">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorCNH}.length() == 8 ? $F{OperadorCNH}.substring(0, 5) + "-" + $F{OperadorCNH}.substring(5) : $F{OperadorCNH}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText49" positionType="Float" mode="Transparent" x="299" y="76" width="81" height="12" forecolor="#000000" uuid="92eb92d3-92be-4f33-a151-c925a0ef2396">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{OperadorCNHValidade})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label62" positionType="Float" mode="Transparent" x="8" y="63" width="23" height="12" forecolor="#000000" uuid="e6e18ab4-c0e2-4616-84f8-2a2e5398eff1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label72" positionType="Float" mode="Transparent" x="229" y="89" width="75" height="12" forecolor="#000000" uuid="27fff960-080d-4f3a-9481-9aa7e24f0b57">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade Curso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label71" positionType="Float" mode="Transparent" x="229" y="35" width="67" height="12" forecolor="#000000" uuid="7833b505-b115-4390-b926-28dff8bacd88">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Sexo/Gênero:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label102" positionType="Float" mode="Transparent" x="8" y="113" width="50" height="12" forecolor="#000000" uuid="bee02b0c-1c54-4997-a794-2864e8911ed0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText66" positionType="Float" mode="Transparent" x="306" y="89" width="79" height="12" forecolor="#000000" uuid="a5cbb3c5-999f-443b-803b-9c2a77751e5d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{ValidadeCurso})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText43" positionType="Float" mode="Transparent" x="257" y="48" width="125" height="12" forecolor="#000000" uuid="98007245-095c-481a-ae89-88a5750106fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorCPF}.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText45" positionType="Float" mode="Transparent" x="60" y="113" width="320" height="12" forecolor="#000000" uuid="ad124817-7cd8-4a8d-a0f1-635608d68db6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorEndereco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label59" positionType="Float" mode="Transparent" x="391" y="113" width="31" height="12" forecolor="#000000" uuid="00f47904-1390-4044-a9b5-57ada7cc689a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText68" positionType="Float" mode="Transparent" x="314" y="63" width="70" height="12" forecolor="#000000" uuid="28cb8226-6473-40de-ad78-709049cc16e4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OrgaoExpedidor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText53" positionType="Float" mode="Transparent" x="466" y="76" width="80" height="12" forecolor="#000000" uuid="bbd854c8-d6e5-4d34-a784-a807ce1dd6ab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorCNHCategoria}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label25" positionType="Float" mode="Transparent" x="392" y="48" width="37" height="12" forecolor="#000000" uuid="26c6c609-eb51-4938-8b7c-dd8292365352">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Avulso:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText47" positionType="Float" mode="Transparent" x="271" y="126" width="112" height="12" forecolor="#000000" uuid="8a9a7c67-3dac-4cbb-a373-092075ffcfe7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorLocalidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label76" positionType="Float" mode="Transparent" x="8" y="35" width="98" height="12" forecolor="#000000" uuid="640d0c0c-a1fb-424b-ac44-2b578188a69f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data de Nascimento:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText75" positionType="Float" mode="Transparent" x="83" y="87" width="95" height="12" forecolor="#000000" uuid="472fa43c-2af6-424c-9013-e573d1d080b3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DataCurso})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label70" positionType="Float" mode="Transparent" x="229" y="76" width="67" height="12" forecolor="#000000" uuid="5bead08e-574a-46a8-a2f7-c5eb38e72ebc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade CNH:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label69" positionType="Float" mode="Transparent" x="229" y="63" width="83" height="12" forecolor="#000000" uuid="c5f459f7-622a-49d3-9faa-f826ba1d20f7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Orgão Expedidor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label69" positionType="Float" mode="Transparent" x="392" y="35" width="74" height="12" forecolor="#000000" uuid="84d8e1ab-0fab-4622-b8b4-bd71fab9827b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade do CI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label72" positionType="Float" mode="Transparent" x="392" y="89" width="106" height="12" forecolor="#000000" uuid="7c497839-02b0-44fc-8375-9b22b9d4a798">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Validade Toxicológico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label55" positionType="Float" mode="Transparent" x="8" y="21" width="68" height="12" forecolor="#000000" uuid="134660f4-e511-4ca2-92d8-626bc1df2507">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nome Social:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText59" positionType="Float" mode="Transparent" x="79" y="21" width="304" height="12" forecolor="#000000" uuid="84491438-a992-4c13-b494-ae4a403df85b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorNomeSocial}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText52" positionType="Float" mode="Transparent" x="413" y="63" width="37" height="12" forecolor="#000000" uuid="1e27f559-6c6a-4859-80c2-2213d38838d7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OperadorUF}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label301" positionType="Float" mode="Transparent" x="392" y="63" width="20" height="12" forecolor="#000000" uuid="fef1f528-447b-41b4-b522-e4daae8ae9e7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label30" mode="Transparent" x="392" y="126" width="52" height="12" forecolor="#000000" uuid="0fbdf435-83f8-431e-b5e9-c8d7e4fe27aa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="OpenSans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF (Local):]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

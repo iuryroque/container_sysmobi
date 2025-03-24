@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Terminal_OSO" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b0c9ce97-242f-451b-9895-65f14b76108b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  MAX(SMB_PARAMETROS_LINHA.ID) AS ID,
+  MAX(SMB_PARAMETROS_LINHA.PAR_GARAGEM) AS PAR_GARAGEM, -- Usando MAX() para PAR_GARAGEM
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA) AS partida1,  -- Terminal de partida 1
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA) AS chegada1,  -- Terminal de chegada 1
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA_2) AS partida2, -- Terminal de partida 2
+  MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA_2) AS chegada2, -- Terminal de chegada 2
+  MAX(SMB_PARAMETROS_LINHA.PAR_INFORMACOES) AS PAR_INFORMACOES,
+  MAX(SMB_PARAMETROS_LINHA.GAU_ID) AS GAU_ID,
+  MAX(SMB_PARAMETROS_LINHA.LNH_ID) AS LNH_ID,
+  
+  -- Nomes e IDs dos terminais de partida e chegada 1
+  MAX(TER_PARTIDA1.TER_NOME) AS terminal_partida1_nome,  -- Nome do terminal de partida 1
+  MAX(TER_CHEGADA1.TER_NOME) AS terminal_chegada1_nome,  -- Nome do terminal de chegada 1
+  MAX(TER_PARTIDA1.TER_ID) AS terminal_partida1_id,      -- ID do terminal de partida 1
+  MAX(TER_CHEGADA1.TER_ID) AS terminal_chegada1_id,      -- ID do terminal de chegada 1
+  
+  -- Nomes e IDs dos terminais de partida e chegada 2
+  MAX(TER_PARTIDA2.TER_NOME) AS terminal_partida2_nome,  -- Nome do terminal de partida 2
+  MAX(TER_CHEGADA2.TER_NOME) AS terminal_chegada2_nome,  -- Nome do terminal de chegada 2
+  MAX(TER_PARTIDA2.TER_ID) AS terminal_partida2_id,      -- ID do terminal de partida 2
+  MAX(TER_CHEGADA2.TER_ID) AS terminal_chegada2_id,      -- ID do terminal de chegada 2
+  
+  MAX(SMB_GARAGEM.GAR_NOME_GARAGEM) AS nome_garagem,     -- Nome da garagem
+  
+  -- Quantidade de terminais (somando os terminais de partida e chegada que não sejam nulos)
+  (CASE 
+    WHEN MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA) IS NOT NULL THEN 1 ELSE 0 END + 
+    CASE 
+    WHEN MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA) IS NOT NULL THEN 1 ELSE 0 END + 
+    CASE 
+    WHEN MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA_2) IS NOT NULL THEN 1 ELSE 0 END + 
+    CASE 
+    WHEN MAX(SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA_2) IS NOT NULL THEN 1 ELSE 0 END
+  ) AS quantidade_terminais,
+  
+  -- Total de partidas e chegadas
+  (
+    SUM(CASE WHEN SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA IS NOT NULL THEN 1 ELSE 0 END) +
+    SUM(CASE WHEN SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA IS NOT NULL THEN 1 ELSE 0 END) +
+    SUM(CASE WHEN SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA_2 IS NOT NULL THEN 1 ELSE 0 END) +
+    SUM(CASE WHEN SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA_2 IS NOT NULL THEN 1 ELSE 0 END)
+  ) AS total_terminais
+  
+FROM
+  SMB_PARAMETROS_LINHA
+  
+  -- Junções para Terminais de Partida e Chegada 1
+  LEFT JOIN SMB_TERMINAL TER_PARTIDA1 ON TER_PARTIDA1.TER_ID = SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA
+  LEFT JOIN SMB_TERMINAL TER_CHEGADA1 ON TER_CHEGADA1.TER_ID = SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA
+  
+  -- Junções para Terminais de Partida e Chegada 2
+  LEFT JOIN SMB_TERMINAL TER_PARTIDA2 ON TER_PARTIDA2.TER_ID = SMB_PARAMETROS_LINHA.PAR_TERMINAL_PARTIDA_2
+  LEFT JOIN SMB_TERMINAL TER_CHEGADA2 ON TER_CHEGADA2.TER_ID = SMB_PARAMETROS_LINHA.PAR_TERMINAL_CHEGADA_2
+  
+  -- Junção com a Garagem
+  LEFT JOIN SMB_GARAGEM ON SMB_PARAMETROS_LINHA.PAR_GARAGEM = SMB_GARAGEM.GAR_ID
+  
+WHERE 
+  SMB_PARAMETROS_LINHA.LNH_ID = $P{Cod}
+  
+GROUP BY 
+  SMB_PARAMETROS_LINHA.LNH_ID  -- Agora agrupando apenas por LNH_ID
+ORDER BY 
+  MAX(SMB_PARAMETROS_LINHA.ID)]]>
+	</queryString>
+	<field name="ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+	</field>
+	<field name="PAR_GARAGEM" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_GARAGEM"/>
+	</field>
+	<field name="partida1" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="partida1"/>
+	</field>
+	<field name="chegada1" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="chegada1"/>
+	</field>
+	<field name="partida2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="partida2"/>
+	</field>
+	<field name="chegada2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="chegada2"/>
+	</field>
+	<field name="PAR_INFORMACOES" class="java.sql.Clob">
+		<property name="com.jaspersoft.studio.field.label" value="PAR_INFORMACOES"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_LINHA"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="terminal_partida1_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_partida1_nome"/>
+	</field>
+	<field name="terminal_chegada1_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_chegada1_nome"/>
+	</field>
+	<field name="terminal_partida1_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_partida1_id"/>
+	</field>
+	<field name="terminal_chegada1_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_chegada1_id"/>
+	</field>
+	<field name="terminal_partida2_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_partida2_nome"/>
+	</field>
+	<field name="terminal_chegada2_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_chegada2_nome"/>
+	</field>
+	<field name="terminal_partida2_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_partida2_id"/>
+	</field>
+	<field name="terminal_chegada2_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal_chegada2_id"/>
+	</field>
+	<field name="nome_garagem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome_garagem"/>
+	</field>
+	<field name="quantidade_terminais" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_terminais"/>
+	</field>
+	<field name="total_terminais" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="total_terminais"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="4" width="572" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="ac8ab861-864a-4959-96b3-3d5281a52726">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="5" width="562" height="15" forecolor="#FFFFFF" uuid="5ef77e34-c27e-4a49-9878-ea441b79ec50">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TERMINAL]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="5" y="21" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f420f9e2-f5aa-47ca-bcfd-894c69a111d4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="21" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="31f27391-9e9b-4f06-b485-22b94b578057"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nº de Bases / Sentidos:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="21" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="ce1383a4-1a75-4c1f-a03e-f17a54aceacc"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="225" y="21" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="1aad7517-02a8-4182-80c9-98b7948f541e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="317" y="21" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="81f887ec-fb9a-4a27-8057-1acd4e305035"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="318" y="21" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="ff75864a-b60c-4e57-8622-7afe00d905eb"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Terminal Principal (Origem):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="445" y="21" width="132" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a871a86f-806b-42f3-970b-df272ac4710e"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="20" width="132" height="16" uuid="c3d11c81-3b77-49dd-88ba-2c24ccba6972"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{terminal_partida1_nome}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="133" y="21" width="90" height="15" uuid="f2226bdb-0649-43ff-9a7e-63485b9e2b59"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade_terminais}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="225" y="19" width="90" height="17" uuid="ed0d514a-102c-4e06-b249-522f515e334f"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_terminais}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

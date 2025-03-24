@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO - Terminal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="b0c9ce97-242f-451b-9895-65f14b76108b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="323"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="677"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="codigoLinha" class="java.lang.Integer"/>
+	<parameter name="codigoParametro" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT 
+	    li.LNH_ID,
+	    (CASE WHEN possuiSentido.IDA=1 AND possuiSentido.VOLTA=0 THEN 1 ELSE CASE WHEN possuiSentido.IDA=1 AND possuiSentido.VOLTA=1 THEN 2 END END)
+		AS nBases,
+	    (CASE WHEN possuiSentido.IDA=1 AND possuiSentido.VOLTA=0 THEN 1 ELSE CASE WHEN possuiSentido.IDA=1 AND possuiSentido.VOLTA=1 THEN 2 END END)
+		AS nSentidos,
+	    terminal.TER_NOME
+	FROM SMB_LINHA li
+	LEFT JOIN (
+	    SELECT 
+	        si.LNH_ID,
+	        MAX(CASE WHEN sid.ITD_SENTIDO = 'IDA' THEN 1 ELSE 0 END) AS IDA,
+	        MAX(CASE WHEN sid.ITD_SENTIDO = 'VOLTA' THEN 1 ELSE 0 END) AS VOLTA
+	    FROM SMB_ITINERARIO_DETALHE sid
+	    INNER JOIN SMB_ITINERARIO si ON si.ITI_ID = sid.ITI_ID
+	    GROUP BY si.LNH_ID
+	) AS possuiSentido ON possuiSentido.LNH_ID = li.LNH_ID
+	LEFT JOIN SMB_PARAMETROS_LINHA par ON par.LNH_ID=li.LNH_ID AND par.ID= $P{codigoParametro} 
+	LEFT JOIN SMB_TERMINAL terminal ON terminal.TER_ID=par.PAR_TERMINAL_PARTIDA
+	WHERE li.LNH_ID= $P{codigoLinha}]]>
+	</queryString>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="nBases" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="nBases"/>
+	</field>
+	<field name="nSentidos" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="nSentidos"/>
+	</field>
+	<field name="TER_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TER_NOME"/>
+	</field>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="554" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="ac8ab861-864a-4959-96b3-3d5281a52726">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="15" width="115" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f420f9e2-f5aa-47ca-bcfd-894c69a111d4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="115" y="15" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="ce1383a4-1a75-4c1f-a03e-f17a54aceacc"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="205" y="15" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="1aad7517-02a8-4182-80c9-98b7948f541e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="295" y="15" width="125" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="81f887ec-fb9a-4a27-8057-1acd4e305035"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="420" y="15" width="134" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a871a86f-806b-42f3-970b-df272ac4710e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="554" height="15" forecolor="#FFFFFF" uuid="5ef77e34-c27e-4a49-9878-ea441b79ec50">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TERMINAL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="15" width="134" height="15" uuid="c3d11c81-3b77-49dd-88ba-2c24ccba6972">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TER_NOME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="115" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="31f27391-9e9b-4f06-b485-22b94b578057">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nº de Bases / Sentidos:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="15" width="90" height="15" uuid="f2226bdb-0649-43ff-9a7e-63485b9e2b59"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nBases}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="205" y="15" width="90" height="15" uuid="ed0d514a-102c-4e06-b249-522f515e334f"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nSentidos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="296" y="15" width="124" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="ff75864a-b60c-4e57-8622-7afe00d905eb"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Terminal Principal (Origem):]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

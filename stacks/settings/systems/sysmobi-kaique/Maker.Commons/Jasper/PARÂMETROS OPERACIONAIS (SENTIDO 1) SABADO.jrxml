@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[Select
+  Case When PLH.PAR_TIPODEDIA = 'U' Then 'Dia Útil' When PLH.PAR_TIPODEDIA = 'S' Then 'Sábado' When PLH.PAR_TIPODEDIA = 'D' Then 'Domingos e Feriados' Else 'Desconhecido' End As tipo_dia,
+  CASE 
+    WHEN PLH.PAR_SENTIDO = 1 THEN 'Ida'
+    WHEN PLH.PAR_SENTIDO = 2 THEN 'Volta'
+    ELSE 'Desconhecido'
+  END AS sentido,
+  Convert(VARCHAR(5),PLH.PAR_HORARIOINICIO,108) As horario_inicio,
+  Convert(VARCHAR(5),PLH.PAR_HORARIOFIM,108) As horario_fim,
+  PLH.PAR_INTERVALO As intervalo,
+  PLH.PAR_PERCURSO As percurso,
+  PLH.PAR_TERMINAL As terminal,
+  PLH.PAR_FROTA As frota,
+  PLH.PAR_NUMEROSO As numero_oso,
+  PLH.ID As id,
+  PLH.ID_PARAMETRO_LINHA As id_parametro_linha,
+  PLH.SMB_ESP_ID As esp_id,
+  Count(PLH.ID) As quantidade_viagens,
+  Concat(TV.TPV_DESCRICAO, ' ', LV.LYV_DESCRICAO) As [T.EQP],
+  SMB_LINHA.LNH_ID
+From
+  SMB_PARAMETROS_LINHA_HORARIOS PLH
+  Inner Join
+  SMB_PARAMETROS_LINHA PL On PL.ID = PLH.ID_PARAMETRO_LINHA
+  Inner Join
+  SMB_LINHA On SMB_LINHA.LNH_ID = PL.LNH_ID
+  Left Join
+  SMB_ESPECIFICACAO_DO_VEICULO EV On PLH.SMB_ESP_ID = EV.SMB_ESP_ID
+  Left Join
+  SMB_TIPO_DE_VEICULO TV On EV.SMB_TIP_ID = TV.SMB_TIP_ID
+  Left Join
+  SMB_CADASTRAR_LAYOUT_VEICULO LV On EV.SMB_CAD_ID = LV.SMB_CAD_ID
+Where
+  PLH.PAR_TIPODEDIA = 'S' And
+  PLH.PAR_SENTIDO = 1  And
+  SMB_LINHA.LNH_ID =$P{Cod}
+Group By
+  PLH.PAR_SENTIDO,
+  PLH.PAR_INTERVALO,
+  PLH.PAR_PERCURSO,
+  PLH.PAR_TERMINAL,
+  PLH.PAR_FROTA,
+  PLH.PAR_NUMEROSO,
+  PLH.ID,
+  PLH.ID_PARAMETRO_LINHA,
+  PLH.SMB_ESP_ID,
+  PLH.PAR_TIPODEDIA,
+  PLH.PAR_HORARIOINICIO,
+  PLH.PAR_HORARIOFIM,
+  TV.TPV_DESCRICAO,
+  LV.LYV_DESCRICAO,
+  EV.SMB_QTD_PORTAS,
+  EV.SMB_POTENCIA_MOTOR,
+  SMB_LINHA.LNH_ID]]>
+	</queryString>
+	<field name="tipo_dia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipo_dia"/>
+	</field>
+	<field name="sentido" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sentido"/>
+	</field>
+	<field name="horario_inicio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_inicio"/>
+	</field>
+	<field name="horario_fim" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_fim"/>
+	</field>
+	<field name="intervalo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="intervalo"/>
+	</field>
+	<field name="percurso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="percurso"/>
+	</field>
+	<field name="terminal" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal"/>
+	</field>
+	<field name="frota" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="frota"/>
+	</field>
+	<field name="numero_oso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="numero_oso"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="id_parametro_linha" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id_parametro_linha"/>
+	</field>
+	<field name="esp_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="esp_id"/>
+	</field>
+	<field name="quantidade_viagens" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens"/>
+	</field>
+	<field name="T.EQP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="T.EQP"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<title>
+		<band height="55">
+			<rectangle>
+				<reportElement x="104" y="40" width="77" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="76e3d533-9ca4-45e0-bbe5-b5096f2bce63">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="104" y="41" width="77" height="14" forecolor="#FFFFFF" uuid="6fd68149-0b0f-4bd1-9ca0-98c29d758a98"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Intervalo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="184" y="40" width="69" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="1b4dce1a-2f23-4ce1-9962-2d852f7f86a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="185" y="40" width="68" height="14" forecolor="#FFFFFF" uuid="75992f3b-b6bb-47c7-859f-751794e6d59a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T. Perc.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="319" y="40" width="48" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="dc343998-ddec-4935-ad9e-5d92c4869929">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="319" y="40" width="48" height="14" forecolor="#FFFFFF" uuid="73c7e51e-bade-49ea-847f-ae9b5d1ed2c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frota]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="370" y="40" width="91" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="e866657c-4013-4416-84c4-07ecbed03384">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="370" y="41" width="91" height="14" forecolor="#FFFFFF" uuid="3a322ac3-afde-4680-84b6-cef639ec36b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Veículo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="465" y="40" width="112" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="62f5e4c7-c527-45d1-982f-0aca129d7a03">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="465" y="41" width="107" height="14" forecolor="#FFFFFF" uuid="76cb01c7-1521-4660-8c12-c94937e4fdcd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº Viagem]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="24" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="f67795a7-efa1-4e58-8852-22195500d89f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="25" width="565" height="14" forecolor="#FFFFFF" uuid="98c6e5d6-e1c2-4b23-a84e-baa9108be057"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SÁBADOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="40" width="94" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="6cab291d-e35a-43b7-9867-534701dc1608">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="40" width="94" height="15" forecolor="#FFFFFF" uuid="b05e83c5-eb4a-4e4c-8d4c-65e5c4541d63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faixa Horária]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="257" y="40" width="59" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="1ff63653-f99d-4cd0-ba62-edfd1475ebf2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="257" y="41" width="59" height="14" forecolor="#FFFFFF" uuid="a9f71c44-0301-4d18-9b66-0fdcfc4069a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T. Term.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="17">
+			<rectangle>
+				<reportElement x="6" y="2" width="45" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="f75dd83d-23ba-47f7-b6e3-407bcf9d11df">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="6" y="2" width="44" height="15" uuid="989fe0bd-c9a4-4619-ab84-01dadacb0e55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{horario_inicio}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="55" y="2" width="45" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="133f3548-7fc4-4ab5-af78-6bd5560fea16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="2" width="45" height="15" uuid="3ddb908c-caa9-4e83-aef4-65e107ce87dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{horario_fim}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="104" y="2" width="77" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="6e4784a9-af5b-4cf1-b3ea-70fb8280d36d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="104" y="2" width="77" height="15" uuid="02c3ca2c-ca30-45b4-be3c-9059c1a5d1f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{intervalo}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="184" y="2" width="69" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c7033ba7-21eb-471b-bb62-aad80ae9a16b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="257" y="2" width="59" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="59768846-4875-47e3-ae21-a918819aa62f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="319" y="2" width="48" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="01111e02-1264-4cf3-8b50-6f21fdd0bf4d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="185" y="2" width="68" height="15" uuid="02783de9-bd26-4a42-a0a4-3afc8b652693"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{percurso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="257" y="2" width="59" height="15" uuid="8305f314-53e1-4f0e-80c8-e54566c8e247"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{terminal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="318" y="2" width="47" height="15" uuid="99876706-949d-4158-b8e2-b5cd06f2c41f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{frota}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="370" y="2" width="91" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="7a3be0b0-c5cd-4083-ae28-f1fc3572f08b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="465" y="2" width="112" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="10ceb6d6-d958-4053-8669-4cc6e7bf45d8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="2" width="91" height="15" uuid="47c322ab-e7c2-487a-ad5a-656b0dfe35aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{T.EQP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="466" y="2" width="107" height="15" uuid="80a17f5f-cf87-4a38-bc24-26b0d1558a1c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quantidade_viagens}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RequerimentoTransferencia" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="450" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="90585b16-b9bc-49e5-a67f-f6c97094c87a">
+	<property name="ireport.scriptlethandling" value="2"/>
+	<property name="ireport.encoding" value="ISO-8859-1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.xml.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="GRE_COD" class="java.lang.Long"/>
+	<parameter name="CESSIONARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select
+  R.GRE_COD,
+  Coalesce(R.GRE_NUMERO_REQUERIMENTO, 'REQUERIMENTO NÃO SOLICITADO') As
+  NUMERO_REQUERIMENTO,
+  Case When P.PES_TIPO = 'PF' Then PF.PEF_NOME
+    When P.PES_TIPO = 'PJ' Then PJ.PEJ_RAZAO_SOCIAL
+    Else 'SEM REGISTROS' End As [NOME/RAZAOSOCIAL],
+  Case
+    When P.PES_TIPO = 'PF' Then Left(PF.PEF_CPF, 3) + '.' +
+    SubString(PF.PEF_CPF, 4, 3) + '.' + SubString(PF.PEF_CPF, 7, 3) + '-' +
+    Right(PF.PEF_CPF, 2)
+    When P.PES_TIPO = 'PJ' Then Left(PJ.PEJ_CNPJ, 2) + '.' +
+    SubString(PJ.PEJ_CNPJ, 3, 3) + '.' + SubString(PJ.PEJ_CNPJ, 6, 3) + '/' +
+    SubString(PJ.PEJ_CNPJ, 9, 4) + '-' + Right(PJ.PEJ_CNPJ, 2)
+    Else 'SEM REGISTROS' End As [CPF/CNPJ],
+  R.GRE_SITUACAO_REQUERIMENTO,
+  R.GRE_TIPO_PERMISSAO As N_PERMISSAO,
+  R.GRE_SERVICO_SOLICITADO,
+  R.GAU_ID,
+  R.PES_COD_REQUERENTE,
+  R.PES_COD_CESSIONARIO,
+  E.END_ENDERECO,
+  E.END_LOCALIDADE As CIDADE,
+  E.END_BAIRRO,
+  E.END_COMPLEMENTO As END_COMPLEMENTO,
+  E.END_UF,
+  RS.SMB_GRE_SERVICO_DESCRICAO,
+  R.GRE_DATA_HORA_ABERTURA,
+  PM.SMB_GES_PERMISSAO As TIPO_PERMISSAO,
+  GA.GAU_NUM_ALVARA_AUT As NUM_ALVARA,
+  PJV.[NOME-CNPJ] As Cooperativa,
+    (Select SMB_PARAMETROS_GLOBAIS.PGL_BRASAO 
+   From SMB_PARAMETROS_GLOBAIS) As PGL_BRASAO
+From
+  SMB_REQUERIMENTO R
+  Left Join SMB_REQUERIMENTO_SERVICOS RS On RS.SMB_GRE_SERVICO_SOLICITADO = R.GRE_SERVICO_SOLICITADO
+  Left Join SMB_PESSOA P On P.PES_ID = R.PES_COD_REQUERENTE
+  Left Join SMB_PESSOA_FISICA PF On PF.PES_ID = R.PES_COD_REQUERENTE
+  Left Join SMB_PESSOA_JURIDICA PJ On PJ.PES_ID = R.PES_COD_REQUERENTE
+  Left Join GER_ENDERECO E On E.PES_ID = P.PES_ID
+  Left Join SMB_GES_PERMISSAO PM On R.GRE_TIPO_PERMISSAO = PM.SMB_GES_ID
+  Left Join SMB_GESTAO_AUTORIZATARIO GA On R.GAU_ID = GA.GAU_ID
+  LEft JOIN PESSOAS_PJ_VI PJV On PJV.PES_ID = GA.PES_COD_CONSORCIO_COOPE
+Where (
+  R.GRE_COD = $P{GRE_COD})]]>
+	</queryString>
+	<field name="GRE_COD" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GRE_COD"/>
+	</field>
+	<field name="NUMERO_REQUERIMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NUMERO_REQUERIMENTO"/>
+	</field>
+	<field name="NOME/RAZAOSOCIAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOME/RAZAOSOCIAL"/>
+	</field>
+	<field name="CPF/CNPJ" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CPF/CNPJ"/>
+	</field>
+	<field name="GRE_SITUACAO_REQUERIMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="GRE_SITUACAO_REQUERIMENTO"/>
+	</field>
+	<field name="N_PERMISSAO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="N_PERMISSAO"/>
+	</field>
+	<field name="GRE_SERVICO_SOLICITADO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GRE_SERVICO_SOLICITADO"/>
+	</field>
+	<field name="GAU_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="GAU_ID"/>
+	</field>
+	<field name="PES_COD_REQUERENTE" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PES_COD_REQUERENTE"/>
+	</field>
+	<field name="PES_COD_CESSIONARIO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PES_COD_CESSIONARIO"/>
+	</field>
+	<field name="END_ENDERECO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_ENDERECO"/>
+	</field>
+	<field name="CIDADE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CIDADE"/>
+	</field>
+	<field name="END_BAIRRO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_BAIRRO"/>
+	</field>
+	<field name="END_COMPLEMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_COMPLEMENTO"/>
+	</field>
+	<field name="END_UF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="END_UF"/>
+	</field>
+	<field name="SMB_GRE_SERVICO_DESCRICAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMB_GRE_SERVICO_DESCRICAO"/>
+	</field>
+	<field name="GRE_DATA_HORA_ABERTURA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="GRE_DATA_HORA_ABERTURA"/>
+	</field>
+	<field name="TIPO_PERMISSAO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIPO_PERMISSAO"/>
+	</field>
+	<field name="NUM_ALVARA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="NUM_ALVARA"/>
+	</field>
+	<field name="Cooperativa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cooperativa"/>
+	</field>
+	<field name="PGL_BRASAO" class="java.sql.Blob">
+		<property name="com.jaspersoft.studio.field.label" value="PGL_BRASAO"/>
+	</field>
+	<variable name="consulta" class="java.lang.String">
+		<variableExpression><![CDATA["Select   SMB_PARAMETROS_GLOBAIS.PGL_BRASAO From   SMB_PARAMETROS_GLOBAIS /*WHERE_NEW*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="consulta1" class="java.lang.String">
+		<variableExpression><![CDATA["Select   Case When Upper(P.PES_TIPO) = 'PF' Then Upper(PF.PEF_NOME)     When Upper(P.PES_TIPO) = 'PJ' Then Upper(PJ.PEJ_RAZAO_SOCIAL)     Else 'SEM REGISTROS' End As [NOME/RAZAOSOCIAL],   Case     When Upper(P.PES_TIPO) = 'PF' Then Left(PF.PEF_CPF, 3) + '.' +     SubString(PF.PEF_CPF, 4, 3) + '.' + SubString(PF.PEF_CPF, 7, 3) + '-' +     Right(PF.PEF_CPF, 2)     When Upper(P.PES_TIPO) = 'PJ' Then Left(PJ.PEJ_CNPJ, 2) + '.' +     SubString(PJ.PEJ_CNPJ, 3, 3) + '.' + SubString(PJ.PEJ_CNPJ, 6, 3) + '/' +     SubString(PJ.PEJ_CNPJ, 9, 4) + '-' + Right(PJ.PEJ_CNPJ, 2)     Else 'SEM REGISTROS' End As [CPF/CNPJ],   Upper(R.PES_COD_CESSIONARIO) As PES_COD_CESSIONARIO,   Upper(E.END_ENDERECO) As END_ENDERECO,   Upper(E.END_LOCALIDADE) As CIDADE,   Upper(E.END_BAIRRO) As END_BAIRRO,   Coalesce(Upper(E.END_COMPLEMENTO), 'NÃO INFORMADO') As END_COMPLEMENTO,   Upper(E.END_UF) As END_UF,   Upper(SMB_REQUERIMENTO_SERVICOS.SMB_GRE_SERVICO_DESCRICAO) As   SERVICO_SOLICITADO From   SMB_REQUERIMENTO R   Left Join SMB_REQUERIMENTO_SERVICOS     On SMB_REQUERIMENTO_SERVICOS.SMB_GRE_SERVICO_SOLICITADO =     R.GRE_SERVICO_SOLICITADO   Left Join SMB_PESSOA P On P.PES_ID = R.PES_COD_CESSIONARIO   Left Join SMB_PESSOA_FISICA PF On PF.PES_ID = R.PES_COD_CESSIONARIO   Left Join SMB_PESSOA_JURIDICA PJ On PJ.PES_ID = R.PES_COD_CESSIONARIO   Left Join GER_ENDERECO E On E.PES_ID = P.PES_ID   Left Join SMB_GES_PERMISSAO PM On R.GRE_TIPO_PERMISSAO = PM.SMB_GES_ID   Left Join SMB_GESTAO_AUTORIZATARIO GA On R.GAU_ID = GA.GAU_ID Where (   Upper(R.GRE_COD) = $P{GRE_COD}) /*WHERE_ADD*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Dados1" class="java.lang.String">
+		<variableExpression><![CDATA["Select   Upper(R.GRE_COD) As GRE_COD,   Coalesce(Upper(R.GRE_NUMERO_REQUERIMENTO), 'REQUERIMENTO NÃO SOLICITADO') As   NUMERO_REQUERIMENTO,   Case When Upper(P.PES_TIPO) = 'PF' Then Upper(PF.PEF_NOME)     When Upper(P.PES_TIPO) = 'PJ' Then Upper(PJ.PEJ_RAZAO_SOCIAL)     Else 'SEM REGISTROS' End As [NOME/RAZAOSOCIAL],   Case     When Upper(P.PES_TIPO) = 'PF' Then Left(PF.PEF_CPF, 3) + '.' +     SubString(PF.PEF_CPF, 4, 3) + '.' + SubString(PF.PEF_CPF, 7, 3) + '-' +     Right(PF.PEF_CPF, 2)     When Upper(P.PES_TIPO) = 'PJ' Then Left(PJ.PEJ_CNPJ, 2) + '.' +     SubString(PJ.PEJ_CNPJ, 3, 3) + '.' + SubString(PJ.PEJ_CNPJ, 6, 3) + '/' +     SubString(PJ.PEJ_CNPJ, 9, 4) + '-' + Right(PJ.PEJ_CNPJ, 2)     Else 'SEM REGISTROS' End As [CPF/CNPJ],   Upper(R.GRE_SITUACAO_REQUERIMENTO) As GRE_SITUACAO_REQUERIMENTO,   Upper(R.GRE_TIPO_PERMISSAO) As N_PERMISSAO,   Upper(R.GRE_SERVICO_SOLICITADO) As GRE_SERVICO_SOLICITADO,   Upper(R.GAU_ID) As GAU_ID,   Upper(R.PES_COD_REQUERENTE) As PES_COD_REQUERENTE,   Upper(R.PES_COD_CESSIONARIO) As PES_COD_CESSIONARIO,   Upper(E.END_ENDERECO) As END_ENDERECO,   Upper(E.END_LOCALIDADE) As CIDADE,   Upper(E.END_BAIRRO) As END_BAIRRO,   Coalesce(Upper(E.END_COMPLEMENTO), 'NÃO INFORMADO') As END_COMPLEMENTO,   Upper(E.END_UF) As END_UF,   Upper(SMB_REQUERIMENTO_SERVICOS.SMB_GRE_SERVICO_DESCRICAO) As   SERVICO_SOLICITADO,   Convert(DATE,R.GRE_DATA_HORA_ABERTURA) As DATA_ABERTURA,   Upper(PM.SMB_GES_PERMISSAO) As TIPO_PERMISSAO,   Upper(GA.GAU_NUM_ALVARA_AUT) As NUM_ALVARA From   SMB_REQUERIMENTO R   Left Join SMB_REQUERIMENTO_SERVICOS     On SMB_REQUERIMENTO_SERVICOS.SMB_GRE_SERVICO_SOLICITADO =     R.GRE_SERVICO_SOLICITADO   Left Join SMB_PESSOA P On P.PES_ID = R.PES_COD_REQUERENTE   Left Join SMB_PESSOA_FISICA PF On PF.PES_ID = R.PES_COD_REQUERENTE   Left Join SMB_PESSOA_JURIDICA PJ On PJ.PES_ID = R.PES_COD_REQUERENTE   Left Join GER_ENDERECO E On E.PES_ID = P.PES_ID   Left Join SMB_GES_PERMISSAO PM On R.GRE_TIPO_PERMISSAO = PM.SMB_GES_ID   Left Join SMB_GESTAO_AUTORIZATARIO GA On R.GAU_ID = GA.GAU_ID Where (   Upper(R.GRE_COD) = $P{GRE_COD}) /*WHERE_ADD*/ /*ORDER_NEW*/ "]]></variableExpression>
+	</variable>
+	<variable name="Entidade" class="java.lang.String">
+		<variableExpression><![CDATA["SELECT     E.ENT_BRASAO,     E.ENT_NOME,     E.ENT_END,     E.ENT_BAIRRO,     M.MUN_NOME,     U.UF_SIGLA FROM     GER_ENTIDADE E LEFT JOIN GER_MUNICIPIO M ON E.MUN_COD = M.MUN_COD     LEFT JOIN GER_UF U ON M.UF_COD = U.UF_COD "]]></variableExpression>
+	</variable>
+	<variable name="NOME_CESSIONARIO" class="java.lang.String"/>
+	<title>
+		<band height="112">
+			<rectangle>
+				<reportElement key="Shape1" mode="Opaque" x="10" y="72" width="573" height="34" forecolor="#0078D7" backcolor="#0078D7" uuid="7ea9d8e3-6754-4d27-9c4c-c22d9069595e"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<image hAlign="Center" evaluationTime="Report">
+				<reportElement key="DBImage1" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="16" width="595" height="44" forecolor="#000000" uuid="a2df00be-e37b-40ac-82ae-67d527a1d5a3"/>
+				<imageExpression><![CDATA[$F{PGL_BRASAO}.getBinaryStream()]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText2" mode="Transparent" x="11" y="72" width="570" height="34" forecolor="#FFFFFF" uuid="73513437-ee28-482a-9942-8fc6f29fca09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["REQUERIMENTO n.º " + $F{NUMERO_REQUERIMENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="313" splitType="Stretch">
+			<rectangle>
+				<reportElement key="Shape1" mode="Opaque" x="11" y="78" width="573" height="24" forecolor="#0078D7" backcolor="#0078D7" uuid="92a4e6d8-c5ab-4017-81fe-86c6ace03c1e"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="Label15" mode="Transparent" x="18" y="1" width="264" height="21" forecolor="#000000" uuid="c6b03e10-1ac9-4a04-9d9c-a5d4dd64714b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Serviço Solicitado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label16" mode="Transparent" x="18" y="24" width="121" height="21" forecolor="#000000" uuid="5d9b94ec-ebe0-4ebb-8f1f-6b4c3f73226f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[N° Permissão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label17" mode="Transparent" x="18" y="48" width="62" height="21" forecolor="#000000" uuid="ff9105dd-1a09-484b-a130-6828ab20c317">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tipo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label19" mode="Transparent" x="20" y="108" width="280" height="21" forecolor="#000000" uuid="7dfb3ac5-9266-43c4-9ff6-065053e07426">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nome/Razão Social:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label20" mode="Transparent" x="20" y="129" width="160" height="21" forecolor="#000000" uuid="9bd5adf6-8503-467c-8204-d47efeb73519">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CPF/CNPJ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label203" positionType="Float" mode="Transparent" x="20" y="176" width="140" height="21" forecolor="#000000" uuid="ef90ca00-c13b-4636-bea6-5484f2db166a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText12" mode="Transparent" x="90" y="129" width="484" height="21" forecolor="#000000" uuid="fbb4b373-97fb-4925-8430-34c418a880e9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPF/CNPJ}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText4" mode="Transparent" x="141" y="108" width="439" height="21" forecolor="#000000" uuid="de3b3687-67c6-4b12-b259-e4e69398a5ff">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOME/RAZAOSOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText3" mode="Transparent" x="54" y="48" width="519" height="21" forecolor="#000000" uuid="efb9b3f8-eadb-41cc-85b2-c5dc5b476bd3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_PERMISSAO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText7" mode="Transparent" x="495" y="24" width="86" height="21" forecolor="#000000" uuid="8706ea42-7609-4d01-b68b-b758ca4853b5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_ALVARA} == null ? "Não Definido" : "D-" + String.format("%04d", $F{NUM_ALVARA}).substring(String.format("%04d", $F{NUM_ALVARA}).length() - 4)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label5" mode="Transparent" x="202" y="24" width="208" height="21" forecolor="#000000" uuid="68ba46e6-ffe8-4677-888d-28eb1ffe4b7b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Data de Cadastro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label14" mode="Transparent" x="429" y="24" width="91" height="21" forecolor="#000000" uuid="e97d7140-6ae3-4362-88d0-ea3735d491ae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[N° Alvará:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label1" mode="Transparent" x="11" y="78" width="572" height="23" forecolor="#FFFFFF" uuid="0f4658b5-6de7-49b2-bf73-1205c7a4d2e7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[DADOS DO CEDENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label9" positionType="Float" mode="Transparent" x="20" y="200" width="88" height="21" forecolor="#000000" uuid="ba82eee4-6c67-4bdd-98c3-e1ce6f7687f5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label12" positionType="Float" mode="Transparent" x="20" y="224" width="130" height="21" forecolor="#000000" uuid="fe2b7eb5-3cce-403f-bd8c-478d89a79b6c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Complemento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label2" positionType="Float" mode="Transparent" x="20" y="248" width="99" height="21" forecolor="#000000" uuid="8d8c8988-7329-4e55-8271-6d06afa24f72">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="Label8" positionType="Float" mode="Transparent" x="20" y="272" width="88" height="21" forecolor="#000000" uuid="90fceb09-cf05-4c38-8aa4-7f8840f5f865">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement key="DBText5" mode="Transparent" x="311" y="24" width="114" height="21" forecolor="#000000" uuid="4a2006e4-4e20-4389-97ef-10ac03d873a8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{GRE_DATA_HORA_ABERTURA})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText6" mode="Transparent" x="107" y="24" width="83" height="21" forecolor="#000000" uuid="4a4a1f74-9857-4b9a-8460-e858f5d402c3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N_PERMISSAO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText8" positionType="Float" mode="Transparent" x="85" y="176" width="484" height="21" forecolor="#000000" uuid="ab5fe442-f012-44b3-932c-71931752e7f1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText9" positionType="Float" mode="Transparent" x="65" y="200" width="510" height="21" forecolor="#000000" uuid="cd150c2b-21ce-43f7-86cb-233d951d5931">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_BAIRRO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText10" positionType="Float" mode="Transparent" x="110" y="224" width="281" height="21" forecolor="#000000" uuid="e6bfca70-70e3-446b-94ae-ddca5611b246">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_COMPLEMENTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText101" positionType="Float" mode="Transparent" x="70" y="248" width="274" height="21" forecolor="#000000" uuid="77899c7b-8a8a-4918-a369-b4e1c2af387c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIDADE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText13" positionType="Float" mode="Transparent" x="46" y="272" width="281" height="21" forecolor="#000000" uuid="e5ff9aa3-bf81-4f2a-8f29-efe2c43f9d6f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{END_UF}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText14" mode="Transparent" x="132" y="1" width="447" height="21" forecolor="#000000" uuid="c938c108-7075-472f-b62b-37926bdb09fc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SMB_GRE_SERVICO_DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="293" width="594" height="20" uuid="92350e1e-07dd-4405-890f-1b2094ee0fc0"/>
+				<subreportParameter name="GRE_COD">
+					<subreportParameterExpression><![CDATA[$P{GRE_COD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="NOME_CESSIONARIO" toVariable="NOME_CESSIONARIO"/>
+				<subreportExpression><![CDATA["RequerimentoCessionario.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement key="Label20" positionType="Float" mode="Transparent" x="20" y="152" width="280" height="21" forecolor="#000000" uuid="f52c9e32-3968-4a7c-8f8b-895d13f782cd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cooperativa:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText12" mode="Transparent" x="100" y="152" width="471" height="21" forecolor="#000000" uuid="527aae8b-bbc5-4daf-afc8-e27ab531eeae">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cooperativa}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="184">
+			<staticText>
+				<reportElement key="Label21" positionType="Float" mode="Transparent" x="23" y="119" width="560" height="37" forecolor="#000000" uuid="8230e997-8048-4b2c-9986-48543d05ca94"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[ATENÇÃO: Este documento tem validade por 30 (trinta) dias não dando direito a circular com o veículo e em assegurar a permissão.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="DBText1" positionType="Float" mode="Transparent" x="23" y="63" width="259" height="19" forecolor="#000000" uuid="a341e4e7-7042-48e3-bc6d-f0efa09a1fb2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOME/RAZAOSOCIAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label3" positionType="Float" mode="Transparent" x="23" y="84" width="162" height="19" forecolor="#000000" uuid="1a70fb86-d9f7-406a-b4ce-3b4058e763ad">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Cedente]]></text>
+			</staticText>
+			<line>
+				<reportElement key="Line1" positionType="Float" mode="Transparent" x="22" y="60" width="260" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="2c6c12d9-c075-4e84-8c1e-bafbbe506115"/>
+			</line>
+			<staticText>
+				<reportElement key="Label4" positionType="Float" mode="Transparent" x="23" y="-1" width="85" height="19" forecolor="#000000" uuid="40cc0b4d-b5a0-4a88-9b2e-0cd02aa2238a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Salvador, ]]></text>
+			</staticText>
+			<textField pattern="d &quot;de&quot; mmmm &quot;de&quot; yyyy">
+				<reportElement key="SystemVariable1" positionType="Float" mode="Transparent" x="80" y="-1" width="151" height="19" forecolor="#000000" uuid="f215165b-05dd-4683-9bae-e6a01a564c2e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new java.util.Locale("pt", "BR")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="Label3" positionType="Float" mode="Transparent" x="312" y="84" width="162" height="19" forecolor="#000000" uuid="cdcdc59c-01e6-4651-95f6-11b6afa3c762">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Cessionário]]></text>
+			</staticText>
+			<line>
+				<reportElement key="Line1" positionType="Float" mode="Transparent" x="312" y="59" width="260" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="09c696ee-f54b-42da-baa3-5c61034bbf1c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="312" y="63" width="260" height="19" uuid="27d2594c-cd18-4b58-8743-ae603648adc6"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$V{NOME_CESSIONARIO}]]></textFieldExpression>
+				<patternExpression><![CDATA[$V{NOME_CESSIONARIO}]]></patternExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,16 @@
+{
+  "atalho_MenuPrincipal_0": {
+    "id": "atalho_MenuPrincipal_0",
+    "conteudo": "<i class=\"menu-icon fas fa-calendar-week\" style=\"font-size: 2rem; margin-bottom: 0.25rem;\"></i><span class=\"menu-item-text text-center mw-100\">Folha de Frequência</span>",
+    "left": "153px",
+    "top": "259px",
+    "tipoEvento": "form",
+    "parametros": [
+      "500000205",
+      "Aba",
+      "{BB484250-1FD8-4BCF-B85D-A4BFA8B0DAAE}",
+      "Menu",
+      {}
+    ]
+  }
+}

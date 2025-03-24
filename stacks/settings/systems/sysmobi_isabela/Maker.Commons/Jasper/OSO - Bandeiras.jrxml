@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OSO - Sub Relatório Bandeiras " pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="ecebc9d9-4ea6-4685-9ee1-93b5535b3c8b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SYSMOBI"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="codigoLinha" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{codigoLinha}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select
+  SMB_LINHA.LNH_ID,
+  SMB_BANDEIRAS.BAN_TIPO,
+  SMB_BANDEIRAS.BAN_NOME
+From
+  SMB_LINHA
+  Inner Join
+  SMB_BANDEIRAS On SMB_LINHA.LNH_ID = SMB_BANDEIRAS.LNH_ID
+where  SMB_LINHA.LNH_ID =  $P{codigoLinha}]]>
+	</queryString>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="BAN_TIPO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BAN_TIPO"/>
+	</field>
+	<field name="BAN_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BAN_NOME"/>
+	</field>
+	<pageHeader>
+		<band height="16">
+			<rectangle>
+				<reportElement x="-11" y="1" width="572" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="31a24459-ac38-43ea-9758-69117ee5f3d4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-11" y="1" width="572" height="15" forecolor="#FFFFFF" uuid="6cffcd44-aa41-4098-a84a-fa623ade5ad2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANDEIRA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement x="-10" y="2" width="105" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="7ababaf1-8d76-463f-9651-1e9b04a53bb3"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Bandeira 1:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-11" y="2" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="c2ddc922-2541-433e-9127-a10f0392dd35"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="117" y="2" width="444" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="ef098833-828d-4ec7-8b01-36ad8447dd25"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="-10" y="2" width="125" height="15" forecolor="#FFFFFF" uuid="d01b2225-00a9-4b68-836b-dc59e0fe2c56"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BAN_TIPO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="2" width="444" height="15" forecolor="#000000" uuid="63621f24-e6ca-46b8-9559-c90ac95f9ba1"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BAN_NOME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

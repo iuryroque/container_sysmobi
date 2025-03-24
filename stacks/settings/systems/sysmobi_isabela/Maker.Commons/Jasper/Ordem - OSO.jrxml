@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordem - OSO" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ad9903f8-ce17-45e2-bde1-312d25f37ed9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+  MAX(SMB_PARAMETROS_LINHA.ID) AS id,
+  MAX(SMB_PARAMETROS_LINHA.PAR_NUMEROSO) AS [n-oso],
+  FORMAT(MAX(SMB_PARAMETROS_LINHA.PAR_INICIO), 'dd/MM/yyyy') AS dt_inicio,  -- Data em formato pt-BR
+  CASE
+    WHEN MAX(SMB_PARAMETROS_LINHA.PAR_FIM) IS NOT NULL THEN FORMAT(MAX(SMB_PARAMETROS_LINHA.PAR_FIM), 'dd/MM/yyyy')  -- Data em formato pt-BR
+    ELSE ''  -- Exibir em branco se não houver data de finalização
+  END AS dt_fim,
+  MAX(SMB_PARAMETROS_LINHA.PAR_MENSAGEM) AS mensagem,
+  MAX(SMB_PARAMETROS_LINHA.PAR_GARAGEM) AS Garagem,
+  MAX(SMB_PARAMETROS_LINHA.PAR_INFORMACOES) AS informacoes,
+  MAX(SMB_PARAMETROS_LINHA.GAU_ID) AS id_linha,
+  MAX(SMB_PARAMETROS_LINHA.LNH_ID) AS LNH_ID,
+  MAX(SMB_PARAMETROS_LINHA.PAR_NUMEROSO_ORIGINAL) AS oso_original,
+  COALESCE(MAX(PESSOAS_PJ_VI.[NOME-CNPJ]), MAX(PESSOAS_PF_VI.[NOME-CPF])) AS AUTORIZATARIO
+FROM
+  SMB_PARAMETROS_LINHA
+  INNER JOIN SMB_GESTAO_AUTORIZATARIO ON SMB_GESTAO_AUTORIZATARIO.GAU_ID = SMB_PARAMETROS_LINHA.GAU_ID
+  LEFT JOIN PESSOAS_PF_VI ON SMB_GESTAO_AUTORIZATARIO.PES_COD_AUTORIZATARIO = PESSOAS_PF_VI.PES_ID
+  LEFT JOIN PESSOAS_PJ_VI ON SMB_GESTAO_AUTORIZATARIO.PES_COD_AUTORIZATARIO = PESSOAS_PJ_VI.PES_ID
+WHERE 
+  SMB_PARAMETROS_LINHA.LNH_ID = $P{Cod}
+GROUP BY
+  SMB_PARAMETROS_LINHA.LNH_ID]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="n-oso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="n-oso"/>
+	</field>
+	<field name="dt_inicio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dt_inicio"/>
+	</field>
+	<field name="dt_fim" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dt_fim"/>
+	</field>
+	<field name="mensagem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="mensagem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_LINHA"/>
+	</field>
+	<field name="Garagem" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Garagem"/>
+	</field>
+	<field name="informacoes" class="java.sql.Clob">
+		<property name="com.jaspersoft.studio.field.label" value="informacoes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SMB_PARAMETROS_LINHA"/>
+	</field>
+	<field name="id_linha" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id_linha"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<field name="oso_original" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="oso_original"/>
+	</field>
+	<field name="AUTORIZATARIO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="AUTORIZATARIO"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="80" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="6" width="572" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="b77498a7-da1f-46d1-9435-1667f7aa241b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="6" width="570" height="15" forecolor="#FFFFFF" uuid="bc928614-1b0f-4626-9a02-0dabf7336b8e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDEM]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="5" y="23" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="443d7a3a-577e-4e59-b08f-ecde7e810575"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="23" width="105" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="6fec23b6-6d95-431b-97aa-ccbea7cbed74"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Início/Fim de Operação: ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="23" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="51bed1de-291c-46ac-9dee-6d9aa93e7708"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="5" y="41" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="9b383518-f505-4388-947d-9ab97a11d523"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="41" width="105" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="a52e6dc0-15c7-44b0-970a-8a7e443eeddb"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Emissor / Área (Setor): ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="41" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="87b80db2-a3b1-496f-882d-855ea095b3a2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="225" y="41" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a972a41b-ad84-45e9-ae62-185ff093642c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="5" y="59" width="126" height="21" forecolor="#FCFAFA" backcolor="#767171" uuid="7d0eb5be-ad8e-4c47-839f-226d51c96def"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="60" width="125" height="20" forecolor="#FFFCFC" backcolor="#080707" uuid="d09dc71d-66d3-4443-9f7b-31dd04dc1b11"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Mensagem:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="133" y="59" width="444" height="21" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="64849fee-893c-4929-a60a-c5e318617af8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="225" y="23" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="810673c2-d78b-4d2f-b7fe-6c96c4b5b694"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="317" y="23" width="126" height="15" forecolor="#FCFAFA" backcolor="#A8D08D" uuid="4880449c-b7a8-453e-b1df-a6d5028dcb74"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="318" y="23" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="1a068e67-1f05-4959-8b78-290d58657d39"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nº Ofício / OSO:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="317" y="41" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3d3e3631-89c6-46d8-aa95-c3a1952aa7f6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="317" y="41" width="125" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="b2e8527c-4d8c-4b26-a008-0ff10fb0b211"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nº Ofício / OSO (anterior):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="445" y="41" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="b31369bc-6466-4ce5-89b4-254d46dfc60d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="445" y="23" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="8cf0f7ef-48d3-44ac-80b4-e552063362a9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="512" y="23" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="eb371d37-590b-4520-b212-e4cff07d535c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="512" y="41" width="65" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="14bd78cd-afe9-46df-87b2-1bdfaea9eba3"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="133" y="21" width="90" height="17" uuid="336e62c3-71ba-4c2a-bacb-9b5c71575a48"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_inicio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="225" y="23" width="90" height="15" uuid="6dfb0b2c-0075-4eb1-91a8-c5c78a8183d3"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_fim}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="133" y="60" width="444" height="20" uuid="6bc28f13-5828-4603-841e-97f75a810e26"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mensagem}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="446" y="23" width="64" height="15" uuid="1cd03f4b-e626-43c6-b927-e7a7527d2565"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{n-oso}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

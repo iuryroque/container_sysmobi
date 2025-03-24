@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EmpresaOSO" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="7714988b-98d0-4456-83b1-6ca9c12c53cf">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SYSMOBI"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="codigoParametro" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{codigoParametro}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    A.GAU_ID AS Codigo,
+    CASE
+        WHEN CHARINDEX(' - CNPJ:', A.AUTORIZATARIO) > 0 THEN LEFT(A.AUTORIZATARIO, CHARINDEX(' - CNPJ:', A.AUTORIZATARIO) - 1)
+        WHEN CHARINDEX(' - CPF:', A.AUTORIZATARIO) > 0 THEN LEFT(A.AUTORIZATARIO, CHARINDEX(' - CPF:', A.AUTORIZATARIO) - 1)
+        ELSE A.AUTORIZATARIO
+    END AS Autorizatario,
+    FCT.FRC_DESCRICAO AS Forma_Contratacao
+FROM SMB_PARAMETROS_LINHA PLH
+INNER JOIN SMB_AUTORIZATARIOS_VI A ON A.GAU_ID = PLH.GAU_ID
+INNER JOIN SMB_LINHA L ON PLH.LNH_ID = L.LNH_ID 
+INNER JOIN SMB_FORMA_CONTRATACAO FCT ON FCT.FRC_ID = L.FRC_ID
+WHERE PLH.ID =  $P{codigoParametro} ]]>
+	</queryString>
+	<field name="Codigo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Codigo"/>
+	</field>
+	<field name="Autorizatario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Autorizatario"/>
+	</field>
+	<field name="Forma_Contratacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Forma_Contratacao"/>
+	</field>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<rectangle>
+				<reportElement stretchType="ContainerHeight" x="210" y="18" width="349" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="c39663fe-4c56-485c-ad61-2b82137be216"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="18" width="348" height="15" uuid="9382137e-8548-4de4-958a-285f722e1a84"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Autorizatario}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="-10" y="34" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="cd1889fe-3215-4c59-b93b-6e8b054ee5dd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="118" y="35" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="e81ec813-c247-4ea4-8521-0207afe498a2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="1" width="569" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="9f6b9c49-8ae0-4cc7-997b-3e4e764f8c8f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-10" y="18" width="126" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="1fcf0942-4b26-436c-bb80-d9fe73a74ce2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="210" y="35" width="349" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="b3e1696b-4cf2-410e-92fe-e2e13a795f8b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-9" y="18" width="119" height="15" forecolor="#FFFCFC" backcolor="#080707" uuid="5b0378d1-ac8e-40d8-b961-ddfd8172c0eb"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Cód. / Operadora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-9" y="35" width="119" height="14" forecolor="#FFFCFC" backcolor="#080707" uuid="62db06f5-fc27-4d9e-a239-3f786fd5e4a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Forma de Contratação:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="118" y="18" width="90" height="15" forecolor="#FCFAFA" backcolor="#D0CECE" uuid="a5ff0ebb-bb6a-4ba0-a6a9-e80cfbefb4dd"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-4" y="1" width="563" height="14" forecolor="#FFFFFF" uuid="9a3c5e42-81e1-44c2-895f-155b339ab0ce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPRESA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="119" y="18" width="88" height="15" uuid="6eddf91d-7975-4c05-a10a-873048ce0002">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Codigo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="119" y="35" width="88" height="15" uuid="b79e6edb-9aba-4001-a414-e9d5b1e695db"/>
+				<textFieldExpression><![CDATA[$F{Forma_Contratacao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

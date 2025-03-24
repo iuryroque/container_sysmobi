@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Controle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d6efd;
+            padding: 10px 15px;
+            color: white;
+        }
+        
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .content-area {
+            overflow-y: auto;
+            height: calc(100vh - 120px);
+            /* Altura da tela menos o header e footer */
+            padding: 20px;
+        }
+        
+        .footer-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-tabs .tab-item {
+            color: #6c757d;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .footer-tabs .tab-item.active {
+            color: #0d6efd;
+        }
+        
+        .footer-tabs .tab-item i {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="header">
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="d-flex align-items-center">
+                <img src="https://via.placeholder.com/40" alt="Foto do Agente" class="profile-pic">
+                <div>
+                    <h6 class="mb-0">Nome do Agente</h6>
+                    <small>Matrícula: 123456</small>
+                </div>
+            </div>
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bell"></i>
+            </button>
+        </div>
+
+        <!-- Conteúdo Principal com Scroll -->
+        <div class="content-area">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Histórico de Ativações</h4>
+                <a href="home-page.html" class="btn btn-secondary btn-sm">Voltar</a>
+            </div>
+
+            <!-- Botão para Nova Ativação -->
+            <button class="btn btn-primary mb-3 w-100" onclick="novaAtivacao()">Nova Ativação</button>
+
+            <!-- Exemplo de registros de ativação/desativação -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">10 de Novembro de 2024</h5>
+                    <p class="card-text"><strong>Ativado:</strong> 08:00 - Estação 1</p>
+                    <p class="card-text"><strong>Desativado:</strong> 17:00 - Estação 1</p>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">09 de Novembro de 2024</h5>
+                    <p class="card-text"><strong>Ativado:</strong> 08:05 - Estação 2</p>
+                    <p class="card-text"><strong>Desativado:</strong> 16:55 - Estação 2</p>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">08 de Novembro de 2024</h5>
+                    <p class="card-text"><strong>Ativado:</strong> 08:10 - Estação 3</p>
+                    <p class="card-text"><strong>Desativado:</strong> 17:15 - Estação 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Tabs -->
+    <div class="footer-tabs">
+        <a href="#" class="tab-item" onclick="showHome()">
+            <i class="fas fa-home"></i>
+            <div>Início</div>
+        </a>
+        <a href="#" class="tab-item active" onclick="showHistory()">
+            <i class="fas fa-clock"></i>
+            <div>Histórico</div>
+        </a>
+        <a href="#" class="tab-item">
+            <i class="fas fa-user"></i>
+            <div>Perfil</div>
+        </a>
+        <a href="#" class="tab-item">
+            <i class="fas fa-cog"></i>
+            <div>Configurações</div>
+        </a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function novaAtivacao() {
+            // Redireciona para a página de nova ativação (substitua "nova_ativacao.html" com a URL correta)
+            window.location.href = "estacao.html";
+        }
+
+        // Função para exibir a página inicial (Home)
+        function showHome() {
+            // Lógica para exibir a página inicial
+        }
+
+        // Função para exibir a página de Histórico
+        function showHistory() {
+            // Lógica para exibir a página de Histórico
+        }
+    </script>
+</body>
+
+</html>

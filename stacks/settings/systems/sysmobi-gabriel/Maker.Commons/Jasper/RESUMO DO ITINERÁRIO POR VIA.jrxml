@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SENTIDO 1 -OSO" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5c866fa-00be-4f68-9c9e-5ac2c1a886bb">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sysmobi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="274"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<parameter name="Cod" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[Select
+  Case When PLH.PAR_TIPODEDIA = 'U' Then 'Dia Útil' When PLH.PAR_TIPODEDIA = 'S' Then 'Sábado' When PLH.PAR_TIPODEDIA = 'D' Then 'Domingos e Feriados' Else 'Desconhecido' End As tipo_dia,
+  CASE 
+    WHEN PLH.PAR_SENTIDO = 1 THEN 'Ida'
+    WHEN PLH.PAR_SENTIDO = 2 THEN 'Volta'
+    ELSE 'Desconhecido'
+  END AS sentido,
+  Convert(VARCHAR(5),PLH.PAR_HORARIOINICIO,108) As horario_inicio,
+  Convert(VARCHAR(5),PLH.PAR_HORARIOFIM,108) As horario_fim,
+  PLH.PAR_INTERVALO As intervalo,
+  PLH.PAR_PERCURSO As percurso,
+  PLH.PAR_TERMINAL As terminal,
+  PLH.PAR_FROTA As frota,
+  PLH.PAR_NUMEROSO As numero_oso,
+  PLH.ID As id,
+  PLH.ID_PARAMETRO_LINHA As id_parametro_linha,
+  PLH.SMB_ESP_ID As esp_id,
+  Count(PLH.ID) As quantidade_viagens,
+  Concat(TV.TPV_DESCRICAO, ' ', LV.LYV_DESCRICAO) As [T.EQP],
+  SMB_LINHA.LNH_ID
+From
+  SMB_PARAMETROS_LINHA_HORARIOS PLH
+  Inner Join
+  SMB_PARAMETROS_LINHA PL On PL.ID = PLH.ID_PARAMETRO_LINHA
+  Inner Join
+  SMB_LINHA On SMB_LINHA.LNH_ID = PL.LNH_ID
+  Left Join
+  SMB_ESPECIFICACAO_DO_VEICULO EV On PLH.SMB_ESP_ID = EV.SMB_ESP_ID
+  Left Join
+  SMB_TIPO_DE_VEICULO TV On EV.SMB_TIP_ID = TV.SMB_TIP_ID
+  Left Join
+  SMB_CADASTRAR_LAYOUT_VEICULO LV On EV.SMB_CAD_ID = LV.SMB_CAD_ID
+Where
+  PLH.PAR_TIPODEDIA = 'U' And
+  PLH.PAR_SENTIDO = 1  And
+  SMB_LINHA.LNH_ID =$P{Cod}
+Group By
+  PLH.PAR_SENTIDO,
+  PLH.PAR_INTERVALO,
+  PLH.PAR_PERCURSO,
+  PLH.PAR_TERMINAL,
+  PLH.PAR_FROTA,
+  PLH.PAR_NUMEROSO,
+  PLH.ID,
+  PLH.ID_PARAMETRO_LINHA,
+  PLH.SMB_ESP_ID,
+  PLH.PAR_TIPODEDIA,
+  PLH.PAR_HORARIOINICIO,
+  PLH.PAR_HORARIOFIM,
+  TV.TPV_DESCRICAO,
+  LV.LYV_DESCRICAO,
+  EV.SMB_QTD_PORTAS,
+  EV.SMB_POTENCIA_MOTOR,
+  SMB_LINHA.LNH_ID]]>
+	</queryString>
+	<field name="tipo_dia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipo_dia"/>
+	</field>
+	<field name="sentido" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sentido"/>
+	</field>
+	<field name="horario_inicio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_inicio"/>
+	</field>
+	<field name="horario_fim" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="horario_fim"/>
+	</field>
+	<field name="intervalo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="intervalo"/>
+	</field>
+	<field name="percurso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="percurso"/>
+	</field>
+	<field name="terminal" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="terminal"/>
+	</field>
+	<field name="frota" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="frota"/>
+	</field>
+	<field name="numero_oso" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="numero_oso"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="id_parametro_linha" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id_parametro_linha"/>
+	</field>
+	<field name="esp_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="esp_id"/>
+	</field>
+	<field name="quantidade_viagens" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade_viagens"/>
+	</field>
+	<field name="T.EQP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="T.EQP"/>
+	</field>
+	<field name="LNH_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="LNH_ID"/>
+	</field>
+	<title>
+		<band height="26">
+			<staticText>
+				<reportElement x="9" y="7" width="562" height="14" forecolor="#FFFFFF" uuid="0e7cbebf-12dd-4cf6-bed1-ec24d73b42ee"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINHA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="6" y="6" width="571" height="15" forecolor="#FCFAFA" backcolor="#767171" uuid="3960551c-bce5-47d0-a802-08f4389b25b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="226"/>
+	</detail>
+</jasperReport>

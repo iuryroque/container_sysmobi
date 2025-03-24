@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Controle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="container-fluid p-0">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center bg-primary text-white p-3">
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="d-flex align-items-center">
+                <img src="https://via.placeholder.com/40" alt="Foto do Agente" class="rounded-circle border border-white me-2">
+                <div>
+                    <h6 class="mb-0">Nome do Agente</h6>
+                    <small>Matrícula: 123456</small>
+                </div>
+            </div>
+            <button class="btn btn-link text-white p-0">
+                <i class="fas fa-bell"></i>
+            </button>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="container py-3">
+            <!-- Data Atual -->
+            <div class="text-center text-secondary mb-3" id="current-date">
+                <!-- Data será inserida via JavaScript -->
+            </div>
+
+            <!-- Localização Atual -->
+            <div class="text-center text-secondary mb-4" id="location">
+                Localização: <span id="location-coordinates">Obtendo localização...</span>
+            </div>
+
+            <!-- Painel de Ativação/Desativação -->
+            <div class="d-flex flex-column align-items-center">
+                <button id="btn-ativar" class="btn btn-success w-100 mb-3" style="max-width: 350px;">Ativar Estação</button>
+                <button id="btn-desativar" class="btn btn-danger w-100" style="max-width: 350px; display: none;">Desativar Estação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Tabs -->
+    <div class="footer-tabs d-flex justify-content-around border-top py-2 fixed-bottom bg-white">
+        <a href="./home-page.html" class="text-center text-decoration-none text-muted">
+            <i class="fas fa-home"></i>
+            <div>Início</div>
+        </a>
+        <a href="#" class="text-center text-decoration-none text-muted">
+            <i class="fas fa-clock"></i>
+            <div>Histórico</div>
+        </a>
+        <a href="#" class="text-center text-decoration-none text-muted">
+            <i class="fas fa-user"></i>
+            <div>Perfil</div>
+        </a>
+        <a href="#" class="text-center text-decoration-none text-muted">
+            <i class="fas fa-cog"></i>
+            <div>Configurações</div>
+        </a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script para mostrar a data atual
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Função para obter a localização geográfica
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location-coordinates').innerText = "Geolocalização não suportada.";
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById('location-coordinates').innerText =
+                `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('location-coordinates').innerText = "Permissão de localização negada.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('location-coordinates').innerText = "Informação de localização indisponível.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('location-coordinates').innerText = "Tempo de solicitação de localização esgotado.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('location-coordinates').innerText = "Erro desconhecido.";
+                    break;
+            }
+        }
+
+        // Obter localização ao carregar a página
+        getLocation();
+
+        // Funções de ativação/desativação da estação
+        const btnAtivar = document.getElementById('btn-ativar');
+        const btnDesativar = document.getElementById('btn-desativar');
+
+        btnAtivar.addEventListener('click', () => {
+            alert('Estação ativada!');
+            btnAtivar.style.display = 'none';
+            btnDesativar.style.display = 'block';
+        });
+
+        btnDesativar.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja desativar a estação?')) {
+                alert('Estação desativada!');
+                btnDesativar.style.display = 'none';
+                btnAtivar.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
