@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NOME_CONTEXTO: sysmobi
+        NOME_CONTEXTO: sgci
     container_name: sysmobi_container
     ports:
       - "5077:8080"  # Expondo o Tomcat
